@@ -1,0 +1,33 @@
+<html>
+<head>
+<style type="text/css">
+body {
+	background-color: #000000;
+	color: #eeeeee;
+	font-family: tahoma, arial, sans-serif;
+}
+</style>
+<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+<script src="../stomp.min.js"></script>
+<script src="smoothie.js"></script>
+<script src="server-load.js"></script>
+</head>
+<body onload="init()">
+
+	<h4>host1.example.com</h4>
+	<canvas id="host1Cpu" width="500" height="100"></canvas>
+
+	<h4>host2.example.com</h4>
+	<canvas id="host2Cpu" width="500" height="100"></canvas>
+
+	<h4>host3.example.com</h4>
+	<canvas id="host3Cpu" width="500" height="100"></canvas>
+
+	<h4>host4.example.com</h4>
+	<canvas id="host4Cpu" width="500" height="100"></canvas>
+
+	<p>
+		<em>This is fake data.</em>
+	</p>
+</body>
+</html>

@@ -1,0 +1,25 @@
+package ch.rasc.s4ws.smoothie;
+
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.adapter.WebSocketHandlerAdapter;
+
+public class CpuDataHandler extends WebSocketHandlerAdapter {
+
+	private final CpuDataService cpuDataService;
+
+	public CpuDataHandler(CpuDataService cpuDataService) {
+		this.cpuDataService = cpuDataService;
+	}
+
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		cpuDataService.addSession(session.getId(), session);
+	}
+
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		cpuDataService.removeSession(session.getId());
+	}
+
+}
