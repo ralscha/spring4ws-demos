@@ -54,27 +54,27 @@ public class CpuDataService {
 					random.nextDouble() });
 
 			TextMessage tm = new TextMessage(objectMapper.writeValueAsString(cpuData));
-			for (WebSocketSession session : sessions.values()) {		
+			for (WebSocketSession session : sessions.values()) {
 				sendMessage(session, tm);
 			}
 		}
 	}
 
 	private void sendMessage(final WebSocketSession session, final TextMessage textMessage) {
-			
-			taskExecutor.execute(new Runnable() {
-				@Override
-				public void run() {					
-						if (session.isOpen()) {
-							try {
-								session.sendMessage(textMessage);
-							} catch (IOException e) {
-								logger.error("sendMessage to session", e);
-							}
-						}
-					}			
+
+		taskExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				if (session.isOpen()) {
+					try {
+						session.sendMessage(textMessage);
+					} catch (IOException e) {
+						logger.error("sendMessage to session", e);
+					}
 				}
-		
-		);			
+			}
+		}
+
+		);
 	}
 }
