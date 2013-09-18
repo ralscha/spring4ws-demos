@@ -1,6 +1,11 @@
 package ch.rasc.s4ws.twitter;
 
-public class Tweet implements Comparable<Tweet> {
+import java.io.Serializable;
+
+public class Tweet implements Comparable<Tweet>, Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	private long id;
 
 	private String profileImageUrl;

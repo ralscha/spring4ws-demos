@@ -1,5 +1,8 @@
 package ch.rasc.s4ws.twitter;
 
+import javax.annotation.PreDestroy;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.EnableWebSocketMessageBroker;
@@ -11,6 +14,10 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.ITopic;
 
 @Configuration
 @EnableWebMvc
@@ -37,6 +44,17 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketMessa
 	@Override
 	public void configureMessageBroker(MessageBrokerConfigurer configurer) {
 		configurer.enableSimpleBroker("/queue/");
+	}
+
+	@Bean
+	public ITopic<Tweet> hazelcastTopic() {
+		HazelcastInstance hc = Hazelcast.newHazelcastInstance();
+		return hc.getTopic("tweets");
+	}
+
+	@PreDestroy
+	public void destroy() {
+		Hazelcast.shutdownAll();
 	}
 
 }

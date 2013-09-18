@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MinMaxPriorityQueue;
+import com.hazelcast.core.ITopic;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
@@ -34,6 +35,9 @@ public class TwitterHandler {
 
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
+
+	@Autowired
+	private ITopic<Tweet> hazelcastTopic;
 
 	private final Queue<Tweet> lastTweets = MinMaxPriorityQueue.maximumSize(10).create();
 
@@ -69,7 +73,7 @@ public class TwitterHandler {
 
 		executorService = Executors.newSingleThreadExecutor();
 
-		TwitterStatusListener statusListener = new TwitterStatusListener(messagingTemplate, lastTweets);
+		TwitterStatusListener statusListener = new TwitterStatusListener(messagingTemplate, hazelcastTopic, lastTweets);
 		t4jClient = new Twitter4jStatusClient(client, queue, ImmutableList.of(statusListener), executorService);
 
 		t4jClient.connect();

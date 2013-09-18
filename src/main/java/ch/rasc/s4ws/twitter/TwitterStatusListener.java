@@ -22,6 +22,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 
+import com.hazelcast.core.ITopic;
 import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 
@@ -34,9 +35,13 @@ public class TwitterStatusListener implements StatusStreamHandler {
 
 	private final Queue<Tweet> lastTweets;
 
-	public TwitterStatusListener(SimpMessageSendingOperations messagingTemplate, Queue<Tweet> lastTweets) {
+	private final ITopic<Tweet> hazelcastTopic;
+
+	public TwitterStatusListener(SimpMessageSendingOperations messagingTemplate, ITopic<Tweet> hazelcastTopic,
+			Queue<Tweet> lastTweets) {
 		this.messagingTemplate = messagingTemplate;
 		this.lastTweets = lastTweets;
+		this.hazelcastTopic = hazelcastTopic;
 	}
 
 	@Override
@@ -68,6 +73,8 @@ public class TwitterStatusListener implements StatusStreamHandler {
 		lastTweets.offer(tweet);
 
 		messagingTemplate.convertAndSend("/queue/tweets", Collections.singletonList(tweet));
+
+		hazelcastTopic.publish(tweet);
 	}
 
 	@Override
