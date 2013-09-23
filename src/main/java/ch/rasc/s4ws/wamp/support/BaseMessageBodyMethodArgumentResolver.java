@@ -37,44 +37,45 @@ public class BaseMessageBodyMethodArgumentResolver implements HandlerMethodArgum
 		Class<?> targetClass = parameter.getParameterType();
 
 		if (message instanceof PublishMessage) {
-			Object sourceObject = ((PublishMessage) message).getEvent();
-			Class<?> sourceClass = sourceObject.getClass();
-			if (targetClass.isAssignableFrom(sourceClass)) {
-				return sourceObject;
-			}
+			Object eventObject = ((PublishMessage) message).getEvent();
+			return convertParameter(parameter, targetClass, eventObject);
 		} else if (message instanceof CallMessage) {
 			List<Object> arguments = ((CallMessage) message).getArguments();
 			for (Object argument : arguments) {
-				TypeDescriptor td = new TypeDescriptor(parameter);
-
-				Class<?> sourceClass = argument.getClass();
-				if (targetClass.isAssignableFrom(sourceClass)) {
-					return convertListElements(td, argument);
-				}
-
-				if (defaultConversionService.canConvert(sourceClass, targetClass)) {
-					try {
-						return convertListElements(td, defaultConversionService.convert(argument, targetClass));
-					} catch (Exception e) {
-
-						TypeFactory typeFactory = objectMapper.getTypeFactory();
-						if (td.isCollection()) {
-							JavaType type = CollectionType.construct(td.getType(),
-									typeFactory.constructType(td.getElementTypeDescriptor().getType()));
-							return objectMapper.convertValue(argument, type);
-						} else if (td.isArray()) {
-							JavaType type = typeFactory.constructArrayType(td.getElementTypeDescriptor().getType());
-							return objectMapper.convertValue(argument, type);
-						}
-
-						throw e;
-					}
-				}
-				return objectMapper.convertValue(argument, targetClass);
+				return convertParameter(parameter, targetClass, argument);
 			}
 		}
 
 		return arg;
+	}
+
+	private Object convertParameter(MethodParameter parameter, Class<?> targetClass, Object argument) throws Exception {
+		TypeDescriptor td = new TypeDescriptor(parameter);
+
+		Class<?> sourceClass = argument.getClass();
+		if (targetClass.isAssignableFrom(sourceClass)) {
+			return convertListElements(td, argument);
+		}
+
+		if (defaultConversionService.canConvert(sourceClass, targetClass)) {
+			try {
+				return convertListElements(td, defaultConversionService.convert(argument, targetClass));
+			} catch (Exception e) {
+
+				TypeFactory typeFactory = objectMapper.getTypeFactory();
+				if (td.isCollection()) {
+					JavaType type = CollectionType.construct(td.getType(),
+							typeFactory.constructType(td.getElementTypeDescriptor().getType()));
+					return objectMapper.convertValue(argument, type);
+				} else if (td.isArray()) {
+					JavaType type = typeFactory.constructArrayType(td.getElementTypeDescriptor().getType());
+					return objectMapper.convertValue(argument, type);
+				}
+
+				throw e;
+			}
+		}
+		return objectMapper.convertValue(argument, targetClass);
 	}
 
 	private static Object convertListElements(TypeDescriptor td, Object convertedValue) {
