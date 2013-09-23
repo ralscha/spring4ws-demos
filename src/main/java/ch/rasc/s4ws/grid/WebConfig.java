@@ -3,7 +3,6 @@ package ch.rasc.s4ws.grid;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -23,7 +22,6 @@ import ch.rasc.s4ws.wamp.handler.WampWebsocketHandler;
 @Configuration
 @EnableWebMvc
 @EnableWebSocket
-@EnableScheduling
 @ComponentScan(basePackages = "ch.rasc.s4ws.grid")
 public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
 
