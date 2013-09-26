@@ -54,7 +54,7 @@ Ext.application({
 		});
 
 		var scheduler = Ext.create('App.view.SchedulerGrid', {
-			title: 'Portal/Atmosphere example',
+			title: 'Springframework 4/SockJS/AutobahnJS/ExtScheduler (Bryntum) example',
 			startDate: new Date(2013, 2, 1, 7, 0),
 			endDate: new Date(2013, 2, 1, 23, 30),
 			flex: 1,
