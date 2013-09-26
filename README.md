@@ -1,3 +1,5 @@
-Sample applications with the new new Springframework 4.0 Websocket/SockJS/STOMP support. 
+Sample applications with the new new Spring Framework 4.0 Websocket/SockJS/STOMP support. 
 
-Goal is to migrate the demos from https://github.com/ralscha/portal-demos
+Copy of the Atmoshpere/Portal examples: https://github.com/ralscha/portal-demos
+
+##Online: https://demo.rasc.ch/spring4ws/
