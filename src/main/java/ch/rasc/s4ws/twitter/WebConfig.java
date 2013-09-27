@@ -1,5 +1,7 @@
 package ch.rasc.s4ws.twitter;
 
+import java.util.Collections;
+
 import javax.annotation.PreDestroy;
 
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.hazelcast.config.Config;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.ITopic;
@@ -48,7 +51,11 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketMessa
 
 	@Bean
 	public ITopic<Tweet> hazelcastTopic() {
-		HazelcastInstance hc = Hazelcast.newHazelcastInstance();
+		Config config = new Config();
+		config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+		config.getNetworkConfig().getJoin().getTcpIpConfig().setMembers(Collections.singletonList("127.0.0.1")).setEnabled(true);
+		
+		HazelcastInstance hc = Hazelcast.newHazelcastInstance(config);
 		return hc.getTopic("tweets");
 	}
 
