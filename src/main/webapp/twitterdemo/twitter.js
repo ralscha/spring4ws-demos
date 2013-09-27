@@ -29,8 +29,8 @@ Ext.onReady(function() {
 		})
 	});
 
-	var path = window.location.pathname.split('/');
-	var sock = new SockJS('/' + path[1] + '/tweets');
+	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
+	var sock = new SockJS(path + '/tweets');
 	var stompClient = Stomp.over(sock);
 
 	stompClient.connect('', '', function(frame) {

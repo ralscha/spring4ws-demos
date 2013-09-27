@@ -413,8 +413,8 @@ window.onload = function() {
 		return map;
 	}
 
-	var path = window.location.pathname.split('/');
-	var sock = new SockJS('/' + path[1] + '/tailEndpoint');
+	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
+	var sock = new SockJS(path + '/tailEndpoint');
 	var stompClient = Stomp.over(sock);
 
 	stompClient.connect('', '', function(frame) {

@@ -2,13 +2,13 @@ var absession = null;
 var launched = false;
 
 Ext.onReady(function() {
-	var path = window.location.pathname.split('/');
+	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
 
 	ab._construct = function(url, protocols) {
 		return new SockJS(url);
 	};
 
-	ab.connect('/' + path[1] + '/book', function(session) {
+	ab.connect(path + '/book', function(session) {
 		absession = session;
 		console.log("Connected to ", absession);
 		launch();

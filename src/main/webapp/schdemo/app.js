@@ -19,14 +19,14 @@ Ext.application({
 	},
 
 	launch: function() {
-		var path = window.location.pathname.split('/');
+		var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
 		var me = this;
 
 		ab._construct = function(url, protocols) {
 			return new SockJS(url);
 		};
 
-		ab.connect('/' + path[1] + '/scheduler', function(session) {
+		ab.connect(path + '/scheduler', function(session) {
 			absession = session;
 			console.log("Connected to ", absession);
 			me.guiLaunch();

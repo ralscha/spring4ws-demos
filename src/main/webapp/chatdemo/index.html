@@ -27,8 +27,8 @@
 						$("#editor p").addClass("user").removeClass("guide").text(username);
 						
 						
-						var path = window.location.pathname.split('/');
-						var sock = new SockJS('/' + path[1] + '/chathandler');
+						var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
+						var sock = new SockJS(path + '/chathandler');
 						stompClient = Stomp.over(sock);
 
 						stompClient.connect('', '', function(frame) {
@@ -36,7 +36,6 @@
 							$(input).removeAttr("disabled").focus();
 							
 							stompClient.subscribe("/queue/chatmessage", function(msg) {
-								console.log(msg);
 								var data = JSON.parse(msg.body);
 								
 								if (lastUsername !== data.username) {

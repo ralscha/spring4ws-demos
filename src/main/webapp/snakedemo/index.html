@@ -169,8 +169,8 @@
         })();
 
         Game.connect = (function() {
-        	var path = window.location.pathname.split('/');
-            Game.socket = new SockJS('/' + path[1] + '/snakehandler');
+        	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
+            Game.socket = new SockJS(path + '/snakehandler');
 
             Game.socket.onopen = function () {
                   // Socket open.. start the game loop.

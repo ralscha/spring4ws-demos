@@ -30,9 +30,9 @@ var seriesOptions = [ {
 	lineWidth: 3
 } ];
 
-var path = window.location.pathname.split('/');
+var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
 
-var sock  = new SockJS('/' + path[1] + '/cpuData');
+var sock  = new SockJS(path + '/cpuData');
 sock.onmessage = function(e) {
 	var data = JSON.parse(e.data);
 	addDataToDataSets(data.time, data.host1, cpuDataSets.host1);
