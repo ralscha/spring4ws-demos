@@ -8,7 +8,7 @@ Ext.onReady(function() {
 		return new SockJS(url);
 	};
 
-	ab.connect(path + '/book', function(session) {
+	ab.connect(path + 'book', function(session) {
 		absession = session;
 		console.log("Connected to ", absession);
 		launch();

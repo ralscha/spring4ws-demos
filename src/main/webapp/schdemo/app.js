@@ -26,7 +26,7 @@ Ext.application({
 			return new SockJS(url);
 		};
 
-		ab.connect(path + '/scheduler', function(session) {
+		ab.connect(path + 'scheduler', function(session) {
 			absession = session;
 			console.log("Connected to ", absession);
 			me.guiLaunch();
