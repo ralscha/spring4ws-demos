@@ -53,8 +53,9 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketMessa
 	public ITopic<Tweet> hazelcastTopic() {
 		Config config = new Config();
 		config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
-		config.getNetworkConfig().getJoin().getTcpIpConfig().setMembers(Collections.singletonList("127.0.0.1")).setEnabled(true);
-		
+		config.getNetworkConfig().getJoin().getTcpIpConfig().setMembers(Collections.singletonList("127.0.0.1"))
+				.setEnabled(true);
+
 		HazelcastInstance hc = Hazelcast.newHazelcastInstance(config);
 		return hc.getTopic("tweets");
 	}
