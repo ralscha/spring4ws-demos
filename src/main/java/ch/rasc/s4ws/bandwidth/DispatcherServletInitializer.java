@@ -1,4 +1,4 @@
-package ch.rasc.s4ws.bandwith;
+package ch.rasc.s4ws.bandwidth;
 
 import javax.servlet.ServletRegistration.Dynamic;
 
@@ -18,12 +18,12 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
 	@Override
 	protected String[] getServletMappings() {
-		return new String[] { "/bandwithdemo/*" };
+		return new String[] { "/bandwidthdemo/*" };
 	}
 
 	@Override
 	protected String getServletName() {
-		return "bandwithDispatcherServlet";
+		return "bandwidthDispatcherServlet";
 	}
 
 	@Override

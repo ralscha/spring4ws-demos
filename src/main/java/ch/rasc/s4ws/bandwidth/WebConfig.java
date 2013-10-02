@@ -1,4 +1,4 @@
-package ch.rasc.s4ws.bandwith;
+package ch.rasc.s4ws.bandwidth;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @EnableWebMvc
 @EnableWebSocketMessageBroker
 @EnableScheduling
-@ComponentScan(basePackages = "ch.rasc.s4ws.bandwith")
+@ComponentScan(basePackages = "ch.rasc.s4ws.bandwidth")
 public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketMessageBrokerConfigurer {
 
 	@Override
