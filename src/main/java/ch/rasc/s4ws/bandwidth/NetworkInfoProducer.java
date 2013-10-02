@@ -1,4 +1,4 @@
-package ch.rasc.s4ws.bandwith;
+package ch.rasc.s4ws.bandwidth;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
@@ -27,7 +27,7 @@ public class NetworkInfoProducer {
 
 	private final boolean isLinux;
 
-	@Value("#{environment['bandwith.network.interface']}")
+	@Value("#{environment['bandwidth.network.interface']}")
 	private String networkInterface;
 
 	@Autowired
