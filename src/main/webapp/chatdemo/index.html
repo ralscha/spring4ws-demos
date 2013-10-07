@@ -28,7 +28,7 @@
 						
 						
 						var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
-						var sock = new SockJS(path + 'chathandler');
+						var sock = new SockJS(path + 'chat');
 						stompClient = Stomp.over(sock);
 
 						stompClient.connect('', '', function(frame) {
@@ -53,7 +53,7 @@
 						});
 						
 					} else {
-						stompClient.send("/workaround/queue/chatmessage", {}, JSON.stringify({username: username, message: input.value}));
+						stompClient.send("/queue/chatmessage", {}, JSON.stringify({username: username, message: input.value}));
 					}
 					
 					input.value = "";

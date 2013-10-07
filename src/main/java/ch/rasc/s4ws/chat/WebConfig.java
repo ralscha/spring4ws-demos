@@ -29,13 +29,12 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketMessa
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/chathandler").withSockJS();
+		registry.addEndpoint("/chat").withSockJS();
 	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerConfigurer configurer) {
 		configurer.enableSimpleBroker("/queue/");
-		configurer.setAnnotationMethodDestinationPrefixes("/workaround");
 	}
 
 }
