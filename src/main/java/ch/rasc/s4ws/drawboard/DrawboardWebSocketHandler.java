@@ -1,0 +1,123 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package ch.rasc.s4ws.drawboard;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Map;
+
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.socket.BinaryMessage;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.adapter.TextWebSocketHandlerAdapter;
+
+import reactor.core.Reactor;
+import reactor.event.Event;
+import reactor.spring.annotation.Selector;
+
+import com.google.common.collect.Maps;
+
+public class DrawboardWebSocketHandler extends TextWebSocketHandlerAdapter {
+
+	private static final Log log = LogFactory.getLog(DrawboardWebSocketHandler.class);
+
+	@Autowired
+	public Reactor reactor;
+
+	private final Map<String, WebSocketSession> sessions = Maps.newConcurrentMap();
+
+	@Selector("sendString")
+	public void consumeSendString(Event<String> event) {
+		String receiver = event.getHeaders().get("sessionId");
+		TextMessage txtMessage = new TextMessage(event.getData());
+		if (receiver != null) {
+			WebSocketSession session = sessions.get(receiver);
+			if (session != null) {
+				try {
+					session.sendMessage(txtMessage);
+				} catch (IOException e) {
+					log.error("sendMessage", e);
+				}
+			}
+		} else {
+			String excludeId = event.getHeaders().get("excludeId");
+			for (WebSocketSession session : sessions.values()) {
+				if (!session.getId().equals(excludeId)) {
+					try {
+						session.sendMessage(txtMessage);
+					} catch (IOException e) {
+						log.error("sendMessage", e);
+					}
+				}
+			}
+		}
+	}
+
+	@Selector("sendBinary")
+	public void consumeSendBinary(Event<ByteBuffer> event) {
+
+		String receiver = event.getHeaders().get("sessionId");
+		BinaryMessage binMsg = new BinaryMessage(event.getData());
+		if (receiver != null) {
+			WebSocketSession session = sessions.get(receiver);
+			if (session != null) {
+				try {
+					session.sendMessage(binMsg);
+				} catch (IOException e) {
+					log.error("sendMessage", e);
+				}
+			}
+		} else {
+			String excludeId = event.getHeaders().get("excludeId");
+			for (WebSocketSession session : sessions.values()) {
+				if (!session.getId().equals(excludeId)) {
+					try {
+						session.sendMessage(binMsg);
+					} catch (IOException e) {
+						log.error("sendMessage", e);
+					}
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		sessions.put(session.getId(), session);
+		reactor.notify("newPlayer", Event.wrap(session.getId()));
+	}
+
+	@Override
+	public void handleTextMessage(WebSocketSession session, final TextMessage message) throws Exception {
+
+		Event<String> event = Event.wrap(message.getPayload());
+		event.getHeaders().set("sessionId", session.getId());
+		reactor.notify("incomingMessage", event);
+	}
+
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		sessions.remove(session.getId());
+		reactor.notify("removePlayer", Event.wrap(session.getId()));
+	}
+
+}
