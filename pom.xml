@@ -10,7 +10,7 @@
 		<spring.version>4.0.0.RC1</spring.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>
-		<spring.security.version>3.2.0.RC1</spring.security.version>
+		<spring.security.version>3.2.0.RC2</spring.security.version>
 	</properties>
 
 	<dependencies>
@@ -90,7 +90,7 @@
 		<dependency>
 			<groupId>net.sf.uadetector</groupId>
 			<artifactId>uadetector-resources</artifactId>
-			<version>2013.09</version>
+			<version>2013.10</version>
 		</dependency>
 
 		<dependency>
