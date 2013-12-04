@@ -27,7 +27,7 @@ import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.adapter.TextWebSocketHandlerAdapter;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
@@ -35,7 +35,7 @@ import reactor.spring.annotation.Selector;
 
 import com.google.common.collect.Maps;
 
-public class DrawboardWebSocketHandler extends TextWebSocketHandlerAdapter {
+public class DrawboardWebSocketHandler extends TextWebSocketHandler {
 
 	private static final Log log = LogFactory.getLog(DrawboardWebSocketHandler.class);
 

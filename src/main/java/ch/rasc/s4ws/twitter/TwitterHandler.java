@@ -12,7 +12,7 @@ import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.annotation.SubscribeEvent;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import com.google.common.collect.ImmutableList;
@@ -47,7 +47,7 @@ public class TwitterHandler {
 
 	private Twitter4jStatusClient t4jClient;
 
-	@SubscribeEvent("/queue/tweets")
+	@SubscribeMapping("/queue/tweets")
 	public Queue<Tweet> subscribe() {
 		return lastTweets;
 	}

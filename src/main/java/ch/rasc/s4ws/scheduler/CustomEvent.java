@@ -17,9 +17,13 @@ public class CustomEvent {
 	private String name;
 
 	@JsonProperty("StartDate")
+	@JsonSerialize(using = ISO8601DateTimeSerializer.class)
+	@JsonDeserialize(using = ISO8601DateTimeDeserializer.class)
 	private DateTime startDate;
 
 	@JsonProperty("EndDate")
+	@JsonSerialize(using = ISO8601DateTimeSerializer.class)
+	@JsonDeserialize(using = ISO8601DateTimeDeserializer.class)
 	private DateTime endDate;
 
 	@JsonProperty("ResourceId")
@@ -73,22 +77,18 @@ public class CustomEvent {
 		this.name = name;
 	}
 
-	@JsonSerialize(using = ISO8601DateTimeSerializer.class)
 	public DateTime getStartDate() {
 		return startDate;
 	}
 
-	@JsonDeserialize(using = ISO8601DateTimeDeserializer.class)
 	public void setStartDate(DateTime startDate) {
 		this.startDate = startDate;
 	}
 
-	@JsonSerialize(using = ISO8601DateTimeSerializer.class)
 	public DateTime getEndDate() {
 		return endDate;
 	}
 
-	@JsonDeserialize(using = ISO8601DateTimeDeserializer.class)
 	public void setEndDate(DateTime endDate) {
 		this.endDate = endDate;
 	}

@@ -2,15 +2,16 @@ package ch.rasc.s4ws.map;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.EnableWebSocketMessageBroker;
-import org.springframework.messaging.simp.config.MessageBrokerConfigurer;
-import org.springframework.messaging.simp.config.StompEndpointRegistry;
-import org.springframework.messaging.simp.config.WebSocketMessageBrokerConfigurer;
+import org.springframework.messaging.simp.config.ChannelRegistration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
 @EnableWebMvc
@@ -35,8 +36,17 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketMessa
 	}
 
 	@Override
-	public void configureMessageBroker(MessageBrokerConfigurer configurer) {
-		configurer.enableSimpleBroker("/queue/");
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/queue/");
 	}
 
+	@Override
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+		// use default thread pool with 1 thread
+	}
+
+	@Override
+	public void configureClientOutboundChannel(ChannelRegistration registration) {
+		registration.taskExecutor().corePoolSize(2).maxPoolSize(3);
+	}
 }

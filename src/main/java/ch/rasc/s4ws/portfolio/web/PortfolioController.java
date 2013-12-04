@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.annotation.SendToUser;
-import org.springframework.messaging.simp.annotation.SubscribeEvent;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import ch.rasc.s4ws.portfolio.Portfolio;
@@ -48,7 +48,7 @@ public class PortfolioController {
 		this.tradeService = tradeService;
 	}
 
-	@SubscribeEvent("/positions")
+	@SubscribeMapping("/positions")
 	public List<PortfolioPosition> getPositions(Principal principal) throws Exception {
 		logger.debug("Positions for " + principal.getName());
 		Portfolio portfolio = this.portfolioService.findPortfolio(principal.getName());

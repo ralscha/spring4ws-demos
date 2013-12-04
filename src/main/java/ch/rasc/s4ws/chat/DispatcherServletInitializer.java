@@ -1,5 +1,7 @@
 package ch.rasc.s4ws.chat;
 
+import javax.servlet.ServletRegistration.Dynamic;
+
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -24,4 +26,9 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 		return "chatDispatcherServlet";
 	}
 
+	@Override
+	protected void customizeRegistration(Dynamic registration) {
+		registration.setInitParameter("dispatchOptionsRequest", "true");
+		registration.setAsyncSupported(true);
+	}
 }

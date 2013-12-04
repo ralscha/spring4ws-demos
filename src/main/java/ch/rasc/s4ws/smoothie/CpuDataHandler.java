@@ -2,9 +2,9 @@ package ch.rasc.s4ws.smoothie;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.adapter.WebSocketHandlerAdapter;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-public class CpuDataHandler extends WebSocketHandlerAdapter {
+public class CpuDataHandler extends TextWebSocketHandler {
 
 	private final CpuDataService cpuDataService;
 
