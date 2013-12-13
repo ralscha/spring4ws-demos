@@ -8,7 +8,7 @@ import org.springframework.core.GenericTypeResolver;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ParameterNameDiscoverer;
-import org.springframework.messaging.handler.method.HandlerMethod;
+import org.springframework.messaging.handler.HandlerMethod;
 import org.springframework.util.ReflectionUtils;
 
 import ch.rasc.s4ws.wamp.message.BaseMessage;
