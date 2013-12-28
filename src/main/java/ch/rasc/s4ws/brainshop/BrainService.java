@@ -75,7 +75,11 @@ public class BrainService {
 							ImmutableMap.of("type", "ideas", "ideas", board.getAllIdeas()) });
 			try {
 				TextMessage tm = new TextMessage(BrainService.objectMapper.writeValueAsString(msg));
-				session.sendMessage(tm);
+				if (session.isOpen()) {
+					session.sendMessage(tm);
+				} else {
+					board.removeUser(session);
+				}
 			} catch (JsonProcessingException e) {
 				throw new RuntimeException(e);
 			} catch (IOException e) {
@@ -139,24 +143,6 @@ public class BrainService {
 
 		board.sendToAllUsers(idea);
 
-	}
-
-	private void sendMessage(final WebSocketSession session, final TextMessage textMessage) {
-
-		taskExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				if (session.isOpen()) {
-					try {
-						session.sendMessage(textMessage);
-					} catch (IOException e) {
-						logger.error("sendMessage to session", e);
-					}
-				}
-			}
-		}
-
-		);
 	}
 
 }
