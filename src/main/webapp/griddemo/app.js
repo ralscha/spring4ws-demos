@@ -8,7 +8,7 @@ Ext.onReady(function() {
 		return new SockJS(url);
 	};
 
-	ab.connect(path + 'book', function(session) {
+	ab.connect(path + 'wamp', function(session) {
 		absession = session;
 		console.log("Connected to ", absession);
 		launch();
@@ -120,9 +120,11 @@ function launch() {
 		tbar: [ {
 			text: 'Add Book',
 			handler: function() {
-				rowEditing.cancelEdit();
+				rowEditing.editor.cancelEdit();
 
 				var r = Ext.create('Book', {
+					isbn: '',
+					link: '',
 					title: 'NewTitle',
 					publisher: 'NewPublisher'
 				});
