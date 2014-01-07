@@ -136,6 +136,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>ch.rasc</groupId>
+			<artifactId>wampspring</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
 			<version>1.0.0.RELEASE</version>
@@ -187,6 +193,18 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>		
+
+		<repository>
+			<id>sonatype</id>
+			<name>sonatype</name>
+			<url>https://oss.sonatype.org/content/groups/public</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
 
 	</repositories>
 

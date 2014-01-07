@@ -16,14 +16,14 @@ Ext.define('App.view.SchedulerGrid', {
 
 		Ext.apply(me, {
 
-			viewConfig: {
-				onEventUpdate: function(store, model, operation) {
-					// Skip local paints of the record currently being dragged
-					if (model !== me.draggingRecord) {
-						this.horizontal.onEventUpdate(store, model, operation);
-					}
-				}
-			},
+//			viewConfig: {
+//				onEventUpdate: function(store, model, operation) {
+//					// Skip local paints of the record currently being dragged
+//					if (model !== me.draggingRecord) {
+//						this.horizontal.onEventUpdate(store, model, operation);
+//					}
+//				}
+//			},
 
 			columns: [ {
 				header: 'Name',

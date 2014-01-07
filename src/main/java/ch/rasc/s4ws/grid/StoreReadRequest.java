@@ -1,7 +1,6 @@
 package ch.rasc.s4ws.grid;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class StoreReadRequest {
@@ -14,12 +13,11 @@ public class StoreReadRequest {
 
 	private Integer page;
 
-	private List<SortInfo> sorters;
+	private String sort;
 
 	private Map<String, Object> params;
 
 	public StoreReadRequest() {
-		this.sorters = Collections.emptyList();
 		this.params = Collections.emptyMap();
 	}
 
@@ -55,12 +53,12 @@ public class StoreReadRequest {
 		this.page = page;
 	}
 
-	public List<SortInfo> getSorters() {
-		return Collections.unmodifiableList(sorters);
+	public String getSort() {
+		return sort;
 	}
 
-	public void setSorters(List<SortInfo> sorters) {
-		this.sorters = sorters;
+	public void setSort(String sort) {
+		this.sort = sort;
 	}
 
 	public Map<String, Object> getParams() {
@@ -74,7 +72,7 @@ public class StoreReadRequest {
 	@Override
 	public String toString() {
 		return "StoreReadRequest [query=" + query + ", limit=" + limit + ", start=" + start + ", page=" + page
-				+ ", sorters=" + sorters + ", params=" + params + "]";
+				+ ", sort=" + sort + ", params=" + params + "]";
 	}
 
 }

@@ -1,12 +1,19 @@
 package ch.rasc.s4ws.grid;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.springframework.expression.ParseException;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Ordering;
 
 public class PropertyOrderingFactory {
+
+	private final static ObjectMapper mapper = new ObjectMapper();
 
 	private PropertyOrderingFactory() {
 		// singleton
@@ -35,7 +42,15 @@ public class PropertyOrderingFactory {
 		}
 	}
 
-	public static <T> Ordering<T> createOrderingFromSorters(Collection<SortInfo> sortInfos) {
+	public static <T> Ordering<T> createOrderingFromSorters(String sortInfo) throws JsonParseException,
+			JsonMappingException, IOException {
+		if (sortInfo == null) {
+			return null;
+		}
+
+		Collection<SortInfo> sortInfos = mapper.readValue(sortInfo, new TypeReference<Collection<SortInfo>>() {
+		});
+
 		Ordering<T> ordering = null;
 
 		if (sortInfos != null) {
