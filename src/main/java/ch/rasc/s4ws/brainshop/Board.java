@@ -139,14 +139,16 @@ public class Board {
 			}
 		}
 
-		if (gGroup.getGroupId().equals(idea.getGroup())) {
-			gGroup.moveIdea(idea);
-			return;
-		}
+		if (gGroup != null) {
+			if (gGroup.getGroupId().equals(idea.getGroup())) {
+				gGroup.moveIdea(idea);
+				return;
+			}
 
-		gGroup.removeIdea(idea.getId());
-		if (gGroup.isEmpty()) {
-			groups.remove(gGroup.getGroupId());
+			gGroup.removeIdea(idea.getId());
+			if (gGroup.isEmpty()) {
+				groups.remove(gGroup.getGroupId());
+			}
 		}
 
 		Group newGroup = groups.get(idea.getGroup());
