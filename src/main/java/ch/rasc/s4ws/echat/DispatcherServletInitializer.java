@@ -1,18 +1,10 @@
 package ch.rasc.s4ws.echat;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-
-	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		servletContext.setInitParameter("org.apache.tomcat.websocket.textBufferSize", "1000000");
-		super.onStartup(servletContext);		
-	}
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
