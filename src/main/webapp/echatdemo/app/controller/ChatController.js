@@ -52,16 +52,12 @@ Ext.define('chat.controller.ChatController', {
 		ab.connect(path + 'wamp', function(session) {
 			me.absession = session;
 			console.log("Connected to ", me.absession);
-			
-		
-			
 		}, function(code, reason) {
 			me.absession = null;
 			console.log("Connection lost (" + reason + ")");
 		}, {
 			skipSubprotocolCheck: true
 		});
-		
 			
 		me.snapshotCanvas = document.querySelector('#snapshotCanvas');
 		me.snapshotContext = me.snapshotCanvas.getContext('2d');
