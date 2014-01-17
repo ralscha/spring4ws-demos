@@ -138,7 +138,7 @@
 		<dependency>
 			<groupId>ch.rasc</groupId>
 			<artifactId>wampspring</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>1.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -185,14 +185,14 @@
 
 	<repositories>
 		
-		<repository>
+<!-- 		<repository>
 			<id>spring-milestones</id>
 			<name>Spring Milestones</name>
 			<url>http://repo.spring.io/milestone</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>		
+		</repository>	 -->	
 
 		<repository>
 			<id>sonatype</id>
