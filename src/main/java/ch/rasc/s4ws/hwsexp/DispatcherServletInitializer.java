@@ -10,7 +10,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
-		super.onStartup(servletContext);		
+		super.onStartup(servletContext);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	}
 
 	@Override
-	protected void customizeRegistration(Dynamic registration) {		
+	protected void customizeRegistration(Dynamic registration) {
 		registration.setInitParameter("dispatchOptionsRequest", "true");
 		registration.setAsyncSupported(true);
 	}

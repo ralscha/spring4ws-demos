@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ch.rasc.wampspring.EventMessenger;
 import ch.rasc.wampspring.annotation.WampCallListener;
 import ch.rasc.wampspring.message.CallMessage;
-import ch.rasc.wampspring.message.WampMessageHeader;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
@@ -20,9 +19,9 @@ public class BookService {
 	@Autowired
 	private EventMessenger eventMessenger;
 
-	@WampCallListener("http://demo.rasc.ch/spring4ws/book#read")
+	@WampCallListener("grid:read")
 	public Collection<Book> bookRead(CallMessage callMessage, StoreReadRequest readRequest) throws Throwable {
-		System.out.println("bookRead:" + callMessage.getHeader(WampMessageHeader.WEBSOCKET_SESSION_ID));
+		System.out.println("bookRead:" + callMessage.getWebSocketSessionId());
 
 		Collection<Book> list = BookDb.list();
 		Ordering<Book> ordering = PropertyOrderingFactory.createOrderingFromSorters(readRequest.getSort());
@@ -30,9 +29,9 @@ public class BookService {
 		return ordering != null ? ordering.sortedCopy(list) : list;
 	}
 
-	@WampCallListener("http://demo.rasc.ch/spring4ws/book#create")
+	@WampCallListener("grid:create")
 	public List<Book> bookCreate(CallMessage callMessage, List<Book> books) {
-		System.out.println("bookCreate:" + callMessage.getHeader(WampMessageHeader.WEBSOCKET_SESSION_ID));
+		System.out.println("bookCreate:" + callMessage.getWebSocketSessionId());
 
 		List<Book> result = Lists.newArrayList();
 		for (Book book : books) {
@@ -40,13 +39,13 @@ public class BookService {
 			result.add(book);
 		}
 
-		eventMessenger.sendToAllExcept("http://demo.rasc.ch/spring4ws/book#oncreate", result, callMessage.getWebSocketSessionId());
+		eventMessenger.sendToAllExcept("grid:oncreate", result, callMessage.getWebSocketSessionId());
 		return result;
 	}
 
-	@WampCallListener("http://demo.rasc.ch/spring4ws/book#update")
+	@WampCallListener("grid:update")
 	public List<Book> bookUpdate(CallMessage callMessage, List<Book> books) {
-		System.out.println("bookUpdate:" + callMessage.getHeader(WampMessageHeader.WEBSOCKET_SESSION_ID));
+		System.out.println("bookUpdate:" + callMessage.getWebSocketSessionId());
 
 		List<Book> result = Lists.newArrayList();
 		for (Book book : books) {
@@ -54,16 +53,16 @@ public class BookService {
 			result.add(book);
 		}
 
-		eventMessenger.sendToAllExcept("http://demo.rasc.ch/spring4ws/book#onupdate", result, callMessage.getWebSocketSessionId());
+		eventMessenger.sendToAllExcept("grid:onupdate", result, callMessage.getWebSocketSessionId());
 		return result;
 	}
 
-	@WampCallListener("http://demo.rasc.ch/spring4ws/book#destroy")
+	@WampCallListener("grid:destroy")
 	public void bookDestroy(CallMessage callMessage, List<Book> books) throws Throwable {
-		System.out.println("bookDestroy:" + callMessage.getHeader(WampMessageHeader.WEBSOCKET_SESSION_ID));
+		System.out.println("bookDestroy:" + callMessage.getWebSocketSessionId());
 		for (Book book : books) {
 			BookDb.delete(book);
 		}
-		eventMessenger.sendToAll("http://demo.rasc.ch/spring4ws/book#ondestroy", books);
+		eventMessenger.sendToAll("grid:ondestroy", books);
 	}
 }

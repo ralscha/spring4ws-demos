@@ -42,28 +42,28 @@ public class EnhancedChatService {
 	private final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
 
 	private final Map<String, UserConnection> socketIdToUserMap = Maps.newConcurrentMap();
-	
+
 	@Autowired
 	private EventMessenger eventMessenger;
-	
+
 	@WampCallListener
 	public Collection<UserConnection> readConnectedUsers() {
 		return socketIdToUserMap.values();
 	}
-	
+
 	@WampCallListener("connect")
 	public void connect(CallMessage callMessage, UserConnection newUser) {
 		ReadableUserAgent ua = parser.parse(newUser.getBrowser());
 		if (ua != null) {
 			newUser.setBrowser(ua.getName() + " " + ua.getVersionNumber().getMajor());
-		}		
-		
+		}
+
 		newUser.setSessionId(callMessage.getWebSocketSessionId());
 		socketIdToUserMap.put(callMessage.getWebSocketSessionId(), newUser);
 		eventMessenger.sendToAll("connected", newUser);
 	}
-	
-	@WampUnsubscribeListener("message") 
+
+	@WampUnsubscribeListener("message")
 	public void unsubscribeClient(UnsubscribeMessage unsubscribeMessage) {
 		UserConnection uc = socketIdToUserMap.remove(unsubscribeMessage.getWebSocketSessionId());
 		if (uc != null) {
@@ -88,8 +88,7 @@ public class EnhancedChatService {
 		}
 		return null;
 	}
-	
-	
+
 	@WampCallListener("snapshot")
 	public void snapshot(CallMessage callMessage, String image) {
 		UserConnection uc = socketIdToUserMap.get(callMessage.getWebSocketSessionId());
@@ -105,20 +104,20 @@ public class EnhancedChatService {
 
 		}
 	}
-	
+
 	private static String resize(byte[] imageData) throws IOException {
-	try (ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
-			ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-		BufferedImage image = ImageIO.read(bis);
+		try (ByteArrayInputStream bis = new ByteArrayInputStream(imageData);
+				ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+			BufferedImage image = ImageIO.read(bis);
 
-		BufferedImage resizedImage = Scalr.resize(image, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, 40,
-				Scalr.OP_ANTIALIAS);
-		ImageIO.write(resizedImage, "png", bos);
-		return DATA_IMAGE + DatatypeConverter.printBase64Binary(bos.toByteArray());
+			BufferedImage resizedImage = Scalr.resize(image, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, 40,
+					Scalr.OP_ANTIALIAS);
+			ImageIO.write(resizedImage, "png", bos);
+			return DATA_IMAGE + DatatypeConverter.printBase64Binary(bos.toByteArray());
+		}
+
 	}
 
-	}
-	
 	@WampCallListener("sendSdp")
 	public void sendSdp(Map<String, Object> offerObject) {
 		String toUsername = (String) offerObject.get("toUsername");
@@ -135,7 +134,7 @@ public class EnhancedChatService {
 			}
 		}
 	}
-	
+
 	@WampCallListener("sendIceCandidate")
 	public void sendIceCandidate(Map<String, Object> candidate) {
 		String toUsername = (String) candidate.get("toUsername");
@@ -154,12 +153,11 @@ public class EnhancedChatService {
 	}
 }
 
-
 //
-//	@On
-//	public void hangup(@Data String toUser) {
-//		Socket toUserSocket = usernameToSocketMap.get(toUser);
-//		if (toUserSocket != null) {
-//			toUserSocket.send("hangup");
-//		}
-//	}
+// @On
+// public void hangup(@Data String toUser) {
+// Socket toUserSocket = usernameToSocketMap.get(toUser);
+// if (toUserSocket != null) {
+// toUserSocket.send("hangup");
+// }
+// }
