@@ -1,31 +1,19 @@
-var absession = null;
 var launched = false;
 
 Ext.onReady(function() {
-	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
-
-	ab._construct = function(url, protocols) {
-		return new SockJS(url);
-	};
-
-	ab.connect(path + 'wamp', function(session) {
-		absession = session;
-		console.log("Connected to ", absession);
+	
+	Ext.WampMgr.on("connect", function(session) {
+		console.log("Connected to ", session);
 		launch();
-	}, function(code, reason) {
-		absession = null;
-		console.log("Connection lost (" + reason + ")");
-	}, {
-		skipSubprotocolCheck: true
 	});
+	
+	Ext.WampMgr.start();
 });
 
 function launch() {
 	if (launched) {
 		return;
 	}
-
-	var baseUri = "http://demo.rasc.ch/spring4ws/book#";
 
 	Ext.QuickTips.init();
 
@@ -49,21 +37,22 @@ function launch() {
 		} ],
 		proxy: {
 			type: 'wamp',
+			prefix: 'grid',
 			api: {
-				create: baseUri + 'create',
-				read: baseUri + 'read',
-				update: baseUri + 'update',
-				destroy: baseUri + 'destroy',
+				create: 'create',
+				read: 'read',
+				update: 'update',
+				destroy: 'destroy',
 
 				// Topic URIs for CRUD events
-				oncreate: baseUri + 'oncreate',
-				onupdate: baseUri + 'onupdate',
-				ondestroy: baseUri + 'ondestroy'
+				oncreate: 'oncreate',
+				onupdate: 'onupdate',
+				ondestroy: 'ondestroy'
 			}
 		}
 	});
 
-	var store = Ext.create('AB.data.WampStore', {
+	var store = Ext.create('Ext.ux.ws.wamp.Store', {
 		model: 'Book',
 		autoLoad: true,
 		remoteSort: true,
