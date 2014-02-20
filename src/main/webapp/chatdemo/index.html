@@ -31,7 +31,7 @@
 						var sock = new SockJS(path + 'chat');
 						stompClient = Stomp.over(sock);
 
-						stompClient.connect('', '', function(frame) {
+						stompClient.connect({}, function(frame) {
 							notify("The connection has been opened");
 							$(input).removeAttr("disabled").focus();
 							

@@ -40,7 +40,7 @@ function iniHtmlElements() {
 
 function startConnection() {
 
-	stompClient.connect('', '', function(frame) {
+	stompClient.connect({}, function(frame) {
 		document.getElementById("m1-status").innerHTML = 'CONNECTED';
 		stompClient.subscribe("/topic/match/" + idMatch, function(msg) {
 			var obj = JSON.parse(msg.body);

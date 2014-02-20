@@ -7,7 +7,7 @@ window.onload = function() {
     var sock  = new SockJS(path + 'network');
     var stompClient = Stomp.over(sock);
 
-    stompClient.connect('', '', function(frame) {
+    stompClient.connect({}, function(frame) {
     	stompClient.subscribe("/queue/networkinfo", function(msg) {
     		update(msg.body);
     	});

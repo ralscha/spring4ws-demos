@@ -33,7 +33,7 @@ Ext.onReady(function() {
 	var sock = new SockJS(path + 'tweets');
 	var stompClient = Stomp.over(sock);
 
-	stompClient.connect('', '', function(frame) {
+	stompClient.connect({}, function(frame) {
 		stompClient.subscribe("/queue/tweets", function(msg) {
 			var tweets = JSON.parse(msg.body);
 

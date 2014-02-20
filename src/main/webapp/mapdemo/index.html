@@ -32,7 +32,7 @@
         var sock  = new SockJS(path + 'cars');
         var stompClient = Stomp.over(sock);
 
-        stompClient.connect('', '', function(frame) {
+        stompClient.connect({}, function(frame) {
         	stompClient.subscribe("/queue/blueCar", function(msg) {
         		var latlng = JSON.parse(msg.body);
         		

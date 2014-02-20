@@ -417,7 +417,7 @@ window.onload = function() {
 	var sock = new SockJS(path + 'tailEndpoint');
 	var stompClient = Stomp.over(sock);
 
-	stompClient.connect('', '', function(frame) {
+	stompClient.connect({}, function(frame) {
 		stompClient.subscribe("/queue/geoip", function(msg) {
 			var geo = JSON.parse(msg.body);
 			setTimeout(function() {
