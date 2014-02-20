@@ -34,8 +34,8 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>tomcat-websocket</artifactId>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-websocket</artifactId>
 			<version>8.0.3</version>
 		</dependency>
 
