@@ -9,7 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.debug>true</maven.compiler.debug>
-		<spring.security.version>3.2.0.RELEASE</spring.security.version>
+		<spring.security.version>3.2.1.RELEASE</spring.security.version>
 	</properties>
 
 	<dependencyManagement>
@@ -17,7 +17,7 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.0.1.RELEASE</version>
+				<version>4.0.2.RELEASE</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -31,6 +31,12 @@
 			<artifactId>embeddedtc</artifactId>
 			<version>2.0-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-websocket</artifactId>
+			<version>8.0.3</version>
 		</dependency>
 
 		<dependency>
