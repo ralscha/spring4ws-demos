@@ -31,7 +31,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
-import reactor.spring.annotation.Selector;
+import reactor.spring.context.annotation.Selector;
 
 import com.google.common.collect.Maps;
 
