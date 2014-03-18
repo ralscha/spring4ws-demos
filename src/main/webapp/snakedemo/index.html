@@ -48,7 +48,7 @@
     <script src="//d1fxtkz8shb9d2.cloudfront.net/sockjs-0.3.min.js"></script>
     
     <script>
-
+        "use strict";
         var Game = {};
 
         Game.fps = 30;
@@ -72,7 +72,7 @@
 
         Game.initialize = function() {
             this.entities = [];
-            canvas = document.getElementById('playground');
+            var canvas = document.getElementById('playground');
             if (!canvas.getContext) {
                 Console.log('Error: 2d canvas not supported by this browser.');
                 return;
@@ -169,7 +169,7 @@
         })();
 
         Game.connect = (function() {
-        	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
+            var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
             Game.socket = new SockJS(path + 'snakehandler');
 
             Game.socket.onopen = function () {
@@ -189,9 +189,8 @@
             };
 
             Game.socket.onmessage = function (message) {
-                // _Potential_ security hole, consider using json lib to parse data in production.
-                var packet = eval('(' + message.data + ')');
-                switch (packet.type) {
+                var packet = JSON.parse(message.data);
+				switch (packet.type) {
                     case 'update':
                         for (var i = 0; i < packet.data.length; i++) {
                             Game.updateSnake(packet.data[i].id, packet.data[i].body);
@@ -214,7 +213,6 @@
                         break;
                 }
               };
-
         });
 
         var Console = {};

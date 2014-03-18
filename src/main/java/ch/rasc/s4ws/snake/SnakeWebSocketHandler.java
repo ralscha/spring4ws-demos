@@ -75,13 +75,13 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 		StringBuilder sb = new StringBuilder();
 		for (Iterator<Snake> iterator = SnakeTimer.getSnakes().iterator(); iterator.hasNext();) {
 			Snake otherSnake = iterator.next();
-			sb.append(String.format("{id: %d, color: '%s'}", Integer.valueOf(otherSnake.getId()),
+			sb.append(String.format("{\"id\": %d, \"color\": \"%s\"}", Integer.valueOf(otherSnake.getId()),
 					otherSnake.getHexColor()));
 			if (iterator.hasNext()) {
 				sb.append(',');
 			}
 		}
-		SnakeTimer.broadcast(String.format("{'type': 'join','data':[%s]}", sb.toString()));
+		SnakeTimer.broadcast(String.format("{\"type\": \"join\",\"data\":[%s]}", sb.toString()));
 	}
 
 	@Override

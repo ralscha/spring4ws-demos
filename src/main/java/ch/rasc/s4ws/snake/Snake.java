@@ -16,10 +16,12 @@
  */
 package ch.rasc.s4ws.snake;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
 
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -55,21 +57,30 @@ public class Snake {
 		this.length = DEFAULT_LENGTH;
 	}
 
-	private synchronized void kill() throws Exception {
+	private synchronized void kill() {
 		resetState();
-		sendMessage("{'type': 'dead'}");
+		sendMessage("{\"type\": \"dead\"}");
 	}
 
-	private synchronized void reward() throws Exception {
+	private synchronized void reward() {
 		length++;
-		sendMessage("{'type': 'kill'}");
+		sendMessage("{\"type\": \"kill\"}");
 	}
 
-	protected void sendMessage(String msg) throws Exception {
-		session.sendMessage(new TextMessage(msg));
+	protected void sendMessage(String msg) {
+
+		try {
+			session.sendMessage(new TextMessage(msg));
+		} catch (IOException ioe) {
+			try {
+				session.close(CloseStatus.NO_CLOSE_FRAME);
+			} catch (IOException ioe2) {
+				// Ignore
+			}
+		}
 	}
 
-	public synchronized void update(Collection<Snake> snakes) throws Exception {
+	public synchronized void update(Collection<Snake> snakes) {
 		Location nextLocation = head.getAdjacentLocation(direction);
 		if (nextLocation.x >= SnakeUtils.PLAYFIELD_WIDTH) {
 			nextLocation.x = 0;
@@ -94,7 +105,7 @@ public class Snake {
 		handleCollisions(snakes);
 	}
 
-	private void handleCollisions(Collection<Snake> snakes) throws Exception {
+	private void handleCollisions(Collection<Snake> snakes) {
 		for (Snake snake : snakes) {
 			boolean headCollision = id != snake.id && snake.getHead().equals(head);
 			boolean tailCollision = snake.getTail().contains(head);
@@ -121,12 +132,12 @@ public class Snake {
 
 	public synchronized String getLocationsJson() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("{x: %d, y: %d}", Integer.valueOf(head.x), Integer.valueOf(head.y)));
+		sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(head.x), Integer.valueOf(head.y)));
 		for (Location location : tail) {
 			sb.append(',');
-			sb.append(String.format("{x: %d, y: %d}", Integer.valueOf(location.x), Integer.valueOf(location.y)));
+			sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(location.x), Integer.valueOf(location.y)));
 		}
-		return String.format("{'id':%d,'body':[%s]}", Integer.valueOf(id), sb.toString());
+		return String.format("{\"id\":%d,\"body\":[%s]}", Integer.valueOf(id), sb.toString());
 	}
 
 	public int getId() {

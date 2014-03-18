@@ -18,12 +18,6 @@ package ch.rasc.s4ws.snake;
 
 public class Location {
 
-	public static final int PLAYFIELD_WIDTH = 640;
-
-	public static final int PLAYFIELD_HEIGHT = 480;
-
-	public static final int GRID_SIZE = 10;
-
 	public int x;
 
 	public int y;
@@ -36,13 +30,13 @@ public class Location {
 	public Location getAdjacentLocation(Direction direction) {
 		switch (direction) {
 		case NORTH:
-			return new Location(x, y - GRID_SIZE);
+			return new Location(x, y - SnakeUtils.GRID_SIZE);
 		case SOUTH:
-			return new Location(x, y + GRID_SIZE);
+			return new Location(x, y + SnakeUtils.GRID_SIZE);
 		case EAST:
-			return new Location(x + GRID_SIZE, y);
+			return new Location(x + SnakeUtils.GRID_SIZE, y);
 		case WEST:
-			return new Location(x - GRID_SIZE, y);
+			return new Location(x - SnakeUtils.GRID_SIZE, y);
 		case NONE:
 			// fall through
 		default:
