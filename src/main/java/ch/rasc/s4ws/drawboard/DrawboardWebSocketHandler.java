@@ -27,15 +27,15 @@ import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
+import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
-import reactor.spring.context.annotation.Selector;
+import reactor.spring.annotation.Selector;
 
 import com.google.common.collect.Maps;
 
-public class DrawboardWebSocketHandler extends TextWebSocketHandler {
+public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 
 	private static final Log log = LogFactory.getLog(DrawboardWebSocketHandler.class);
 

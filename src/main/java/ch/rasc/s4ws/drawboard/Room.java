@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
-import reactor.spring.context.annotation.Selector;
+import reactor.spring.annotation.Selector;
 import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
 
 import com.google.common.collect.Maps;
