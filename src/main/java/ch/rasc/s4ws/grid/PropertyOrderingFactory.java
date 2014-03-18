@@ -49,6 +49,7 @@ public class PropertyOrderingFactory {
 		}
 
 		Collection<SortInfo> sortInfos = mapper.readValue(sortInfo, new TypeReference<Collection<SortInfo>>() {
+			//nothing here
 		});
 
 		Ordering<T> ordering = null;
