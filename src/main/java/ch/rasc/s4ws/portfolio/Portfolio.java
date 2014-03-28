@@ -16,13 +16,13 @@
 package ch.rasc.s4ws.portfolio;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Portfolio {
 
-	private final Map<String, PortfolioPosition> positionLookup = new HashMap<>();
+	private final Map<String, PortfolioPosition> positionLookup = new LinkedHashMap<>();
 
 	public List<PortfolioPosition> getPositions() {
 		return new ArrayList<>(positionLookup.values());

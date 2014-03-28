@@ -15,14 +15,17 @@
  */
 package ch.rasc.s4ws.portfolio.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 /**
+ * Customizes Spring Security configuration.
+ *
  * @author Rob Winch
- * 
  */
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -31,31 +34,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//@formatter:off
 		http
-		    .csrf().disable()
-			.authorizeRequests()
-				.antMatchers("/portfoliodemo/login.css").permitAll()
-				.antMatchers("/portfoliodemo/**").authenticated()
-				.and()
-			.logout()
-				.logoutSuccessUrl("/portfoliodemo/login.html?logout")
-				.logoutUrl("/portfoliodemo/logout.html")
-				.permitAll()
-				.and()
-			.formLogin()
-				.defaultSuccessUrl("/portfoliodemo/index.html")
-				.loginPage("/portfoliodemo/login.html")
-				.failureUrl("/portfoliodemo/login.html?error")
-				.permitAll();
+		.csrf().disable()
+		// See https://jira.springsource.org/browse/SPR-11496
+		.headers().addHeaderWriter(
+				new XFrameOptionsHeaderWriter(
+						XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+	        .and()
+
+		.formLogin()
+			.defaultSuccessUrl("/portfoliodemo/index.html")
+			.loginPage("/portfoliodemo/login.html")
+			.failureUrl("/portfoliodemo/login.html?error")
+			.permitAll()
+			.and()
+		.logout()
+			.logoutSuccessUrl("/portfoliodemo/login.html?logout")
+			.logoutUrl("/portfoliodemo/logout.html")
+			.permitAll()
+			.and()
+		.authorizeRequests()
+			.antMatchers("/portfoliodemo/login.css").permitAll()
+			.antMatchers("/portfoliodemo/**").authenticated()
+			.and();
+
 		//@formatter:on
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		//@formatter:off
 		auth
 			.inMemoryAuthentication()
-				.withUser("fabrice").password("fab123").roles("USER").and()
-				.withUser("paulson").password("bond").roles("ADMIN","USER");
+			.withUser("fabrice").password("fab123").roles("USER").and()
+			.withUser("paulson").password("bond").roles("ADMIN","USER");
 		//@formatter:on
 	}
 }
