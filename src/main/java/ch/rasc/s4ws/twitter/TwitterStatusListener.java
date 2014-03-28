@@ -19,12 +19,14 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
+import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 
 import com.hazelcast.core.ITopic;
 import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.message.StallWarningMessage;
 
 public class TwitterStatusListener implements StatusStreamHandler {
 
@@ -136,5 +138,16 @@ public class TwitterStatusListener implements StatusStreamHandler {
 			}
 		}
 		return url;
+	}
+
+	@Override
+	public void onStallWarning(StallWarning warning) {
+		// nothing here
+
+	}
+
+	@Override
+	public void onStallWarningMessage(StallWarningMessage warning) {
+		// nothing here
 	}
 }
