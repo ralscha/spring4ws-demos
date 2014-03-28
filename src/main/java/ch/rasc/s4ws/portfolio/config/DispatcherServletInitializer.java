@@ -16,8 +16,6 @@
 
 package ch.rasc.s4ws.portfolio.config;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -43,11 +41,6 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	protected void customizeRegistration(Dynamic registration) {
 		registration.setInitParameter("dispatchOptionsRequest", "true");
 		registration.setAsyncSupported(true);
-	}
-
-	@Override
-	public void onStartup(ServletContext servletContext) throws ServletException {
-		super.onStartup(servletContext);
 	}
 
 	@Override
