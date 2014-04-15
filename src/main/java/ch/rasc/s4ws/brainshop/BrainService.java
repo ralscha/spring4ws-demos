@@ -5,8 +5,6 @@ import java.util.concurrent.Executor;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.DateTime;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.StringUtils;
@@ -18,8 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 
 public class BrainService {
-
-	private final static Log logger = LogFactory.getLog(BrainService.class);
 
 	public final static ObjectMapper objectMapper = new ObjectMapper();
 
