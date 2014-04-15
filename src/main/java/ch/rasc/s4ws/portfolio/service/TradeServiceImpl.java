@@ -47,8 +47,7 @@ public class TradeServiceImpl implements TradeService {
 	}
 
 	/**
-	 * In real application a trade is probably executed in an external system,
-	 * i.e. asynchronously.
+	 * In real application a trade is probably executed in an external system, i.e. asynchronously.
 	 */
 	@Override
 	public void executeTrade(Trade trade) {
@@ -57,23 +56,23 @@ public class TradeServiceImpl implements TradeService {
 		String ticker = trade.getTicker();
 		int sharesToTrade = trade.getShares();
 
-		PortfolioPosition newPosition = (trade.getAction() == TradeAction.Buy) ? portfolio.buy(ticker, sharesToTrade)
+		PortfolioPosition newPosition = trade.getAction() == TradeAction.Buy ? portfolio.buy(ticker, sharesToTrade)
 				: portfolio.sell(ticker, sharesToTrade);
 
-				if (newPosition == null) {
-					String payload = "Rejected trade " + trade;
-					this.messagingTemplate.convertAndSendToUser(trade.getUsername(), "/queue/errors", payload);
-					return;
-				}
+		if (newPosition == null) {
+			String payload = "Rejected trade " + trade;
+			this.messagingTemplate.convertAndSendToUser(trade.getUsername(), "/queue/errors", payload);
+			return;
+		}
 
-				this.tradeResults.add(new TradeResult(trade.getUsername(), newPosition));
+		this.tradeResults.add(new TradeResult(trade.getUsername(), newPosition));
 	}
 
 	@Scheduled(fixedDelay = 1500)
 	public void sendTradeNotifications() {
 
 		for (TradeResult result : this.tradeResults) {
-			if (System.currentTimeMillis() >= (result.timestamp + 1500)) {
+			if (System.currentTimeMillis() >= result.timestamp + 1500) {
 				logger.debug("Sending position update: " + result.position);
 				this.messagingTemplate.convertAndSendToUser(result.user, "/queue/position-updates", result.position);
 				this.tradeResults.remove(result);

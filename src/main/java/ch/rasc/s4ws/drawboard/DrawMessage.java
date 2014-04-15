@@ -107,8 +107,7 @@ public final class DrawMessage {
 	}
 
 	/**
-	 * Specifies if this DrawMessage is the last one in a chain (e.g. a chain of
-	 * brush paths).<br>
+	 * Specifies if this DrawMessage is the last one in a chain (e.g. a chain of brush paths).<br>
 	 * Currently it is unused.
 	 */
 	public boolean isLastInChain() {
@@ -183,10 +182,8 @@ public final class DrawMessage {
 	}
 
 	/**
-	 * Converts this message into a String representation that can be sent over
-	 * WebSocket.<br>
-	 * Since a DrawMessage consists only of numbers, we concatenate those
-	 * numbers with a ",".
+	 * Converts this message into a String representation that can be sent over WebSocket.<br>
+	 * Since a DrawMessage consists only of numbers, we concatenate those numbers with a ",".
 	 */
 	@Override
 	public String toString() {

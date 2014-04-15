@@ -137,10 +137,12 @@ public class TennisMatch {
 	}
 
 	public boolean hasSetWinner() {
-		if ((player1.getGamesInCurrentSet() >= 6 && (player1.getGamesInCurrentSet() >= player2.getGamesInCurrentSet() + 2 || player1
-				.getGamesInCurrentSet() + player2.getGamesInCurrentSet() == 13))
-				|| (player2.getGamesInCurrentSet() >= 6 && (player2.getGamesInCurrentSet() >= player1
-						.getGamesInCurrentSet() + 2 || player1.getGamesInCurrentSet() + player2.getGamesInCurrentSet() == 13))) {
+		if (player1.getGamesInCurrentSet() >= 6
+				&& (player1.getGamesInCurrentSet() >= player2.getGamesInCurrentSet() + 2 || player1
+						.getGamesInCurrentSet() + player2.getGamesInCurrentSet() == 13)
+				|| player2.getGamesInCurrentSet() >= 6
+				&& (player2.getGamesInCurrentSet() >= player1.getGamesInCurrentSet() + 2 || player1
+						.getGamesInCurrentSet() + player2.getGamesInCurrentSet() == 13)) {
 			if (!isSet1Finished) {
 				isSet1Finished = true;
 				player1.setSet1(player1.getGamesInCurrentSet());

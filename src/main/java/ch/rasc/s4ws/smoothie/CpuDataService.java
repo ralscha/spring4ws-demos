@@ -62,15 +62,12 @@ public class CpuDataService {
 
 	private void sendMessage(final WebSocketSession session, final TextMessage textMessage) {
 
-		taskExecutor.execute(new Runnable() {
-			@Override
-			public void run() {
-				if (session.isOpen()) {
-					try {
-						session.sendMessage(textMessage);
-					} catch (IOException e) {
-						logger.error("sendMessage to session", e);
-					}
+		taskExecutor.execute(() -> {
+			if (session.isOpen()) {
+				try {
+					session.sendMessage(textMessage);
+				} catch (IOException e) {
+					logger.error("sendMessage to session", e);
 				}
 			}
 		}
