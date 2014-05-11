@@ -1,9 +1,8 @@
 package ch.rasc.s4ws.brainshop;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.google.common.collect.Sets;
 
 public class Idea {
 	private static AtomicInteger lastId = new AtomicInteger(0);
@@ -22,9 +21,9 @@ public class Idea {
 
 	private String date;
 
-	private Set<String> likes = Sets.newHashSet();
+	private Set<String> likes = new HashSet<>();
 
-	private Set<String> dislikes = Sets.newHashSet();
+	private Set<String> dislikes = new HashSet<>();
 
 	public static Idea createIdea() {
 		Idea newIdea = new Idea();

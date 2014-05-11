@@ -1,7 +1,9 @@
 package ch.rasc.s4ws.brainshop;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,9 +14,7 @@ import org.springframework.web.socket.WebSocketSession;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class Board {
 	private static final Map<String, Board> boards = Maps.newConcurrentMap();
@@ -48,7 +48,7 @@ public class Board {
 			TextMessage tm = new TextMessage(BrainService.objectMapper.writeValueAsString(response));
 
 			for (Board board : boards.values()) {
-				Set<String> usersWithErrors = Sets.newHashSet();
+				Set<String> usersWithErrors = new HashSet<>();
 				for (String sessionId : board.users.keySet()) {
 					try {
 						WebSocketSession ws = board.users.get(sessionId);
@@ -113,7 +113,7 @@ public class Board {
 	}
 
 	public Collection<Idea> getAllIdeas() {
-		List<Idea> ideas = Lists.newArrayList();
+		List<Idea> ideas = new ArrayList<>();
 		for (Group group : groups.values()) {
 			for (Idea idea : group.getIdeas()) {
 				idea.setGroup(group.getGroupId());
@@ -163,7 +163,7 @@ public class Board {
 	public void sendToAllUsers(Object msg) {
 		try {
 			TextMessage tm = new TextMessage(BrainService.objectMapper.writeValueAsString(msg));
-			Set<String> usersWithErrors = Sets.newHashSet();
+			Set<String> usersWithErrors = new HashSet<>();
 			for (String sessionId : users.keySet()) {
 				try {
 					WebSocketSession ws = users.get(sessionId);

@@ -3,6 +3,7 @@ package ch.rasc.s4ws.tail;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -26,7 +27,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.maxmind.geoip.Location;
 import com.maxmind.geoip.LookupService;
 
@@ -54,7 +54,7 @@ public class TailService {
 	public void postConstruct() throws IOException {
 		String property = environment.getRequiredProperty("TAIL_GEOCITY_DAT");
 		lookupService = new LookupService(property, LookupService.GEOIP_INDEX_CACHE);
-		tailers = Lists.newArrayList();
+		tailers = new ArrayList<>();
 
 		String logFiles = environment.getRequiredProperty("TAIL_ACCESS_LOG");
 		for (String logFile : Splitter.on(",").trimResults().split(logFiles)) {

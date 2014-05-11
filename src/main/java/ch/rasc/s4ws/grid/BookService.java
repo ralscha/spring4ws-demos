@@ -1,5 +1,6 @@
 package ch.rasc.s4ws.grid;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,7 +11,6 @@ import ch.rasc.wampspring.EventMessenger;
 import ch.rasc.wampspring.annotation.WampCallListener;
 import ch.rasc.wampspring.message.CallMessage;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
 
 @Service
@@ -33,7 +33,7 @@ public class BookService {
 	public List<Book> bookCreate(CallMessage callMessage, List<Book> books) {
 		System.out.println("bookCreate:" + callMessage.getWebSocketSessionId());
 
-		List<Book> result = Lists.newArrayList();
+		List<Book> result = new ArrayList<>();
 		for (Book book : books) {
 			BookDb.create(book);
 			result.add(book);
@@ -47,7 +47,7 @@ public class BookService {
 	public List<Book> bookUpdate(CallMessage callMessage, List<Book> books) {
 		System.out.println("bookUpdate:" + callMessage.getWebSocketSessionId());
 
-		List<Book> result = Lists.newArrayList();
+		List<Book> result = new ArrayList<>();
 		for (Book book : books) {
 			BookDb.update(book);
 			result.add(book);
