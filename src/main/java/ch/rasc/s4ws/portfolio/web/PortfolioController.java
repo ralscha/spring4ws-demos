@@ -43,7 +43,8 @@ public class PortfolioController {
 	private final TradeService tradeService;
 
 	@Autowired
-	public PortfolioController(PortfolioService portfolioService, TradeService tradeService) {
+	public PortfolioController(PortfolioService portfolioService,
+			TradeService tradeService) {
 		this.portfolioService = portfolioService;
 		this.tradeService = tradeService;
 	}

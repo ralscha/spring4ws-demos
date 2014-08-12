@@ -6,7 +6,8 @@ import javax.servlet.ServletRegistration.Dynamic;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+public class DispatcherServletInitializer extends
+		AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {

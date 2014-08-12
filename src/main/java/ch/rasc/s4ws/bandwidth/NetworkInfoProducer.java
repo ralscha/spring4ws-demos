@@ -34,7 +34,8 @@ public class NetworkInfoProducer {
 	private SimpMessageSendingOperations messagingTemplate;
 
 	public NetworkInfoProducer() {
-		OperatingSystemMXBean operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
+		OperatingSystemMXBean operatingSystemMXBean = ManagementFactory
+				.getOperatingSystemMXBean();
 		String os = operatingSystemMXBean.getName().toLowerCase();
 		isLinux = os.indexOf("linux") != -1;
 	}
@@ -44,21 +45,26 @@ public class NetworkInfoProducer {
 
 		if (isLinux) {
 			try {
-				ProcessBuilder pb = new ProcessBuilder("cat", "/sys/class/net/" + networkInterface
-						+ "/statistics/rx_bytes");
+				ProcessBuilder pb = new ProcessBuilder("cat", "/sys/class/net/"
+						+ networkInterface + "/statistics/rx_bytes");
 				Process p = pb.start();
 				p.waitFor();
-				rx = Long.valueOf(StringUtils.trimAllWhitespace(IOUtils.toString(p.getInputStream())));
+				rx = Long.parseLong(StringUtils.trimAllWhitespace(IOUtils.toString(p
+						.getInputStream())));
 
-				pb = new ProcessBuilder("cat", "/sys/class/net/" + networkInterface + "/statistics/tx_bytes");
+				pb = new ProcessBuilder("cat", "/sys/class/net/" + networkInterface
+						+ "/statistics/tx_bytes");
 				p = pb.start();
 				p.waitFor();
-				tx = Long.valueOf(StringUtils.trimAllWhitespace(IOUtils.toString(p.getInputStream())));
-			} catch (NumberFormatException | IOException | InterruptedException e) {
+				tx = Long.parseLong(StringUtils.trimAllWhitespace(IOUtils.toString(p
+						.getInputStream())));
+			}
+			catch (NumberFormatException | IOException | InterruptedException e) {
 				rx = 0;
 				tx = 0;
 			}
-		} else {
+		}
+		else {
 			rx += rand.nextInt(512 * 1024);
 			tx += rand.nextInt(512 * 1024);
 		}

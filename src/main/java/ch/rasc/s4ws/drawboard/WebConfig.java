@@ -51,7 +51,8 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 
 	@Bean
 	public Reactor reactor(Environment env) {
-		Reactor reactor = Reactors.reactor().env(env).dispatcher(Environment.THREAD_POOL).get();
+		Reactor reactor = Reactors.reactor().env(env).dispatcher(Environment.THREAD_POOL)
+				.get();
 		return reactor;
 	}
 

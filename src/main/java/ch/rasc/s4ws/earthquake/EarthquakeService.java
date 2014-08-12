@@ -37,7 +37,8 @@ public class EarthquakeService {
 		try {
 			lastGeoJson = objectMapper.readValue(new URL(pastHour), GeoJson.class);
 			messagingTemplate.convertAndSend("/topic/quakes.all", lastGeoJson);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			logger.error("poll data", e);
 		}
 	}

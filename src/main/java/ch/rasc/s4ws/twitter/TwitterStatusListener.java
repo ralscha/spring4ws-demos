@@ -39,8 +39,8 @@ public class TwitterStatusListener implements StatusStreamHandler {
 
 	private final ITopic<Tweet> hazelcastTopic;
 
-	public TwitterStatusListener(SimpMessageSendingOperations messagingTemplate, ITopic<Tweet> hazelcastTopic,
-			Queue<Tweet> lastTweets) {
+	public TwitterStatusListener(SimpMessageSendingOperations messagingTemplate,
+			ITopic<Tweet> hazelcastTopic, Queue<Tweet> lastTweets) {
 		this.messagingTemplate = messagingTemplate;
 		this.lastTweets = lastTweets;
 		this.hazelcastTopic = hazelcastTopic;
@@ -57,9 +57,10 @@ public class TwitterStatusListener implements StatusStreamHandler {
 		while (matcher.find()) {
 			String unshortenedURL = unshorten(matcher.group());
 			if (unshortenedURL != null) {
-				matcher.appendReplacement(sb, "<a target=\"_blank\" href=\"" + unshortenedURL + "\">" + unshortenedURL
-						+ "</a>");
-			} else {
+				matcher.appendReplacement(sb, "<a target=\"_blank\" href=\""
+						+ unshortenedURL + "\">" + unshortenedURL + "</a>");
+			}
+			else {
 				matcher.appendReplacement(sb, "$0");
 			}
 		}
@@ -74,7 +75,8 @@ public class TwitterStatusListener implements StatusStreamHandler {
 
 		lastTweets.offer(tweet);
 
-		messagingTemplate.convertAndSend("/queue/tweets", Collections.singletonList(tweet));
+		messagingTemplate.convertAndSend("/queue/tweets",
+				Collections.singletonList(tweet));
 
 		hazelcastTopic.publish(tweet);
 	}
@@ -119,7 +121,8 @@ public class TwitterStatusListener implements StatusStreamHandler {
 			HttpResponse response = defaultHttpClient.execute(head);
 
 			int status = response.getStatusLine().getStatusCode();
-			if (status == HttpStatus.SC_MOVED_PERMANENTLY || status == HttpStatus.SC_MOVED_TEMPORARILY) {
+			if (status == HttpStatus.SC_MOVED_PERMANENTLY
+					|| status == HttpStatus.SC_MOVED_TEMPORARILY) {
 				Header locationHeader = response.getFirstHeader("location");
 				if (locationHeader != null) {
 					String value = locationHeader.getValue();
@@ -128,11 +131,14 @@ public class TwitterStatusListener implements StatusStreamHandler {
 					}
 					return unshorten(value);
 				}
-			} else if (status >= 400 && status != HttpStatus.SC_METHOD_NOT_ALLOWED && status != HttpStatus.SC_FORBIDDEN) {
+			}
+			else if (status >= 400 && status != HttpStatus.SC_METHOD_NOT_ALLOWED
+					&& status != HttpStatus.SC_FORBIDDEN) {
 				return null;
 			}
 
-		} catch (IllegalStateException | IOException e) {
+		}
+		catch (IllegalStateException | IOException e) {
 			if (!(e instanceof SSLException || e instanceof ConnectException)) {
 				// ignore this
 			}

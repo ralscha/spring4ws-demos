@@ -59,7 +59,8 @@ public class SnakeTimer {
 
 	protected static void tick() {
 		StringBuilder sb = new StringBuilder();
-		for (Iterator<Snake> iterator = SnakeTimer.getSnakes().iterator(); iterator.hasNext();) {
+		for (Iterator<Snake> iterator = SnakeTimer.getSnakes().iterator(); iterator
+				.hasNext();) {
 			Snake snake = iterator.next();
 			snake.update(SnakeTimer.getSnakes());
 			sb.append(snake.getLocationsJson());
@@ -74,7 +75,8 @@ public class SnakeTimer {
 		for (Snake snake : SnakeTimer.getSnakes()) {
 			try {
 				snake.sendMessage(message);
-			} catch (IllegalStateException ise) {
+			}
+			catch (IllegalStateException ise) {
 				// An ISE can occur if an attempt is made to write to a
 				// WebSocket connection after it has been closed. The
 				// alternative to catching this exception is to synchronise
@@ -91,7 +93,8 @@ public class SnakeTimer {
 			public void run() {
 				try {
 					tick();
-				} catch (RuntimeException e) {
+				}
+				catch (RuntimeException e) {
 					log.error("Caught to prevent timer from shutting down", e);
 				}
 			}

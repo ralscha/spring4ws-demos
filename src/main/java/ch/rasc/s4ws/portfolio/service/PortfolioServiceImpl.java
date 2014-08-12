@@ -36,7 +36,8 @@ public class PortfolioServiceImpl implements PortfolioService {
 	public PortfolioServiceImpl() {
 
 		Portfolio portfolio = new Portfolio();
-		portfolio.addPosition(new PortfolioPosition("Citrix Systems, Inc.", "CTXS", 24.30, 75));
+		portfolio.addPosition(new PortfolioPosition("Citrix Systems, Inc.", "CTXS",
+				24.30, 75));
 		portfolio.addPosition(new PortfolioPosition("Dell Inc.", "DELL", 13.44, 50));
 		portfolio.addPosition(new PortfolioPosition("Microsoft", "MSFT", 34.15, 33));
 		portfolio.addPosition(new PortfolioPosition("Oracle", "ORCL", 31.22, 45));

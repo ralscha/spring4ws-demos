@@ -35,11 +35,13 @@ public class EnhancedChatService {
 
 	private static final String DATA_IMAGE = "data:image/png;base64,";
 
-	private final static Logger logger = LoggerFactory.getLogger(EnhancedChatService.class);
+	private final static Logger logger = LoggerFactory
+			.getLogger(EnhancedChatService.class);
 
 	private final static ObjectMapper mapper = new ObjectMapper();
 
-	private final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
+	private final UserAgentStringParser parser = UADetectorServiceFactory
+			.getResourceModuleParser();
 
 	private final Map<String, UserConnection> socketIdToUserMap = Maps.newConcurrentMap();
 
@@ -65,7 +67,8 @@ public class EnhancedChatService {
 
 	@WampUnsubscribeListener("message")
 	public void unsubscribeClient(UnsubscribeMessage unsubscribeMessage) {
-		UserConnection uc = socketIdToUserMap.remove(unsubscribeMessage.getWebSocketSessionId());
+		UserConnection uc = socketIdToUserMap.remove(unsubscribeMessage
+				.getWebSocketSessionId());
 		if (uc != null) {
 			eventMessenger.sendToAll("disconnected", uc);
 		}
@@ -75,7 +78,8 @@ public class EnhancedChatService {
 	public void hangup(String connectedWith) {
 		String webSocketSessionId = findUserConnection(connectedWith);
 		if (webSocketSessionId != null) {
-			eventMessenger.sendTo("hangup", null, Collections.singleton(webSocketSessionId));
+			eventMessenger.sendTo("hangup", null,
+					Collections.singleton(webSocketSessionId));
 		}
 	}
 
@@ -94,11 +98,13 @@ public class EnhancedChatService {
 		UserConnection uc = socketIdToUserMap.get(callMessage.getWebSocketSessionId());
 		if (uc != null && image.startsWith(DATA_IMAGE)) {
 			try {
-				byte[] imageBytes = DatatypeConverter.parseBase64Binary(image.substring(DATA_IMAGE.length()));
+				byte[] imageBytes = DatatypeConverter.parseBase64Binary(image
+						.substring(DATA_IMAGE.length()));
 				String resizedImageDataURL = resize(imageBytes);
 				uc.setImage(resizedImageDataURL);
 				eventMessenger.sendToAll("snapshot", uc);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 
@@ -110,8 +116,8 @@ public class EnhancedChatService {
 				ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			BufferedImage image = ImageIO.read(bis);
 
-			BufferedImage resizedImage = Scalr.resize(image, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, 40,
-					Scalr.OP_ANTIALIAS);
+			BufferedImage resizedImage = Scalr.resize(image, Scalr.Method.AUTOMATIC,
+					Scalr.Mode.AUTOMATIC, 40, Scalr.OP_ANTIALIAS);
 			ImageIO.write(resizedImage, "png", bos);
 			return DATA_IMAGE + DatatypeConverter.printBase64Binary(bos.toByteArray());
 		}
@@ -123,13 +129,16 @@ public class EnhancedChatService {
 		String toUsername = (String) offerObject.get("toUsername");
 		String webSocketSessionId = findUserConnection(toUsername);
 		if (webSocketSessionId != null) {
-			eventMessenger.sendTo("receiveSdp", offerObject, Collections.singleton(webSocketSessionId));
+			eventMessenger.sendTo("receiveSdp", offerObject,
+					Collections.singleton(webSocketSessionId));
 		}
 
 		if (logger.isDebugEnabled()) {
 			try {
-				logger.debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(offerObject));
-			} catch (IOException e) {
+				logger.debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+						offerObject));
+			}
+			catch (IOException e) {
 				// ignore this
 			}
 		}
@@ -140,13 +149,16 @@ public class EnhancedChatService {
 		String toUsername = (String) candidate.get("toUsername");
 		String webSocketSessionId = findUserConnection(toUsername);
 		if (webSocketSessionId != null) {
-			eventMessenger.sendTo("receiveIceCandidate", candidate, Collections.singleton(webSocketSessionId));
+			eventMessenger.sendTo("receiveIceCandidate", candidate,
+					Collections.singleton(webSocketSessionId));
 		}
 
 		if (logger.isDebugEnabled()) {
 			try {
-				logger.debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(candidate));
-			} catch (IOException e) {
+				logger.debug(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(
+						candidate));
+			}
+			catch (IOException e) {
 				// ignore this
 			}
 		}

@@ -20,11 +20,13 @@ public class BookService {
 	private EventMessenger eventMessenger;
 
 	@WampCallListener("grid:read")
-	public Collection<Book> bookRead(CallMessage callMessage, StoreReadRequest readRequest) throws Throwable {
+	public Collection<Book> bookRead(CallMessage callMessage, StoreReadRequest readRequest)
+			throws Throwable {
 		System.out.println("bookRead:" + callMessage.getWebSocketSessionId());
 
 		Collection<Book> list = BookDb.list();
-		Ordering<Book> ordering = PropertyOrderingFactory.createOrderingFromSorters(readRequest.getSort());
+		Ordering<Book> ordering = PropertyOrderingFactory
+				.createOrderingFromSorters(readRequest.getSort());
 
 		return ordering != null ? ordering.sortedCopy(list) : list;
 	}
@@ -39,7 +41,8 @@ public class BookService {
 			result.add(book);
 		}
 
-		eventMessenger.sendToAllExcept("grid:oncreate", result, callMessage.getWebSocketSessionId());
+		eventMessenger.sendToAllExcept("grid:oncreate", result,
+				callMessage.getWebSocketSessionId());
 		return result;
 	}
 
@@ -53,7 +56,8 @@ public class BookService {
 			result.add(book);
 		}
 
-		eventMessenger.sendToAllExcept("grid:onupdate", result, callMessage.getWebSocketSessionId());
+		eventMessenger.sendToAllExcept("grid:onupdate", result,
+				callMessage.getWebSocketSessionId());
 		return result;
 	}
 

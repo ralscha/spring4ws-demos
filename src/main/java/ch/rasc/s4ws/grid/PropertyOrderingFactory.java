@@ -23,12 +23,14 @@ public class PropertyOrderingFactory {
 		try {
 			Ordering<T> ordering = new PropertyOrdering<>(propertyName);
 			return ordering;
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			return null;
 		}
 	}
 
-	public static <T> Ordering<T> createOrdering(String propertyName, SortDirection sortDirection) {
+	public static <T> Ordering<T> createOrdering(String propertyName,
+			SortDirection sortDirection) {
 		try {
 			Ordering<T> ordering = new PropertyOrdering<>(propertyName);
 
@@ -37,29 +39,33 @@ public class PropertyOrderingFactory {
 			}
 
 			return ordering;
-		} catch (ParseException e) {
+		}
+		catch (ParseException e) {
 			return null;
 		}
 	}
 
-	public static <T> Ordering<T> createOrderingFromSorters(String sortInfo) throws JsonParseException,
-			JsonMappingException, IOException {
+	public static <T> Ordering<T> createOrderingFromSorters(String sortInfo)
+			throws JsonParseException, JsonMappingException, IOException {
 		if (sortInfo == null) {
 			return null;
 		}
 
-		Collection<SortInfo> sortInfos = mapper.readValue(sortInfo, new TypeReference<Collection<SortInfo>>() {
-			// nothing here
-		});
+		Collection<SortInfo> sortInfos = mapper.readValue(sortInfo,
+				new TypeReference<Collection<SortInfo>>() {
+					// nothing here
+				});
 
 		Ordering<T> ordering = null;
 
 		if (sortInfos != null) {
 			for (SortInfo sorter : sortInfos) {
-				Ordering<T> propertyOrdering = createOrdering(sorter.getProperty(), sorter.getDirection());
+				Ordering<T> propertyOrdering = createOrdering(sorter.getProperty(),
+						sorter.getDirection());
 				if (ordering == null) {
 					ordering = propertyOrdering;
-				} else {
+				}
+				else {
 					ordering = ordering.compound(propertyOrdering);
 				}
 			}

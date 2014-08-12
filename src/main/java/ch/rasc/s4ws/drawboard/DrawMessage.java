@@ -107,7 +107,8 @@ public final class DrawMessage {
 	}
 
 	/**
-	 * Specifies if this DrawMessage is the last one in a chain (e.g. a chain of brush paths).<br>
+	 * Specifies if this DrawMessage is the last one in a chain (e.g. a chain of brush
+	 * paths).<br>
 	 * Currently it is unused.
 	 */
 	public boolean isLastInChain() {
@@ -118,8 +119,9 @@ public final class DrawMessage {
 		this.lastInChain = lastInChain;
 	}
 
-	public DrawMessage(int type, byte colorR, byte colorG, byte colorB, byte colorA, double thickness, double x1,
-			double x2, double y1, double y2, boolean lastInChain) {
+	public DrawMessage(int type, byte colorR, byte colorG, byte colorB, byte colorA,
+			double thickness, double x1, double x2, double y1, double y2,
+			boolean lastInChain) {
 
 		this.type = type;
 		this.colorR = colorR;
@@ -141,7 +143,8 @@ public final class DrawMessage {
 	 */
 	public void draw(Graphics2D g) {
 
-		g.setStroke(new BasicStroke((float) thickness, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
+		g.setStroke(new BasicStroke((float) thickness, BasicStroke.CAP_ROUND,
+				BasicStroke.JOIN_MITER));
 		g.setColor(new Color(colorR & 0xFF, colorG & 0xFF, colorB & 0xFF, colorA & 0xFF));
 
 		if (x1 == x2 && y1 == y2) {
@@ -149,12 +152,14 @@ public final class DrawMessage {
 			Arc2D arc = new Arc2D.Double(x1, y1, 0, 0, 0d, 360d, Arc2D.OPEN);
 			g.draw(arc);
 
-		} else if (type == 1 || type == 2) {
+		}
+		else if (type == 1 || type == 2) {
 			// Draw a line.
 			Line2D line = new Line2D.Double(x1, y1, x2, y2);
 			g.draw(line);
 
-		} else if (type == 3 || type == 4) {
+		}
+		else if (type == 3 || type == 4) {
 			double x1 = this.x1, x2 = this.x2, y1 = this.y1, y2 = this.y2;
 			if (x1 > x2) {
 				x1 = this.x2;
@@ -172,9 +177,11 @@ public final class DrawMessage {
 				Rectangle2D rect = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
 				g.draw(rect);
 
-			} else if (type == 4) {
+			}
+			else if (type == 4) {
 				// Draw an ellipse.
-				Arc2D arc = new Arc2D.Double(x1, y1, x2 - x1, y2 - y1, 0d, 360d, Arc2D.OPEN);
+				Arc2D arc = new Arc2D.Double(x1, y1, x2 - x1, y2 - y1, 0d, 360d,
+						Arc2D.OPEN);
 				g.draw(arc);
 
 			}
@@ -183,13 +190,15 @@ public final class DrawMessage {
 
 	/**
 	 * Converts this message into a String representation that can be sent over WebSocket.<br>
-	 * Since a DrawMessage consists only of numbers, we concatenate those numbers with a ",".
+	 * Since a DrawMessage consists only of numbers, we concatenate those numbers with a
+	 * ",".
 	 */
 	@Override
 	public String toString() {
 
-		return type + "," + (colorR & 0xFF) + "," + (colorG & 0xFF) + "," + (colorB & 0xFF) + "," + (colorA & 0xFF)
-				+ "," + thickness + "," + x1 + "," + y1 + "," + x2 + "," + y2 + "," + (lastInChain ? "1" : "0");
+		return type + "," + (colorR & 0xFF) + "," + (colorG & 0xFF) + ","
+				+ (colorB & 0xFF) + "," + (colorA & 0xFF) + "," + thickness + "," + x1
+				+ "," + y1 + "," + x2 + "," + y2 + "," + (lastInChain ? "1" : "0");
 	}
 
 	public static DrawMessage parseFromString(String str) throws ParseException {
@@ -226,12 +235,13 @@ public final class DrawMessage {
 
 			last = !"0".equals(elements[10]);
 
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex) {
 			throw new ParseException(ex);
 		}
 
-		DrawMessage m = new DrawMessage(type, colors[0], colors[1], colors[2], colors[3], thickness, coords[0],
-				coords[2], coords[1], coords[3], last);
+		DrawMessage m = new DrawMessage(type, colors[0], colors[1], colors[2], colors[3],
+				thickness, coords[0], coords[2], coords[1], coords[3], last);
 
 		return m;
 	}

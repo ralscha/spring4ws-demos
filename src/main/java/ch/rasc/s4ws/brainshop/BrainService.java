@@ -38,22 +38,27 @@ public class BrainService {
 	public void handleIncomingMessage(WebSocketSession session, BrainMessage bm) {
 		if (bm.getType().equals("idea")) {
 			handleIncomingIdea(bm);
-		} else if (bm.getType().equals("command")) {
+		}
+		else if (bm.getType().equals("command")) {
 			if (bm.getCommand().equals("init")) {
 				handleInit(session, bm);
-			} else if (bm.getCommand().equals("delete")) {
+			}
+			else if (bm.getCommand().equals("delete")) {
 				handleDelete(bm);
-			} else if (bm.getCommand().equals("like")) {
+			}
+			else if (bm.getCommand().equals("like")) {
 				handleLike(bm);
-			} else if (bm.getCommand().equals("dislike")) {
+			}
+			else if (bm.getCommand().equals("dislike")) {
 				handleDislike(bm);
-			} else if (bm.getCommand().equals("delete-board")) {
+			}
+			else if (bm.getCommand().equals("delete-board")) {
 				handleDeleteBoard(bm);
 			}
 		}
 	}
 
-	private void handleInit(WebSocketSession session, BrainMessage bm) {
+	private static void handleInit(WebSocketSession session, BrainMessage bm) {
 		if (StringUtils.hasText(bm.getBoard())) {
 			Board board = Board.get(bm.getBoard());
 			if (board == null) {
@@ -63,37 +68,38 @@ public class BrainService {
 
 			board.addUser(session);
 
-			Object msg = ImmutableMap.of(
-					"type",
-					"init",
-					"data",
-					new Object[] { ImmutableMap.of("type", "board-list", "boards", Board.all()),
-							ImmutableMap.of("type", "ideas", "ideas", board.getAllIdeas()) });
+			Object msg = ImmutableMap.of("type", "init", "data", new Object[] {
+					ImmutableMap.of("type", "board-list", "boards", Board.all()),
+					ImmutableMap.of("type", "ideas", "ideas", board.getAllIdeas()) });
 			try {
-				TextMessage tm = new TextMessage(BrainService.objectMapper.writeValueAsString(msg));
+				TextMessage tm = new TextMessage(
+						BrainService.objectMapper.writeValueAsString(msg));
 				if (session.isOpen()) {
 					session.sendMessage(tm);
-				} else {
+				}
+				else {
 					board.removeUser(session);
 				}
-			} catch (JsonProcessingException e) {
+			}
+			catch (JsonProcessingException e) {
 				throw new RuntimeException(e);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 				board.removeUser(session);
 			}
 		}
 	}
 
-	private void handleDelete(BrainMessage bm) {
+	private static void handleDelete(BrainMessage bm) {
 		Board board = Board.get(bm.getBoard());
-		board.sendToAllUsers(ImmutableMap.of("type", "command", "command", "delete", "board", bm.getBoard(), "id",
-				bm.getId()));
+		board.sendToAllUsers(ImmutableMap.of("type", "command", "command", "delete",
+				"board", bm.getBoard(), "id", bm.getId()));
 		board.removeIdea(bm.getId());
 
 	}
 
-	private void handleLike(BrainMessage bm) {
+	private static void handleLike(BrainMessage bm) {
 		Board board = Board.get(bm.getBoard());
 		Idea idea = board.getIdea(bm.getId());
 		idea.like(bm.getUser());
@@ -101,7 +107,7 @@ public class BrainService {
 		board.sendToAllUsers(idea);
 	}
 
-	private void handleDislike(BrainMessage bm) {
+	private static void handleDislike(BrainMessage bm) {
 		Board board = Board.get(bm.getBoard());
 		Idea idea = board.getIdea(bm.getId());
 		idea.dislike(bm.getUser());
@@ -109,7 +115,7 @@ public class BrainService {
 		board.sendToAllUsers(idea);
 	}
 
-	private void handleDeleteBoard(BrainMessage bm) {
+	private static void handleDeleteBoard(BrainMessage bm) {
 		Board.remove(bm.getName());
 		Board.broadcastAllBoards();
 	}
@@ -121,7 +127,8 @@ public class BrainService {
 		Idea idea;
 		if (bm.getId() != null) {
 			idea = board.getIdea(bm.getId());
-		} else {
+		}
+		else {
 			isNew = true;
 			idea = Idea.createIdea();
 		}
@@ -133,7 +140,8 @@ public class BrainService {
 
 		if (isNew) {
 			board.addIdea(idea);
-		} else {
+		}
+		else {
 			board.moveIdea(idea);
 		}
 

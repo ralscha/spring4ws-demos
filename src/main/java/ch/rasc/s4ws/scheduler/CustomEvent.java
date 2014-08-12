@@ -52,7 +52,8 @@ public class CustomEvent {
 		// default constructor
 	}
 
-	public CustomEvent(int id, int resourceId, String name, DateTime startDate, DateTime endDate, boolean done) {
+	public CustomEvent(int id, int resourceId, String name, DateTime startDate,
+			DateTime endDate, boolean done) {
 		this.id = id;
 		this.resourceId = resourceId;
 		this.name = name;
@@ -151,9 +152,10 @@ public class CustomEvent {
 
 	@Override
 	public String toString() {
-		return "CustomEvent [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", resourceId=" + resourceId + ", resizable=" + resizable + ", draggable=" + draggable + ", cls="
-				+ cls + ", blocked=" + blocked + ", blockedBy=" + blockedBy + ", done=" + done + "]";
+		return "CustomEvent [id=" + id + ", name=" + name + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", resourceId=" + resourceId + ", resizable="
+				+ resizable + ", draggable=" + draggable + ", cls=" + cls + ", blocked="
+				+ blocked + ", blockedBy=" + blockedBy + ", done=" + done + "]";
 	}
 
 }

@@ -53,17 +53,20 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 			if (session != null) {
 				try {
 					session.sendMessage(txtMessage);
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					log.error("sendMessage", e);
 				}
 			}
-		} else {
+		}
+		else {
 			String excludeId = event.getHeaders().get("excludeId");
 			for (WebSocketSession session : sessions.values()) {
 				if (!session.getId().equals(excludeId)) {
 					try {
 						session.sendMessage(txtMessage);
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						log.error("sendMessage", e);
 					}
 				}
@@ -81,17 +84,20 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 			if (session != null) {
 				try {
 					session.sendMessage(binMsg);
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					log.error("sendMessage", e);
 				}
 			}
-		} else {
+		}
+		else {
 			String excludeId = event.getHeaders().get("excludeId");
 			for (WebSocketSession session : sessions.values()) {
 				if (!session.getId().equals(excludeId)) {
 					try {
 						session.sendMessage(binMsg);
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						log.error("sendMessage", e);
 					}
 				}
@@ -107,7 +113,8 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 	}
 
 	@Override
-	public void handleTextMessage(WebSocketSession session, final TextMessage message) throws Exception {
+	public void handleTextMessage(WebSocketSession session, final TextMessage message)
+			throws Exception {
 
 		Event<String> event = Event.wrap(message.getPayload());
 		event.getHeaders().set("sessionId", session.getId());
@@ -115,7 +122,8 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
+			throws Exception {
 		sessions.remove(session.getId());
 		reactor.notify("removePlayer", Event.wrap(session.getId()));
 	}

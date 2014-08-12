@@ -71,8 +71,9 @@ public class StoreReadRequest {
 
 	@Override
 	public String toString() {
-		return "StoreReadRequest [query=" + query + ", limit=" + limit + ", start=" + start + ", page=" + page
-				+ ", sort=" + sort + ", params=" + params + "]";
+		return "StoreReadRequest [query=" + query + ", limit=" + limit + ", start="
+				+ start + ", page=" + page + ", sort=" + sort + ", params=" + params
+				+ "]";
 	}
 
 }

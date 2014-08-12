@@ -44,7 +44,8 @@ public class Feature {
 
 	@Override
 	public String toString() {
-		return "Feature [type=" + type + ", properties=" + properties + ", geometry=" + geometry + ", id=" + id + "]";
+		return "Feature [type=" + type + ", properties=" + properties + ", geometry="
+				+ geometry + ", id=" + id + "]";
 	}
 
 }

@@ -42,7 +42,8 @@ public class TennisMatch {
 		this.player1 = player1;
 		this.player2 = player2;
 		this.serve = player1.getName();
-		liveComments = "Welcome to this match between " + player1.getName() + " and " + player2.getName() + ".";
+		liveComments = "Welcome to this match between " + player1.getName() + " and "
+				+ player2.getName() + ".";
 	}
 
 	public String getKey() {
@@ -54,7 +55,8 @@ public class TennisMatch {
 		player2.reset();
 		isSet1Finished = isSet2Finished = isSet3Finished = isFinished = false;
 
-		liveComments = "WELCOME to this match between " + player1.getName() + " and " + player2.getName() + ".";
+		liveComments = "WELCOME to this match between " + player1.getName() + " and "
+				+ player2.getName() + ".";
 
 	}
 
@@ -107,7 +109,8 @@ public class TennisMatch {
 	}
 
 	public boolean hasMatchWinner() {
-		if (isSet1Finished && isSet2Finished && (isSet3Finished || player1.getSets() != player2.getSets())) {
+		if (isSet1Finished && isSet2Finished
+				&& (isSet3Finished || player1.getSets() != player2.getSets())) {
 			return true;
 		}
 		return false;
@@ -129,7 +132,8 @@ public class TennisMatch {
 			player1Points = 0;
 			if (player1.getName().equals(serve)) {
 				serve = player2.getName();
-			} else {
+			}
+			else {
 				serve = player1.getName();
 			}
 		}
@@ -147,11 +151,13 @@ public class TennisMatch {
 				isSet1Finished = true;
 				player1.setSet1(player1.getGamesInCurrentSet());
 				player2.setSet1(player2.getGamesInCurrentSet());
-			} else if (!isSet2Finished) {
+			}
+			else if (!isSet2Finished) {
 				isSet2Finished = true;
 				player1.setSet2(player1.getGamesInCurrentSet());
 				player2.setSet2(player2.getGamesInCurrentSet());
-			} else {
+			}
+			else {
 				isSet3Finished = true;
 				player1.setSet3(player1.getGamesInCurrentSet());
 				player2.setSet3(player2.getGamesInCurrentSet());
@@ -160,7 +166,8 @@ public class TennisMatch {
 			addLiveComments(playerWithHighestGames() + " wins this set !!");
 			if (player1.getGamesInCurrentSet() > player2.getGamesInCurrentSet()) {
 				player1.incSets();
-			} else {
+			}
+			else {
 				player2.incSets();
 			}
 

@@ -21,7 +21,8 @@ public class Group {
 	public void addIdea(Idea idea) {
 		if (idea.getNext() != null && idea.getNext() > 0) {
 			ideas.add(indexOf(idea.getNext()), idea);
-		} else {
+		}
+		else {
 			ideas.add(0, idea);
 		}
 	}
@@ -72,11 +73,13 @@ public class Group {
 
 		if (idea.getNext() < 0) {
 			ideas.add(idea);
-		} else {
+		}
+		else {
 			int nextIdx = indexOf(idea.getNext());
 			if (nextIdx < 0) {
 				ideas.add(idea);
-			} else {
+			}
+			else {
 				ideas.add(nextIdx, idea);
 			}
 

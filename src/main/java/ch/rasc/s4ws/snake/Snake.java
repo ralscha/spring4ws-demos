@@ -71,10 +71,12 @@ public class Snake {
 
 		try {
 			session.sendMessage(new TextMessage(msg));
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			try {
 				session.close(CloseStatus.NO_CLOSE_FRAME);
-			} catch (IOException ioe2) {
+			}
+			catch (IOException ioe2) {
 				// Ignore
 			}
 		}
@@ -132,12 +134,15 @@ public class Snake {
 
 	public synchronized String getLocationsJson() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(head.x), Integer.valueOf(head.y)));
+		sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(head.x),
+				Integer.valueOf(head.y)));
 		for (Location location : tail) {
 			sb.append(',');
-			sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(location.x), Integer.valueOf(location.y)));
+			sb.append(String.format("{\"x\": %d, \"y\": %d}",
+					Integer.valueOf(location.x), Integer.valueOf(location.y)));
 		}
-		return String.format("{\"id\":%d,\"body\":[%s]}", Integer.valueOf(id), sb.toString());
+		return String.format("{\"id\":%d,\"body\":[%s]}", Integer.valueOf(id),
+				sb.toString());
 	}
 
 	public int getId() {

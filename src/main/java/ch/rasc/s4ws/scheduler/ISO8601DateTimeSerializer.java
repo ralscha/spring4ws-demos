@@ -27,8 +27,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 public class ISO8601DateTimeSerializer extends JsonSerializer<DateTime> {
 
 	@Override
-	public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider) throws IOException,
-			JsonProcessingException {
+	public void serialize(DateTime value, JsonGenerator jgen, SerializerProvider provider)
+			throws IOException, JsonProcessingException {
 
 		jgen.writeString(value.toString());
 	}

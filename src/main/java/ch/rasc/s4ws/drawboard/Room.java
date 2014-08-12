@@ -22,7 +22,8 @@ import com.google.common.collect.Maps;
 
 public final class Room {
 
-	private final BufferedImage roomImage = new BufferedImage(900, 600, BufferedImage.TYPE_INT_RGB);
+	private final BufferedImage roomImage = new BufferedImage(900, 600,
+			BufferedImage.TYPE_INT_RGB);
 
 	private final Graphics2D roomGraphics = roomImage.createGraphics();
 
@@ -32,7 +33,8 @@ public final class Room {
 	public Reactor reactor;
 
 	public Room() {
-		roomGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		roomGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
 		roomGraphics.setBackground(Color.WHITE);
 		roomGraphics.clearRect(0, 0, roomImage.getWidth(), roomImage.getHeight());
 	}
@@ -44,7 +46,8 @@ public final class Room {
 		event.getHeaders().set("excludeId", sessionId);
 		reactor.notify("sendString", event);
 
-		event = Event.wrap(MessageType.IMAGE_MESSAGE.flag + String.valueOf(playerMap.size()));
+		event = Event.wrap(MessageType.IMAGE_MESSAGE.flag
+				+ String.valueOf(playerMap.size()));
 		event.getHeaders().set("sessionId", sessionId);
 		reactor.notify("sendString", event);
 
@@ -52,10 +55,12 @@ public final class Room {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(roomImage, "PNG", bout);
-		} catch (IOException e) { /* Should never happen */
+		}
+		catch (IOException e) { /* Should never happen */
 		}
 
-		Event<ByteBuffer> byteBufferEvent = Event.wrap(ByteBuffer.wrap(bout.toByteArray()));
+		Event<ByteBuffer> byteBufferEvent = Event
+				.wrap(ByteBuffer.wrap(bout.toByteArray()));
 		byteBufferEvent.getHeaders().set("sessionId", sessionId);
 		reactor.notify("sendBinary", byteBufferEvent);
 	}
@@ -78,22 +83,26 @@ public final class Room {
 		if (messageType == '1') {
 			try {
 				int indexOfChar = messageContent.indexOf('|');
-				long msgId = Long.parseLong(messageContent.substring(0, indexOfChar));
+				Long msgId = Long.valueOf(messageContent.substring(0, indexOfChar));
 				playerMap.put(sessionId, msgId);
 
-				DrawMessage drawMessage = DrawMessage.parseFromString(messageContent.substring(indexOfChar + 1));
+				DrawMessage drawMessage = DrawMessage.parseFromString(messageContent
+						.substring(indexOfChar + 1));
 				drawMessage.draw(roomGraphics);
 				String drawMessageString = drawMessage.toString();
 
 				for (String playerSessionId : playerMap.keySet()) {
-					Event<String> event = Event.wrap("1" + playerMap.get(playerSessionId) + "," + drawMessageString);
+					Event<String> event = Event.wrap("1" + playerMap.get(playerSessionId)
+							+ "," + drawMessageString);
 					event.getHeaders().set("sessionId", playerSessionId);
 					reactor.notify("sendString", event);
 				}
 
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				e.printStackTrace();
-			} catch (ParseException e) {
+			}
+			catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}

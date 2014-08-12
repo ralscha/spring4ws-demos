@@ -64,8 +64,8 @@ public class Metadata {
 
 	@Override
 	public String toString() {
-		return "Metadata [generated=" + generated + ", url=" + url + ", title=" + title + ", status=" + status
-				+ ", api=" + api + ", count=" + count + "]";
+		return "Metadata [generated=" + generated + ", url=" + url + ", title=" + title
+				+ ", status=" + status + ", api=" + api + ", count=" + count + "]";
 	}
 
 }

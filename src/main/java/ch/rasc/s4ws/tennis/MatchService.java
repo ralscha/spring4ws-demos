@@ -39,14 +39,14 @@ public class MatchService {
 	@PostConstruct
 	public void init() {
 		random = new Random();
-		matches.put("1234", new TennisMatch("1234", "US OPEN - QUARTER FINALS", new Player("Ferrer D.", "es"),
-				new Player("Almagro N.", "es")));
-		matches.put("1235", new TennisMatch("1235", "US OPEN - QUARTER FINALS", new Player("Djokovic N.", "rs"),
-				new Player("Berdych T.", "cz")));
-		matches.put("1236", new TennisMatch("1236", "US OPEN - QUARTER FINALS", new Player("Murray A.", "gb"),
-				new Player("Chardy J.", "fr")));
-		matches.put("1237", new TennisMatch("1237", "US OPEN - QUARTER FINALS", new Player("Federer R.", "ch"),
-				new Player("Tsonga J.W.", "fr")));
+		matches.put("1234", new TennisMatch("1234", "US OPEN - QUARTER FINALS",
+				new Player("Ferrer D.", "es"), new Player("Almagro N.", "es")));
+		matches.put("1235", new TennisMatch("1235", "US OPEN - QUARTER FINALS",
+				new Player("Djokovic N.", "rs"), new Player("Berdych T.", "cz")));
+		matches.put("1236", new TennisMatch("1236", "US OPEN - QUARTER FINALS",
+				new Player("Murray A.", "gb"), new Player("Chardy J.", "fr")));
+		matches.put("1237", new TennisMatch("1237", "US OPEN - QUARTER FINALS",
+				new Player("Federer R.", "ch"), new Player("Tsonga J.W.", "fr")));
 
 		for (String matchId : matches.keySet()) {
 			matchClientBets.put(matchId, new ConcurrentHashMap<String, String>());
@@ -63,7 +63,8 @@ public class MatchService {
 			// Handle point
 			if (random.nextInt(2) == 1) {
 				m.playerOneScores();
-			} else {
+			}
+			else {
 				m.playerTwoScores();
 			}
 
@@ -76,10 +77,12 @@ public class MatchService {
 					String result;
 					if (betWinner.equals(m.playerWithHighestSets())) {
 						result = "OK";
-					} else {
+					}
+					else {
 						result = "NOK";
 					}
-					messagingTemplate.convertAndSend("/queue/bet/" + clientId + "/" + m.getKey(), result);
+					messagingTemplate.convertAndSend(
+							"/queue/bet/" + clientId + "/" + m.getKey(), result);
 				}
 
 			}

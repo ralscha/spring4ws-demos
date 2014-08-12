@@ -43,9 +43,10 @@ public class Board {
 
 	public static void broadcastAllBoards() {
 		try {
-			ImmutableMap<String, Object> response = ImmutableMap.<String, Object> of("type", "board-list", "boards",
-					boards.keySet().toArray());
-			TextMessage tm = new TextMessage(BrainService.objectMapper.writeValueAsString(response));
+			ImmutableMap<String, Object> response = ImmutableMap.<String, Object> of(
+					"type", "board-list", "boards", boards.keySet().toArray());
+			TextMessage tm = new TextMessage(
+					BrainService.objectMapper.writeValueAsString(response));
 
 			for (Board board : boards.values()) {
 				Set<String> usersWithErrors = new HashSet<>();
@@ -54,10 +55,12 @@ public class Board {
 						WebSocketSession ws = board.users.get(sessionId);
 						if (ws.isOpen()) {
 							ws.sendMessage(tm);
-						} else {
+						}
+						else {
 							usersWithErrors.add(sessionId);
 						}
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						e.printStackTrace();
 						usersWithErrors.add(sessionId);
 					}
@@ -67,7 +70,8 @@ public class Board {
 					board.users.remove(sessionId);
 				}
 			}
-		} catch (JsonProcessingException e) {
+		}
+		catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -162,17 +166,20 @@ public class Board {
 
 	public void sendToAllUsers(Object msg) {
 		try {
-			TextMessage tm = new TextMessage(BrainService.objectMapper.writeValueAsString(msg));
+			TextMessage tm = new TextMessage(
+					BrainService.objectMapper.writeValueAsString(msg));
 			Set<String> usersWithErrors = new HashSet<>();
 			for (String sessionId : users.keySet()) {
 				try {
 					WebSocketSession ws = users.get(sessionId);
 					if (ws.isOpen()) {
 						ws.sendMessage(tm);
-					} else {
+					}
+					else {
 						usersWithErrors.add(sessionId);
 					}
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					e.printStackTrace();
 					usersWithErrors.add(sessionId);
 				}
@@ -181,7 +188,8 @@ public class Board {
 			for (String sessionId : usersWithErrors) {
 				users.remove(sessionId);
 			}
-		} catch (JsonProcessingException e) {
+		}
+		catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
 

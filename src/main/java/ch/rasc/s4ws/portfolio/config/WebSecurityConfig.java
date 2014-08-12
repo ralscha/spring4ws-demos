@@ -32,41 +32,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		//@formatter:off
-		http
-		.csrf().disable()
-		// See https://jira.springsource.org/browse/SPR-11496
-		.headers().addHeaderWriter(
-				new XFrameOptionsHeaderWriter(
-						XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-	        .and()
+		// @formatter:off
+		http.csrf()
+				.disable()
+				// See https://jira.springsource.org/browse/SPR-11496
+				.headers()
+				.addHeaderWriter(
+						new XFrameOptionsHeaderWriter(
+								XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
+				.and()
 
-		.formLogin()
-			.defaultSuccessUrl("/portfoliodemo/index.html")
-			.loginPage("/portfoliodemo/login.html")
-			.failureUrl("/portfoliodemo/login.html?error")
-			.permitAll()
-			.and()
-		.logout()
-			.logoutSuccessUrl("/portfoliodemo/login.html?logout")
-			.logoutUrl("/portfoliodemo/logout.html")
-			.permitAll()
-			.and()
-		.authorizeRequests()
-			.antMatchers("/portfoliodemo/login.css").permitAll()
-			.antMatchers("/portfoliodemo/**").authenticated()
-			.and();
+				.formLogin().defaultSuccessUrl("/portfoliodemo/index.html")
+				.loginPage("/portfoliodemo/login.html")
+				.failureUrl("/portfoliodemo/login.html?error").permitAll().and().logout()
+				.logoutSuccessUrl("/portfoliodemo/login.html?logout")
+				.logoutUrl("/portfoliodemo/logout.html").permitAll().and()
+				.authorizeRequests().antMatchers("/portfoliodemo/login.css").permitAll()
+				.antMatchers("/portfoliodemo/**").authenticated().and();
 
-		//@formatter:on
+		// @formatter:on
 	}
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		//@formatter:off
-		auth
-			.inMemoryAuthentication()
-			.withUser("fabrice").password("fab123").roles("USER").and()
-			.withUser("paulson").password("bond").roles("ADMIN","USER");
-		//@formatter:on
+		// @formatter:off
+		auth.inMemoryAuthentication().withUser("fabrice").password("fab123")
+				.roles("USER").and().withUser("paulson").password("bond")
+				.roles("ADMIN", "USER");
+		// @formatter:on
 	}
 }

@@ -48,7 +48,8 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 		float saturation = (random.nextInt(2000) + 1000) / 10000f;
 		float luminance = 0.9f;
 		Color color = Color.getHSBColor(hue, saturation, luminance);
-		return '#' + Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
+		return '#' + Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000)
+				.substring(1);
 	}
 
 	public static Location getRandomLocation() {
@@ -73,34 +74,42 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 		this.snake = new Snake(id, session);
 		SnakeTimer.addSnake(snake);
 		StringBuilder sb = new StringBuilder();
-		for (Iterator<Snake> iterator = SnakeTimer.getSnakes().iterator(); iterator.hasNext();) {
+		for (Iterator<Snake> iterator = SnakeTimer.getSnakes().iterator(); iterator
+				.hasNext();) {
 			Snake otherSnake = iterator.next();
-			sb.append(String.format("{\"id\": %d, \"color\": \"%s\"}", Integer.valueOf(otherSnake.getId()),
-					otherSnake.getHexColor()));
+			sb.append(String.format("{\"id\": %d, \"color\": \"%s\"}",
+					Integer.valueOf(otherSnake.getId()), otherSnake.getHexColor()));
 			if (iterator.hasNext()) {
 				sb.append(',');
 			}
 		}
-		SnakeTimer.broadcast(String.format("{\"type\": \"join\",\"data\":[%s]}", sb.toString()));
+		SnakeTimer.broadcast(String.format("{\"type\": \"join\",\"data\":[%s]}",
+				sb.toString()));
 	}
 
 	@Override
-	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+	protected void handleTextMessage(WebSocketSession session, TextMessage message)
+			throws Exception {
 		String payload = message.getPayload();
 		if ("west".equals(payload)) {
 			snake.setDirection(Direction.WEST);
-		} else if ("north".equals(payload)) {
+		}
+		else if ("north".equals(payload)) {
 			snake.setDirection(Direction.NORTH);
-		} else if ("east".equals(payload)) {
+		}
+		else if ("east".equals(payload)) {
 			snake.setDirection(Direction.EAST);
-		} else if ("south".equals(payload)) {
+		}
+		else if ("south".equals(payload)) {
 			snake.setDirection(Direction.SOUTH);
 		}
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
+			throws Exception {
 		SnakeTimer.removeSnake(snake);
-		SnakeTimer.broadcast(String.format("{'type': 'leave', 'id': %d}", Integer.valueOf(id)));
+		SnakeTimer.broadcast(String.format("{'type': 'leave', 'id': %d}",
+				Integer.valueOf(id)));
 	}
 }

@@ -44,14 +44,14 @@ public class CpuDataService {
 	public void sendData() throws JsonProcessingException {
 		if (!sessions.isEmpty()) {
 			final CpuData cpuData = new CpuData();
-			cpuData.setHost1(new double[] { random.nextDouble(), random.nextDouble(), random.nextDouble(),
-					random.nextDouble() });
-			cpuData.setHost2(new double[] { random.nextDouble(), random.nextDouble(), random.nextDouble(),
-					random.nextDouble() });
-			cpuData.setHost3(new double[] { random.nextDouble(), random.nextDouble(), random.nextDouble(),
-					random.nextDouble() });
-			cpuData.setHost4(new double[] { random.nextDouble(), random.nextDouble(), random.nextDouble(),
-					random.nextDouble() });
+			cpuData.setHost1(new double[] { random.nextDouble(), random.nextDouble(),
+					random.nextDouble(), random.nextDouble() });
+			cpuData.setHost2(new double[] { random.nextDouble(), random.nextDouble(),
+					random.nextDouble(), random.nextDouble() });
+			cpuData.setHost3(new double[] { random.nextDouble(), random.nextDouble(),
+					random.nextDouble(), random.nextDouble() });
+			cpuData.setHost4(new double[] { random.nextDouble(), random.nextDouble(),
+					random.nextDouble(), random.nextDouble() });
 
 			TextMessage tm = new TextMessage(objectMapper.writeValueAsString(cpuData));
 			for (WebSocketSession session : sessions.values()) {
@@ -66,7 +66,8 @@ public class CpuDataService {
 			if (session.isOpen()) {
 				try {
 					session.sendMessage(textMessage);
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					logger.error("sendMessage to session", e);
 				}
 			}

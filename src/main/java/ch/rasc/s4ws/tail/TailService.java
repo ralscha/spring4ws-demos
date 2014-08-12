@@ -33,10 +33,11 @@ import com.maxmind.geoip.LookupService;
 @Service
 public class TailService {
 
-	private final Pattern accessLogPattern = Pattern.compile(getAccessLogRegex(), Pattern.CASE_INSENSITIVE
-			| Pattern.DOTALL);
+	private final Pattern accessLogPattern = Pattern.compile(getAccessLogRegex(),
+			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-	private final UserAgentStringParser parser = UADetectorServiceFactory.getResourceModuleParser();
+	private final UserAgentStringParser parser = UADetectorServiceFactory
+			.getResourceModuleParser();
 
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
@@ -105,14 +106,16 @@ public class TailService {
 					String userAgent = matcher.group(9);
 					ReadableUserAgent ua = parser.parse(userAgent);
 					if (ua != null && ua.getFamily() != UserAgentFamily.UNKNOWN) {
-						String uaString = ua.getName() + " " + ua.getVersionNumber().toVersionString();
+						String uaString = ua.getName() + " "
+								+ ua.getVersionNumber().toVersionString();
 						uaString += "; " + ua.getOperatingSystem().getName();
 						uaString += "; " + ua.getFamily();
 						uaString += "; " + ua.getTypeName();
 						uaString += "; " + ua.getProducer();
 
 						access.setMessage(matcher.group(4) + "; " + uaString);
-					} else {
+					}
+					else {
 						access.setMessage(null);
 					}
 					access.setLl(new float[] { l.latitude, l.longitude });
@@ -134,7 +137,8 @@ public class TailService {
 		String regex8 = " \"([^\"]+|.+?)\""; // Referer
 		String regex9 = " \"([^\"]+|.+?)\""; // Agent
 
-		return regex1 + regex2 + regex3 + regex4 + regex5 + regex6 + regex7 + regex8 + regex9;
+		return regex1 + regex2 + regex3 + regex4 + regex5 + regex6 + regex7 + regex8
+				+ regex9;
 	}
 
 }

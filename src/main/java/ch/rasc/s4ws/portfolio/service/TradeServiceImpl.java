@@ -41,13 +41,15 @@ public class TradeServiceImpl implements TradeService {
 	private final List<TradeResult> tradeResults = new CopyOnWriteArrayList<>();
 
 	@Autowired
-	public TradeServiceImpl(SimpMessageSendingOperations messagingTemplate, PortfolioService portfolioService) {
+	public TradeServiceImpl(SimpMessageSendingOperations messagingTemplate,
+			PortfolioService portfolioService) {
 		this.messagingTemplate = messagingTemplate;
 		this.portfolioService = portfolioService;
 	}
 
 	/**
-	 * In real application a trade is probably executed in an external system, i.e. asynchronously.
+	 * In real application a trade is probably executed in an external system, i.e.
+	 * asynchronously.
 	 */
 	@Override
 	public void executeTrade(Trade trade) {
@@ -56,12 +58,13 @@ public class TradeServiceImpl implements TradeService {
 		String ticker = trade.getTicker();
 		int sharesToTrade = trade.getShares();
 
-		PortfolioPosition newPosition = trade.getAction() == TradeAction.Buy ? portfolio.buy(ticker, sharesToTrade)
-				: portfolio.sell(ticker, sharesToTrade);
+		PortfolioPosition newPosition = trade.getAction() == TradeAction.Buy ? portfolio
+				.buy(ticker, sharesToTrade) : portfolio.sell(ticker, sharesToTrade);
 
 		if (newPosition == null) {
 			String payload = "Rejected trade " + trade;
-			this.messagingTemplate.convertAndSendToUser(trade.getUsername(), "/queue/errors", payload);
+			this.messagingTemplate.convertAndSendToUser(trade.getUsername(),
+					"/queue/errors", payload);
 			return;
 		}
 
@@ -74,7 +77,8 @@ public class TradeServiceImpl implements TradeService {
 		for (TradeResult result : this.tradeResults) {
 			if (System.currentTimeMillis() >= result.timestamp + 1500) {
 				logger.debug("Sending position update: " + result.position);
-				this.messagingTemplate.convertAndSendToUser(result.user, "/queue/position-updates", result.position);
+				this.messagingTemplate.convertAndSendToUser(result.user,
+						"/queue/position-updates", result.position);
 				this.tradeResults.remove(result);
 			}
 		}

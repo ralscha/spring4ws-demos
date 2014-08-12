@@ -18,7 +18,8 @@ public class CpuDataHandler extends TextWebSocketHandler {
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
+			throws Exception {
 		cpuDataService.removeSession(session.getId());
 	}
 

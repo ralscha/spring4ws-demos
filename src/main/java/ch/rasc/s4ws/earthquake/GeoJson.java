@@ -48,7 +48,8 @@ public class GeoJson {
 
 	@Override
 	public String toString() {
-		return "GeoJson [type=" + type + ", metadata=" + metadata + ", features=" + features + ", bbox=" + bbox + "]";
+		return "GeoJson [type=" + type + ", metadata=" + metadata + ", features="
+				+ features + ", bbox=" + bbox + "]";
 	}
 
 }

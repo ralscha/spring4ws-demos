@@ -57,24 +57,30 @@ public class TwitterHandler {
 		BlockingQueue<String> queue = new LinkedBlockingQueue<>(100);
 		StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
 
-		endpoint.trackTerms(ImmutableList.of("ExtJS", "#extjs", "#SenchaTouch", "Sencha", "#java", "java7", "java8",
-				"#websocket", "#SpringFramework", "html5", "javascript"));
+		endpoint.trackTerms(ImmutableList.of("ExtJS", "#extjs", "#SenchaTouch", "Sencha",
+				"#java", "java7", "java8", "#websocket", "#SpringFramework", "html5",
+				"javascript"));
 		endpoint.languages(ImmutableList.of("en", "de"));
 
 		String consumerKey = environment.getProperty("twitter4j.oauth.consumerKey");
 		String consumerSecret = environment.getProperty("twitter4j.oauth.consumerSecret");
 		String accessToken = environment.getProperty("twitter4j.oauth.accessToken");
-		String accessTokenSecret = environment.getProperty("twitter4j.oauth.accessTokenSecret");
+		String accessTokenSecret = environment
+				.getProperty("twitter4j.oauth.accessTokenSecret");
 
-		Authentication auth = new OAuth1(consumerKey, consumerSecret, accessToken, accessTokenSecret);
+		Authentication auth = new OAuth1(consumerKey, consumerSecret, accessToken,
+				accessTokenSecret);
 
-		client = new ClientBuilder().hosts(Constants.STREAM_HOST).endpoint(endpoint).authentication(auth)
-				.processor(new StringDelimitedProcessor(queue)).build();
+		client = new ClientBuilder().hosts(Constants.STREAM_HOST).endpoint(endpoint)
+				.authentication(auth).processor(new StringDelimitedProcessor(queue))
+				.build();
 
 		executorService = Executors.newSingleThreadExecutor();
 
-		TwitterStatusListener statusListener = new TwitterStatusListener(messagingTemplate, hazelcastTopic, lastTweets);
-		t4jClient = new Twitter4jStatusClient(client, queue, ImmutableList.of(statusListener), executorService);
+		TwitterStatusListener statusListener = new TwitterStatusListener(
+				messagingTemplate, hazelcastTopic, lastTweets);
+		t4jClient = new Twitter4jStatusClient(client, queue,
+				ImmutableList.of(statusListener), executorService);
 
 		t4jClient.connect();
 		t4jClient.process();

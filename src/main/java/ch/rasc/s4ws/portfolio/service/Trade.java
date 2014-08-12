@@ -59,8 +59,8 @@ public class Trade {
 
 	@Override
 	public String toString() {
-		return "[ticker=" + this.ticker + ", shares=" + this.shares + ", action=" + this.action + ", username="
-				+ this.username + "]";
+		return "[ticker=" + this.ticker + ", shares=" + this.shares + ", action="
+				+ this.action + ", username=" + this.username + "]";
 	}
 
 	public enum TradeAction {

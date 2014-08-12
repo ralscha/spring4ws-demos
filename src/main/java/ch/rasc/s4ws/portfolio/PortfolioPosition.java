@@ -65,8 +65,8 @@ public class PortfolioPosition {
 
 	@Override
 	public String toString() {
-		return "PortfolioPosition [company=" + this.company + ", ticker=" + this.ticker + ", price=" + this.price
-				+ ", shares=" + this.shares + "]";
+		return "PortfolioPosition [company=" + this.company + ", ticker=" + this.ticker
+				+ ", price=" + this.price + ", shares=" + this.shares + "]";
 	}
 
 }
