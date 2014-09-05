@@ -1,6 +1,7 @@
 // MIT License:
 //
 // Copyright (c) 2010-2013, Joe Walnes
+//               2013-2014, Drew Noakes
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +24,7 @@
 /**
  * Smoothie Charts - http://smoothiecharts.org/
  * (c) 2010-2013, Joe Walnes
- *     2013, Drew Noakes
+ *     2013-2014, Drew Noakes
  *
  * v1.0: Main charting library, by Joe Walnes
  * v1.1: Auto scaling of axis, by Neil Dunn
@@ -60,9 +61,19 @@
  * v1.18: Allow control of max/min label precision, by @drewnoakes
  *        Added 'borderVisible' chart option, by @drewnoakes
  *        Allow drawing series with fill but no stroke (line), by @drewnoakes
+ * v1.19: Avoid unnecessary repaints, and fixed flicker in old browsers having multiple charts in document (#40), by @asbai
+ * v1.20: Add SmoothieChart.getTimeSeriesOptions and SmoothieChart.bringToFront functions, by @drewnoakes
+ * v1.21: Add 'step' interpolation mode, by @drewnoakes
+ * v1.22: Add support for different pixel ratios. Also add optional y limit formatters, by @copacetic
+ * v1.23: Fix bug introduced in v1.22 (#44), by @drewnoakes
+ * v1.24: Fix bug introduced in v1.23, re-adding parseFloat to y-axis formatter defaults, by @siggy_sf
+ * v1.25: Fix bug seen when adding a data point to TimeSeries which is older than the current data, by @Nking92
+ *        Draw time labels on top of series, by @comolosabia
+ *        Add TimeSeries.clear function, by @drewnoakes
+ * v1.26: Add support for resizing on high device pixel ratio screens, by @copacetic
  */
 
-(function(exports) {
+;(function(exports) {
 
   var Util = {
     extend: function() {
@@ -107,14 +118,21 @@
    */
   function TimeSeries(options) {
     this.options = Util.extend({}, TimeSeries.defaultOptions, options);
-    this.data = [];
-    this.maxValue = Number.NaN; // The maximum value ever seen in this TimeSeries.
-    this.minValue = Number.NaN; // The minimum value ever seen in this TimeSeries.
+    this.clear();
   }
 
   TimeSeries.defaultOptions = {
     resetBoundsInterval: 3000,
     resetBounds: true
+  };
+
+  /**
+   * Clears all data and state from this TimeSeries object.
+   */
+  TimeSeries.prototype.clear = function() {
+    this.data = [];
+    this.maxValue = Number.NaN; // The maximum value ever seen in this TimeSeries.
+    this.minValue = Number.NaN; // The minimum value ever seen in this TimeSeries.
   };
 
   /**
@@ -154,11 +172,14 @@
   TimeSeries.prototype.append = function(timestamp, value, sumRepeatedTimeStampValues) {
     // Rewind until we hit an older timestamp
     var i = this.data.length - 1;
-    while (i > 0 && this.data[i][0] > timestamp) {
+    while (i >= 0 && this.data[i][0] > timestamp) {
       i--;
     }
 
-    if (this.data.length > 0 && this.data[i][0] === timestamp) {
+    if (i === -1) {
+      // This new item is the oldest data
+      this.data.splice(0, 0, [timestamp, value]);
+    } else if (this.data.length > 0 && this.data[i][0] === timestamp) {
       // Update existing values in the array
       if (sumRepeatedTimeStampValues) {
         // Sum this value into the existing 'bucket'
@@ -200,34 +221,42 @@
    *
    * <pre>
    * {
-   *   minValue: undefined,        // specify to clamp the lower y-axis to a given value
-   *   maxValue: undefined,        // specify to clamp the upper y-axis to a given value
-   *   maxValueScale: 1,           // allows proportional padding to be added above the chart. for 10% padding, specify 1.1.
-   *   yRangeFunction: undefined,  // function({min: , max: }) { return {min: , max: }; }
-   *   scaleSmoothing: 0.125,      // controls the rate at which y-value zoom animation occurs
-   *   millisPerPixel: 20,         // sets the speed at which the chart pans by
+   *   minValue: undefined,                      // specify to clamp the lower y-axis to a given value
+   *   maxValue: undefined,                      // specify to clamp the upper y-axis to a given value
+   *   maxValueScale: 1,                         // allows proportional padding to be added above the chart. for 10% padding, specify 1.1.
+   *   yRangeFunction: undefined,                // function({min: , max: }) { return {min: , max: }; }
+   *   scaleSmoothing: 0.125,                    // controls the rate at which y-value zoom animation occurs
+   *   millisPerPixel: 20,                       // sets the speed at which the chart pans by
+   *   enableDpiScaling: true,                   // support rendering at different DPI depending on the device
+   *   yMinFormatter: function(min, precision) { // callback function that formats the min y value label
+   *     return parseFloat(min).toFixed(precision);
+   *   },
+   *   yMaxFormatter: function(max, precision) { // callback function that formats the max y value label
+   *     return parseFloat(max).toFixed(precision);
+   *   },
    *   maxDataSetLength: 2,
-   *   interpolation: 'bezier'     // or 'linear'
-   *   timestampFormatter: null,   // Optional function to format time stamps for bottom of chart. You may use SmoothieChart.timeFormatter, or your own: function(date) { return ''; }
-   *   horizontalLines: [],        // [ { value: 0, color: '#ffffff', lineWidth: 1 } ],
+   *   interpolation: 'bezier'                   // one of 'bezier', 'linear', or 'step'
+   *   timestampFormatter: null,                 // optional function to format time stamps for bottom of chart
+   *                                             // you may use SmoothieChart.timeFormatter, or your own: function(date) { return ''; }
+   *   horizontalLines: [],                      // [ { value: 0, color: '#ffffff', lineWidth: 1 } ]
    *   grid:
    *   {
-   *     fillStyle: '#000000',     // the background colour of the chart
-   *     lineWidth: 1,             // the pixel width of grid lines
-   *     strokeStyle: '#777777',   // colour of grid lines
-   *     millisPerLine: 1000,      // distance between vertical grid lines
-   *     sharpLines: false,        // controls whether grid lines are 1px sharp, or softened
-   *     verticalSections: 2,      // number of vertical sections marked out by horizontal grid lines
-   *     borderVisible: true       // whether the grid lines trace the border of the chart or not
+   *     fillStyle: '#000000',                   // the background colour of the chart
+   *     lineWidth: 1,                           // the pixel width of grid lines
+   *     strokeStyle: '#777777',                 // colour of grid lines
+   *     millisPerLine: 1000,                    // distance between vertical grid lines
+   *     sharpLines: false,                      // controls whether grid lines are 1px sharp, or softened
+   *     verticalSections: 2,                    // number of vertical sections marked out by horizontal grid lines
+   *     borderVisible: true                     // whether the grid lines trace the border of the chart or not
    *   },
    *   labels
    *   {
-   *     disabled: false,          // enables/disables labels showing the min/max values
-   *     fillStyle: '#ffffff',     // colour for text of labels,
+   *     disabled: false,                        // enables/disables labels showing the min/max values
+   *     fillStyle: '#ffffff',                   // colour for text of labels,
    *     fontSize: 15,
    *     fontFamily: 'sans-serif',
    *     precision: 2
-   *   },
+   *   }
    * }
    * </pre>
    *
@@ -238,10 +267,18 @@
     this.seriesSet = [];
     this.currentValueRange = 1;
     this.currentVisMinValue = 0;
+    this.lastRenderTimeMillis = 0;
   }
 
   SmoothieChart.defaultChartOptions = {
     millisPerPixel: 20,
+    enableDpiScaling: true,
+    yMinFormatter: function(min, precision) {
+      return parseFloat(min).toFixed(precision);
+    },
+    yMaxFormatter: function(max, precision) {
+      return parseFloat(max).toFixed(precision);
+    },
     maxValueScale: 1,
     interpolation: 'bezier',
     scaleSmoothing: 0.125,
@@ -267,9 +304,7 @@
 
   // Based on http://inspirit.github.com/jsfeat/js/compatibility.js
   SmoothieChart.AnimateCompatibility = (function() {
-    // TODO this global variable will cause bugs if more than one chart is used and the browser does not support *requestAnimationFrame natively
-    var lastTime = 0,
-        requestAnimationFrame = function(callback, element) {
+    var requestAnimationFrame = function(callback, element) {
           var requestAnimationFrame =
             window.requestAnimationFrame        ||
             window.webkitRequestAnimationFrame  ||
@@ -277,13 +312,9 @@
             window.oRequestAnimationFrame       ||
             window.msRequestAnimationFrame      ||
             function(callback) {
-              var currTime = new Date().getTime(),
-                  timeToCall = Math.max(0, 16 - (currTime - lastTime)),
-                  id = window.setTimeout(function() {
-                    callback(currTime + timeToCall);
-                  }, timeToCall);
-              lastTime = currTime + timeToCall;
-              return id;
+              return window.setTimeout(function() {
+                callback(new Date().getTime());
+              }, 16);
             };
           return requestAnimationFrame.call(window, callback, element);
         },
@@ -352,6 +383,37 @@
   };
 
   /**
+   * Gets render options for the specified <code>TimeSeries</code>.
+   *
+   * As you may use a single <code>TimeSeries</code> in multiple charts with different formatting in each usage,
+   * these settings are stored in the chart.
+   */
+  SmoothieChart.prototype.getTimeSeriesOptions = function(timeSeries) {
+    // Find the correct timeseries to remove, and remove it
+    var numSeries = this.seriesSet.length;
+    for (var i = 0; i < numSeries; i++) {
+      if (this.seriesSet[i].timeSeries === timeSeries) {
+        return this.seriesSet[i].options;
+      }
+    }
+  };
+
+  /**
+   * Brings the specified <code>TimeSeries</code> to the top of the chart. It will be rendered last.
+   */
+  SmoothieChart.prototype.bringToFront = function(timeSeries) {
+    // Find the correct timeseries to remove, and remove it
+    var numSeries = this.seriesSet.length;
+    for (var i = 0; i < numSeries; i++) {
+      if (this.seriesSet[i].timeSeries === timeSeries) {
+        var set = this.seriesSet.splice(i, 1);
+        this.seriesSet.push(set[0]);
+        break;
+      }
+    }
+  };
+
+  /**
    * Instructs the <code>SmoothieChart</code> to start rendering to the provided canvas, with specified delay.
    *
    * @param canvas the target canvas element
@@ -362,6 +424,33 @@
     this.canvas = canvas;
     this.delay = delayMillis;
     this.start();
+  };
+
+  /**
+   * Make sure the canvas has the optimal resolution for the device's pixel ratio.
+   */
+  SmoothieChart.prototype.resize = function() {
+    // TODO this function doesn't handle the value of enableDpiScaling changing during execution
+    if (!this.options.enableDpiScaling || !window || window.devicePixelRatio === 1)
+      return;
+
+    var dpr = window.devicePixelRatio;
+    var width = parseInt(this.canvas.getAttribute('width'));
+    var height = parseInt(this.canvas.getAttribute('height'));
+
+    if (!this.originalWidth || (this.originalWidth * dpr !== width)) {
+      this.originalWidth = width;
+      this.canvas.setAttribute('width', (width * dpr).toString());
+      this.canvas.style.width = width + 'px';
+      this.canvas.getContext('2d').scale(dpr, dpr);
+    }
+
+    if (!this.originalHeight || (this.originalHeight * dpr !== height)) {
+      this.originalHeight = height;
+      this.canvas.setAttribute('height', (height * dpr).toString());
+      this.canvas.style.height = height + 'px';
+      this.canvas.getContext('2d').scale(dpr, dpr);
+    }
   };
 
   /**
@@ -433,18 +522,38 @@
 
     if (!isNaN(chartMaxValue) && !isNaN(chartMinValue)) {
       var targetValueRange = chartMaxValue - chartMinValue;
-      this.currentValueRange += chartOptions.scaleSmoothing * (targetValueRange - this.currentValueRange);
-      this.currentVisMinValue += chartOptions.scaleSmoothing * (chartMinValue - this.currentVisMinValue);
+      var valueRangeDiff = (targetValueRange - this.currentValueRange);
+      var minValueDiff = (chartMinValue - this.currentVisMinValue);
+      this.isAnimatingScale = Math.abs(valueRangeDiff) > 0.1 || Math.abs(minValueDiff) > 0.1;
+      this.currentValueRange += chartOptions.scaleSmoothing * valueRangeDiff;
+      this.currentVisMinValue += chartOptions.scaleSmoothing * minValueDiff;
     }
 
     this.valueRange = { min: chartMinValue, max: chartMaxValue };
   };
 
   SmoothieChart.prototype.render = function(canvas, time) {
-    canvas = canvas || this.canvas;
-    time = time || new Date().getTime() - (this.delay || 0);
+    var nowMillis = new Date().getTime();
 
-    // TODO only render if the chart has moved at least 1px since the last rendered frame
+    if (!this.isAnimatingScale) {
+      // We're not animating. We can use the last render time and the scroll speed to work out whether
+      // we actually need to paint anything yet. If not, we can return immediately.
+
+      // Render at least every 1/6th of a second. The canvas may be resized, which there is
+      // no reliable way to detect.
+      var maxIdleMillis = Math.min(1000/6, this.options.millisPerPixel);
+
+      if (nowMillis - this.lastRenderTimeMillis < maxIdleMillis) {
+        return;
+      }
+    }
+
+    this.resize();
+
+    this.lastRenderTimeMillis = nowMillis;
+
+    canvas = canvas || this.canvas;
+    time = time || nowMillis - (this.delay || 0);
 
     // Round time down to pixel granularity, so motion appears smoother.
     time -= time % this.options.millisPerPixel;
@@ -495,7 +604,7 @@
     context.strokeStyle = chartOptions.grid.strokeStyle;
     // Vertical (time) dividers.
     if (chartOptions.grid.millisPerLine > 0) {
-      var textUntilX = dimensions.width - context.measureText(minValueString).width + 4;
+      context.beginPath();
       for (var t = time - (time % chartOptions.grid.millisPerLine);
            t >= oldestValidTime;
            t -= chartOptions.grid.millisPerLine) {
@@ -503,24 +612,11 @@
         if (chartOptions.grid.sharpLines) {
           gx -= 0.5;
         }
-        context.beginPath();
         context.moveTo(gx, 0);
         context.lineTo(gx, dimensions.height);
-        context.stroke();
-        context.closePath();
-
-        // Display timestamp at bottom of this line if requested, and it won't overlap
-        if (chartOptions.timestampFormatter && gx < textUntilX) {
-          // Formats the timestamp based on user specified formatting function
-          // SmoothieChart.timeFormatter function above is one such formatting option
-          var tx = new Date(t),
-            ts = chartOptions.timestampFormatter(tx),
-            tsWidth = context.measureText(ts).width;
-          textUntilX = gx - tsWidth - 2;
-          context.fillStyle = chartOptions.labels.fillStyle;
-          context.fillText(ts, gx - tsWidth, dimensions.height - 2);
-        }
       }
+      context.stroke();
+      context.closePath();
     }
 
     // Horizontal (value) dividers.
@@ -611,6 +707,11 @@
                 x, y); // endPoint (B)
               break;
             }
+            case "step": {
+              context.lineTo(x,lastY);
+              context.lineTo(x,y);
+              break;
+            }
           }
         }
 
@@ -637,11 +738,32 @@
 
     // Draw the axis values on the chart.
     if (!chartOptions.labels.disabled && !isNaN(this.valueRange.min) && !isNaN(this.valueRange.max)) {
-      var maxValueString = parseFloat(this.valueRange.max).toFixed(chartOptions.labels.precision),
-          minValueString = parseFloat(this.valueRange.min).toFixed(chartOptions.labels.precision);
+      var maxValueString = chartOptions.yMaxFormatter(this.valueRange.max, chartOptions.labels.precision),
+          minValueString = chartOptions.yMinFormatter(this.valueRange.min, chartOptions.labels.precision);
       context.fillStyle = chartOptions.labels.fillStyle;
       context.fillText(maxValueString, dimensions.width - context.measureText(maxValueString).width - 2, chartOptions.labels.fontSize);
       context.fillText(minValueString, dimensions.width - context.measureText(minValueString).width - 2, dimensions.height - 2);
+    }
+
+    // Display timestamps along x-axis at the bottom of the chart.
+    if (chartOptions.timestampFormatter && chartOptions.grid.millisPerLine > 0) {
+      var textUntilX = dimensions.width - context.measureText(minValueString).width + 4;
+      for (var t = time - (time % chartOptions.grid.millisPerLine);
+           t >= oldestValidTime;
+           t -= chartOptions.grid.millisPerLine) {
+        var gx = timeToXPixel(t);
+        // Only draw the timestamp if it won't overlap with the previously drawn one.
+        if (gx < textUntilX) {
+          // Formats the timestamp based on user specified formatting function
+          // SmoothieChart.timeFormatter function above is one such formatting option
+          var tx = new Date(t),
+            ts = chartOptions.timestampFormatter(tx),
+            tsWidth = context.measureText(ts).width;
+          textUntilX = gx - tsWidth - 2;
+          context.fillStyle = chartOptions.labels.fillStyle;
+          context.fillText(ts, gx - tsWidth, dimensions.height - 2);
+        }
+      }
     }
 
     context.restore(); // See .save() above.
@@ -649,12 +771,12 @@
 
   // Sample timestamp formatting function
   SmoothieChart.timeFormatter = function(date) {
-    function pad2(number) { return (number < 10 ? '0' : '') + number; }
+    function pad2(number) { return (number < 10 ? '0' : '') + number }
     return pad2(date.getHours()) + ':' + pad2(date.getMinutes()) + ':' + pad2(date.getSeconds());
   };
 
   exports.TimeSeries = TimeSeries;
   exports.SmoothieChart = SmoothieChart;
 
-})(typeof exports === 'undefined' ?  this : exports);
+})(typeof exports === 'undefined' ? this : exports);
 

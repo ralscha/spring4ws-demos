@@ -68,8 +68,7 @@ Ext.define('AB.data.WampStore', {
 	toArray: function(obj) {
 		if (Ext.isArray(obj)) {
 			return obj;
-		} else {
-			return [ obj ];
 		}
+		return [ obj ];
 	}
 });

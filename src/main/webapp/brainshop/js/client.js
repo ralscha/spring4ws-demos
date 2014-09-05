@@ -356,7 +356,7 @@ var Brainstorm = (function () {
                   firstGroupAdded = idea1.group;
                 }
                 else {
-                  firstGroupAdded = Math.uuid(20);
+                  firstGroupAdded = uuid.v4();
                   group = newGroupElement(firstGroupAdded);
                   $('#board').append(group);
                 }
@@ -434,7 +434,7 @@ var Brainstorm = (function () {
   }
 
   function newGroupEvent(e) {
-    var target = e.message.target, group = newGroupElement(Math.uuid(20));
+    var target = e.message.target, group = newGroupElement(uuid.v4());
     if (group.children().length === 0)
       group.append(target);
     cleanGroups();

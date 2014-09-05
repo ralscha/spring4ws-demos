@@ -1,5 +1,5 @@
 var idMatch = '1234';
-var clientId = Math.uuid();
+var clientId = uuid.v4();
 var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
 var sock = new SockJS(path + 'tennis');
 var stompClient = Stomp.over(sock);
