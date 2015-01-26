@@ -15,7 +15,7 @@ public class Metadata {
 	private Integer count;
 
 	public Long getGenerated() {
-		return generated;
+		return this.generated;
 	}
 
 	public void setGenerated(Long generated) {
@@ -23,7 +23,7 @@ public class Metadata {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
@@ -31,7 +31,7 @@ public class Metadata {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -39,7 +39,7 @@ public class Metadata {
 	}
 
 	public Integer getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(Integer status) {
@@ -47,7 +47,7 @@ public class Metadata {
 	}
 
 	public String getApi() {
-		return api;
+		return this.api;
 	}
 
 	public void setApi(String api) {
@@ -55,7 +55,7 @@ public class Metadata {
 	}
 
 	public Integer getCount() {
-		return count;
+		return this.count;
 	}
 
 	public void setCount(Integer count) {
@@ -64,8 +64,9 @@ public class Metadata {
 
 	@Override
 	public String toString() {
-		return "Metadata [generated=" + generated + ", url=" + url + ", title=" + title
-				+ ", status=" + status + ", api=" + api + ", count=" + count + "]";
+		return "Metadata [generated=" + this.generated + ", url=" + this.url + ", title="
+				+ this.title + ", status=" + this.status + ", api=" + this.api
+				+ ", count=" + this.count + "]";
 	}
 
 }

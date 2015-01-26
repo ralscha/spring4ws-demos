@@ -15,7 +15,7 @@ public class GeoJson {
 	private List<BigDecimal> bbox = new ArrayList<>();
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -23,7 +23,7 @@ public class GeoJson {
 	}
 
 	public Metadata getMetadata() {
-		return metadata;
+		return this.metadata;
 	}
 
 	public void setMetadata(Metadata metadata) {
@@ -31,7 +31,7 @@ public class GeoJson {
 	}
 
 	public List<Feature> getFeatures() {
-		return features;
+		return this.features;
 	}
 
 	public void setFeatures(List<Feature> features) {
@@ -39,7 +39,7 @@ public class GeoJson {
 	}
 
 	public List<BigDecimal> getBbox() {
-		return bbox;
+		return this.bbox;
 	}
 
 	public void setBbox(List<BigDecimal> bbox) {
@@ -48,8 +48,8 @@ public class GeoJson {
 
 	@Override
 	public String toString() {
-		return "GeoJson [type=" + type + ", metadata=" + metadata + ", features="
-				+ features + ", bbox=" + bbox + "]";
+		return "GeoJson [type=" + this.type + ", metadata=" + this.metadata
+				+ ", features=" + this.features + ", bbox=" + this.bbox + "]";
 	}
 
 }

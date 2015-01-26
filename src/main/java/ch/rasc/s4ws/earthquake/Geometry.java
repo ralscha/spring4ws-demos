@@ -11,7 +11,7 @@ public class Geometry {
 	private List<BigDecimal> coordinates = new ArrayList<>();
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -19,7 +19,7 @@ public class Geometry {
 	}
 
 	public List<BigDecimal> getCoordinates() {
-		return coordinates;
+		return this.coordinates;
 	}
 
 	public void setCoordinates(List<BigDecimal> coordinates) {
@@ -28,7 +28,7 @@ public class Geometry {
 
 	@Override
 	public String toString() {
-		return "Geometry [type=" + type + ", coordinates=" + coordinates + "]";
+		return "Geometry [type=" + this.type + ", coordinates=" + this.coordinates + "]";
 	}
 
 }

@@ -27,7 +27,7 @@ public final class DrawMessage {
 	 * 4: Ellipse
 	 */
 	public int getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(int type) {
@@ -35,7 +35,7 @@ public final class DrawMessage {
 	}
 
 	public double getThickness() {
-		return thickness;
+		return this.thickness;
 	}
 
 	public void setThickness(double thickness) {
@@ -43,7 +43,7 @@ public final class DrawMessage {
 	}
 
 	public byte getColorR() {
-		return colorR;
+		return this.colorR;
 	}
 
 	public void setColorR(byte colorR) {
@@ -51,7 +51,7 @@ public final class DrawMessage {
 	}
 
 	public byte getColorG() {
-		return colorG;
+		return this.colorG;
 	}
 
 	public void setColorG(byte colorG) {
@@ -59,7 +59,7 @@ public final class DrawMessage {
 	}
 
 	public byte getColorB() {
-		return colorB;
+		return this.colorB;
 	}
 
 	public void setColorB(byte colorB) {
@@ -67,7 +67,7 @@ public final class DrawMessage {
 	}
 
 	public byte getColorA() {
-		return colorA;
+		return this.colorA;
 	}
 
 	public void setColorA(byte colorA) {
@@ -75,7 +75,7 @@ public final class DrawMessage {
 	}
 
 	public double getX1() {
-		return x1;
+		return this.x1;
 	}
 
 	public void setX1(double x1) {
@@ -83,7 +83,7 @@ public final class DrawMessage {
 	}
 
 	public double getX2() {
-		return x2;
+		return this.x2;
 	}
 
 	public void setX2(double x2) {
@@ -91,7 +91,7 @@ public final class DrawMessage {
 	}
 
 	public double getY1() {
-		return y1;
+		return this.y1;
 	}
 
 	public void setY1(double y1) {
@@ -99,7 +99,7 @@ public final class DrawMessage {
 	}
 
 	public double getY2() {
-		return y2;
+		return this.y2;
 	}
 
 	public void setY2(double y2) {
@@ -112,7 +112,7 @@ public final class DrawMessage {
 	 * Currently it is unused.
 	 */
 	public boolean isLastInChain() {
-		return lastInChain;
+		return this.lastInChain;
 	}
 
 	public void setLastInChain(boolean lastInChain) {
@@ -143,23 +143,24 @@ public final class DrawMessage {
 	 */
 	public void draw(Graphics2D g) {
 
-		g.setStroke(new BasicStroke((float) thickness, BasicStroke.CAP_ROUND,
+		g.setStroke(new BasicStroke((float) this.thickness, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_MITER));
-		g.setColor(new Color(colorR & 0xFF, colorG & 0xFF, colorB & 0xFF, colorA & 0xFF));
+		g.setColor(new Color(this.colorR & 0xFF, this.colorG & 0xFF, this.colorB & 0xFF,
+				this.colorA & 0xFF));
 
-		if (x1 == x2 && y1 == y2) {
+		if (this.x1 == this.x2 && this.y1 == this.y2) {
 			// Always draw as arc to meet the behavior in the HTML5 Canvas.
-			Arc2D arc = new Arc2D.Double(x1, y1, 0, 0, 0d, 360d, Arc2D.OPEN);
+			Arc2D arc = new Arc2D.Double(this.x1, this.y1, 0, 0, 0d, 360d, Arc2D.OPEN);
 			g.draw(arc);
 
 		}
-		else if (type == 1 || type == 2) {
+		else if (this.type == 1 || this.type == 2) {
 			// Draw a line.
-			Line2D line = new Line2D.Double(x1, y1, x2, y2);
+			Line2D line = new Line2D.Double(this.x1, this.y1, this.x2, this.y2);
 			g.draw(line);
 
 		}
-		else if (type == 3 || type == 4) {
+		else if (this.type == 3 || this.type == 4) {
 			double x1 = this.x1, x2 = this.x2, y1 = this.y1, y2 = this.y2;
 			if (x1 > x2) {
 				x1 = this.x2;
@@ -172,13 +173,13 @@ public final class DrawMessage {
 
 			// TODO: If (x1 == x2 || y1 == y2) draw as line.
 
-			if (type == 3) {
+			if (this.type == 3) {
 				// Draw a rectangle.
 				Rectangle2D rect = new Rectangle2D.Double(x1, y1, x2 - x1, y2 - y1);
 				g.draw(rect);
 
 			}
-			else if (type == 4) {
+			else if (this.type == 4) {
 				// Draw an ellipse.
 				Arc2D arc = new Arc2D.Double(x1, y1, x2 - x1, y2 - y1, 0d, 360d,
 						Arc2D.OPEN);
@@ -196,9 +197,10 @@ public final class DrawMessage {
 	@Override
 	public String toString() {
 
-		return type + "," + (colorR & 0xFF) + "," + (colorG & 0xFF) + ","
-				+ (colorB & 0xFF) + "," + (colorA & 0xFF) + "," + thickness + "," + x1
-				+ "," + y1 + "," + x2 + "," + y2 + "," + (lastInChain ? "1" : "0");
+		return this.type + "," + (this.colorR & 0xFF) + "," + (this.colorG & 0xFF) + ","
+				+ (this.colorB & 0xFF) + "," + (this.colorA & 0xFF) + ","
+				+ this.thickness + "," + this.x1 + "," + this.y1 + "," + this.x2 + ","
+				+ this.y2 + "," + (this.lastInChain ? "1" : "0");
 	}
 
 	public static DrawMessage parseFromString(String str) throws ParseException {

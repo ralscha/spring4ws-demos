@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
-import reactor.spring.annotation.Selector;
+import reactor.spring.context.annotation.Selector;
 import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
 
 import com.google.common.collect.Maps;
@@ -25,7 +25,7 @@ public final class Room {
 	private final BufferedImage roomImage = new BufferedImage(900, 600,
 			BufferedImage.TYPE_INT_RGB);
 
-	private final Graphics2D roomGraphics = roomImage.createGraphics();
+	private final Graphics2D roomGraphics = this.roomImage.createGraphics();
 
 	private final Map<String, Long> playerMap = Maps.newConcurrentMap();
 
@@ -33,28 +33,29 @@ public final class Room {
 	public Reactor reactor;
 
 	public Room() {
-		roomGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+		this.roomGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-		roomGraphics.setBackground(Color.WHITE);
-		roomGraphics.clearRect(0, 0, roomImage.getWidth(), roomImage.getHeight());
+		this.roomGraphics.setBackground(Color.WHITE);
+		this.roomGraphics.clearRect(0, 0, this.roomImage.getWidth(),
+				this.roomImage.getHeight());
 	}
 
 	@Selector("newPlayer")
 	public void newPlayer(String sessionId) {
-		playerMap.put(sessionId, 0L);
+		this.playerMap.put(sessionId, 0L);
 		Event<String> event = Event.wrap(MessageType.PLAYER_CHANGED.flag + "+");
 		event.getHeaders().set("excludeId", sessionId);
-		reactor.notify("sendString", event);
+		this.reactor.notify("sendString", event);
 
 		event = Event.wrap(MessageType.IMAGE_MESSAGE.flag
-				+ String.valueOf(playerMap.size()));
+				+ String.valueOf(this.playerMap.size()));
 		event.getHeaders().set("sessionId", sessionId);
-		reactor.notify("sendString", event);
+		this.reactor.notify("sendString", event);
 
 		// Store image as PNG
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		try {
-			ImageIO.write(roomImage, "PNG", bout);
+			ImageIO.write(this.roomImage, "PNG", bout);
 		}
 		catch (IOException e) { /* Should never happen */
 		}
@@ -62,14 +63,14 @@ public final class Room {
 		Event<ByteBuffer> byteBufferEvent = Event
 				.wrap(ByteBuffer.wrap(bout.toByteArray()));
 		byteBufferEvent.getHeaders().set("sessionId", sessionId);
-		reactor.notify("sendBinary", byteBufferEvent);
+		this.reactor.notify("sendBinary", byteBufferEvent);
 	}
 
 	@Selector("removePlayer")
 	public void removePlayer(String sessionId) {
 		Event<String> event = Event.wrap(MessageType.PLAYER_CHANGED.flag + "-");
-		playerMap.remove(sessionId);
-		reactor.notify("sendString", event);
+		this.playerMap.remove(sessionId);
+		this.reactor.notify("sendString", event);
 	}
 
 	@Selector("incomingMessage")
@@ -84,18 +85,19 @@ public final class Room {
 			try {
 				int indexOfChar = messageContent.indexOf('|');
 				Long msgId = Long.valueOf(messageContent.substring(0, indexOfChar));
-				playerMap.put(sessionId, msgId);
+				this.playerMap.put(sessionId, msgId);
 
 				DrawMessage drawMessage = DrawMessage.parseFromString(messageContent
 						.substring(indexOfChar + 1));
-				drawMessage.draw(roomGraphics);
+				drawMessage.draw(this.roomGraphics);
 				String drawMessageString = drawMessage.toString();
 
-				for (String playerSessionId : playerMap.keySet()) {
-					Event<String> event = Event.wrap("1" + playerMap.get(playerSessionId)
-							+ "," + drawMessageString);
+				for (String playerSessionId : this.playerMap.keySet()) {
+					Event<String> event = Event.wrap("1"
+							+ this.playerMap.get(playerSessionId) + ","
+							+ drawMessageString);
 					event.getHeaders().set("sessionId", playerSessionId);
-					reactor.notify("sendString", event);
+					this.reactor.notify("sendString", event);
 				}
 
 			}

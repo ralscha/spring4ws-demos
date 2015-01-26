@@ -22,7 +22,7 @@ public class RandomDataService {
 		for (int i = 0; i < randomNumbers.length; i++) {
 			randomNumbers[i] = random.nextInt(101);
 		}
-		eventMessenger.sendToAll("data", randomNumbers);
+		this.eventMessenger.sendToAll("data", randomNumbers);
 	}
 
 }

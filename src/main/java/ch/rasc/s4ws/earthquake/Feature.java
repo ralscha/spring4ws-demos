@@ -11,7 +11,7 @@ public class Feature {
 	private String id;
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -19,7 +19,7 @@ public class Feature {
 	}
 
 	public Properties getProperties() {
-		return properties;
+		return this.properties;
 	}
 
 	public void setProperties(Properties properties) {
@@ -27,7 +27,7 @@ public class Feature {
 	}
 
 	public Geometry getGeometry() {
-		return geometry;
+		return this.geometry;
 	}
 
 	public void setGeometry(Geometry geometry) {
@@ -35,7 +35,7 @@ public class Feature {
 	}
 
 	public String getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(String id) {
@@ -44,8 +44,8 @@ public class Feature {
 
 	@Override
 	public String toString() {
-		return "Feature [type=" + type + ", properties=" + properties + ", geometry="
-				+ geometry + ", id=" + id + "]";
+		return "Feature [type=" + this.type + ", properties=" + this.properties
+				+ ", geometry=" + this.geometry + ", id=" + this.id + "]";
 	}
 
 }

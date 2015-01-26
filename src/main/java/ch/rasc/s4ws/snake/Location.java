@@ -30,13 +30,13 @@ public class Location {
 	public Location getAdjacentLocation(Direction direction) {
 		switch (direction) {
 		case NORTH:
-			return new Location(x, y - SnakeUtils.GRID_SIZE);
+			return new Location(this.x, this.y - SnakeUtils.GRID_SIZE);
 		case SOUTH:
-			return new Location(x, y + SnakeUtils.GRID_SIZE);
+			return new Location(this.x, this.y + SnakeUtils.GRID_SIZE);
 		case EAST:
-			return new Location(x + SnakeUtils.GRID_SIZE, y);
+			return new Location(this.x + SnakeUtils.GRID_SIZE, this.y);
 		case WEST:
-			return new Location(x - SnakeUtils.GRID_SIZE, y);
+			return new Location(this.x - SnakeUtils.GRID_SIZE, this.y);
 		case NONE:
 			// fall through
 		default:
@@ -55,10 +55,10 @@ public class Location {
 
 		Location location = (Location) o;
 
-		if (x != location.x) {
+		if (this.x != location.x) {
 			return false;
 		}
-		if (y != location.y) {
+		if (this.y != location.y) {
 			return false;
 		}
 
@@ -67,8 +67,8 @@ public class Location {
 
 	@Override
 	public int hashCode() {
-		int result = x;
-		result = 31 * result + y;
+		int result = this.x;
+		result = 31 * result + this.y;
 		return result;
 	}
 }

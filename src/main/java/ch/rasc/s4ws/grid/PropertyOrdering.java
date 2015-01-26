@@ -17,8 +17,8 @@ public class PropertyOrdering<T> extends Ordering<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public int compare(T o1, T o2) {
-		Object left = readPropertyExpression.getValue(o1);
-		Object right = readPropertyExpression.getValue(o2);
+		Object left = this.readPropertyExpression.getValue(o1);
+		Object right = this.readPropertyExpression.getValue(o2);
 
 		if (left == right) {
 			return 0;

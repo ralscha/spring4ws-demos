@@ -29,14 +29,14 @@ public class EarthquakeService {
 
 	@SubscribeMapping("/topic/quakes.all")
 	public GeoJson subscribe() {
-		return lastGeoJson;
+		return this.lastGeoJson;
 	}
 
 	@Scheduled(initialDelay = 2000, fixedDelay = 60000)
 	public void pollData() {
 		try {
-			lastGeoJson = objectMapper.readValue(new URL(pastHour), GeoJson.class);
-			messagingTemplate.convertAndSend("/topic/quakes.all", lastGeoJson);
+			this.lastGeoJson = objectMapper.readValue(new URL(pastHour), GeoJson.class);
+			this.messagingTemplate.convertAndSend("/topic/quakes.all", this.lastGeoJson);
 		}
 		catch (IOException e) {
 			logger.error("poll data", e);

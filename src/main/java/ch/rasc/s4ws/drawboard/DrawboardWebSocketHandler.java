@@ -31,7 +31,7 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
-import reactor.spring.annotation.Selector;
+import reactor.spring.context.annotation.Selector;
 
 import com.google.common.collect.Maps;
 
@@ -49,7 +49,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 		String receiver = event.getHeaders().get("sessionId");
 		TextMessage txtMessage = new TextMessage(event.getData());
 		if (receiver != null) {
-			WebSocketSession session = sessions.get(receiver);
+			WebSocketSession session = this.sessions.get(receiver);
 			if (session != null) {
 				try {
 					session.sendMessage(txtMessage);
@@ -61,7 +61,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 		}
 		else {
 			String excludeId = event.getHeaders().get("excludeId");
-			for (WebSocketSession session : sessions.values()) {
+			for (WebSocketSession session : this.sessions.values()) {
 				if (!session.getId().equals(excludeId)) {
 					try {
 						session.sendMessage(txtMessage);
@@ -80,7 +80,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 		String receiver = event.getHeaders().get("sessionId");
 		BinaryMessage binMsg = new BinaryMessage(event.getData());
 		if (receiver != null) {
-			WebSocketSession session = sessions.get(receiver);
+			WebSocketSession session = this.sessions.get(receiver);
 			if (session != null) {
 				try {
 					session.sendMessage(binMsg);
@@ -92,7 +92,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 		}
 		else {
 			String excludeId = event.getHeaders().get("excludeId");
-			for (WebSocketSession session : sessions.values()) {
+			for (WebSocketSession session : this.sessions.values()) {
 				if (!session.getId().equals(excludeId)) {
 					try {
 						session.sendMessage(binMsg);
@@ -108,8 +108,8 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		sessions.put(session.getId(), session);
-		reactor.notify("newPlayer", Event.wrap(session.getId()));
+		this.sessions.put(session.getId(), session);
+		this.reactor.notify("newPlayer", Event.wrap(session.getId()));
 	}
 
 	@Override
@@ -118,14 +118,14 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 
 		Event<String> event = Event.wrap(message.getPayload());
 		event.getHeaders().set("sessionId", session.getId());
-		reactor.notify("incomingMessage", event);
+		this.reactor.notify("incomingMessage", event);
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
-		sessions.remove(session.getId());
-		reactor.notify("removePlayer", Event.wrap(session.getId()));
+		this.sessions.remove(session.getId());
+		this.reactor.notify("removePlayer", Event.wrap(session.getId()));
 	}
 
 }

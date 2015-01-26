@@ -22,7 +22,7 @@ public class StoreReadRequest {
 	}
 
 	public String getQuery() {
-		return query;
+		return this.query;
 	}
 
 	public void setQuery(String query) {
@@ -30,7 +30,7 @@ public class StoreReadRequest {
 	}
 
 	public Integer getLimit() {
-		return limit;
+		return this.limit;
 	}
 
 	public void setLimit(Integer limit) {
@@ -38,7 +38,7 @@ public class StoreReadRequest {
 	}
 
 	public Integer getStart() {
-		return start;
+		return this.start;
 	}
 
 	public void setStart(Integer start) {
@@ -46,7 +46,7 @@ public class StoreReadRequest {
 	}
 
 	public Integer getPage() {
-		return page;
+		return this.page;
 	}
 
 	public void setPage(Integer page) {
@@ -54,7 +54,7 @@ public class StoreReadRequest {
 	}
 
 	public String getSort() {
-		return sort;
+		return this.sort;
 	}
 
 	public void setSort(String sort) {
@@ -62,7 +62,7 @@ public class StoreReadRequest {
 	}
 
 	public Map<String, Object> getParams() {
-		return Collections.unmodifiableMap(params);
+		return Collections.unmodifiableMap(this.params);
 	}
 
 	public void setParams(Map<String, Object> params) {
@@ -71,9 +71,9 @@ public class StoreReadRequest {
 
 	@Override
 	public String toString() {
-		return "StoreReadRequest [query=" + query + ", limit=" + limit + ", start="
-				+ start + ", page=" + page + ", sort=" + sort + ", params=" + params
-				+ "]";
+		return "StoreReadRequest [query=" + this.query + ", limit=" + this.limit
+				+ ", start=" + this.start + ", page=" + this.page + ", sort=" + this.sort
+				+ ", params=" + this.params + "]";
 	}
 
 }

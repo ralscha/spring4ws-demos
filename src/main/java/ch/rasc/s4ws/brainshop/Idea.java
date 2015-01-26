@@ -32,11 +32,11 @@ public class Idea {
 	}
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public Integer getNext() {
-		return next;
+		return this.next;
 	}
 
 	public void setNext(Integer next) {
@@ -44,7 +44,7 @@ public class Idea {
 	}
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
@@ -52,7 +52,7 @@ public class Idea {
 	}
 
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	public void setText(String text) {
@@ -60,7 +60,7 @@ public class Idea {
 	}
 
 	public String getGroup() {
-		return group;
+		return this.group;
 	}
 
 	public void setGroup(String group) {
@@ -68,7 +68,7 @@ public class Idea {
 	}
 
 	public String getDate() {
-		return date;
+		return this.date;
 	}
 
 	public void setDate(String date) {
@@ -76,7 +76,7 @@ public class Idea {
 	}
 
 	public boolean isLast() {
-		return last;
+		return this.last;
 	}
 
 	public void setLast(boolean last) {
@@ -84,7 +84,7 @@ public class Idea {
 	}
 
 	public Set<String> getLikes() {
-		return likes;
+		return this.likes;
 	}
 
 	public void setLikes(Set<String> likes) {
@@ -92,7 +92,7 @@ public class Idea {
 	}
 
 	public Set<String> getDislikes() {
-		return dislikes;
+		return this.dislikes;
 	}
 
 	public void setDislikes(Set<String> dislikes) {
@@ -100,12 +100,12 @@ public class Idea {
 	}
 
 	public void dislike(String user) {
-		likes.remove(user);
-		dislikes.add(user);
+		this.likes.remove(user);
+		this.dislikes.add(user);
 	}
 
 	public void like(String user) {
-		dislikes.remove(user);
-		likes.add(user);
+		this.dislikes.remove(user);
+		this.likes.add(user);
 	}
 }

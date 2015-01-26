@@ -13,7 +13,7 @@ public class Book {
 	private String link;
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -21,7 +21,7 @@ public class Book {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -29,7 +29,7 @@ public class Book {
 	}
 
 	public String getPublisher() {
-		return publisher;
+		return this.publisher;
 	}
 
 	public void setPublisher(String publisher) {
@@ -37,7 +37,7 @@ public class Book {
 	}
 
 	public String getIsbn() {
-		return isbn;
+		return this.isbn;
 	}
 
 	public void setIsbn(String isbn) {
@@ -45,7 +45,7 @@ public class Book {
 	}
 
 	public String getLink() {
-		return link;
+		return this.link;
 	}
 
 	public void setLink(String link) {

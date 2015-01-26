@@ -41,7 +41,7 @@ public class BookService {
 			result.add(book);
 		}
 
-		eventMessenger.sendToAllExcept("grid:oncreate", result,
+		this.eventMessenger.sendToAllExcept("grid:oncreate", result,
 				callMessage.getWebSocketSessionId());
 		return result;
 	}
@@ -56,7 +56,7 @@ public class BookService {
 			result.add(book);
 		}
 
-		eventMessenger.sendToAllExcept("grid:onupdate", result,
+		this.eventMessenger.sendToAllExcept("grid:onupdate", result,
 				callMessage.getWebSocketSessionId());
 		return result;
 	}
@@ -67,6 +67,6 @@ public class BookService {
 		for (Book book : books) {
 			BookDb.delete(book);
 		}
-		eventMessenger.sendToAll("grid:ondestroy", books);
+		this.eventMessenger.sendToAll("grid:ondestroy", books);
 	}
 }

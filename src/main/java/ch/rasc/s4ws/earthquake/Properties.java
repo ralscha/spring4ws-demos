@@ -57,7 +57,7 @@ public class Properties {
 	private String title;
 
 	public BigDecimal getMag() {
-		return mag;
+		return this.mag;
 	}
 
 	public void setMag(BigDecimal mag) {
@@ -65,7 +65,7 @@ public class Properties {
 	}
 
 	public String getPlace() {
-		return place;
+		return this.place;
 	}
 
 	public void setPlace(String place) {
@@ -73,7 +73,7 @@ public class Properties {
 	}
 
 	public Long getTime() {
-		return time;
+		return this.time;
 	}
 
 	public void setTime(Long time) {
@@ -81,7 +81,7 @@ public class Properties {
 	}
 
 	public Long getUpdated() {
-		return updated;
+		return this.updated;
 	}
 
 	public void setUpdated(Long updated) {
@@ -89,7 +89,7 @@ public class Properties {
 	}
 
 	public Integer getTz() {
-		return tz;
+		return this.tz;
 	}
 
 	public void setTz(Integer tz) {
@@ -97,7 +97,7 @@ public class Properties {
 	}
 
 	public String getUrl() {
-		return url;
+		return this.url;
 	}
 
 	public void setUrl(String url) {
@@ -105,7 +105,7 @@ public class Properties {
 	}
 
 	public String getDetail() {
-		return detail;
+		return this.detail;
 	}
 
 	public void setDetail(String detail) {
@@ -113,7 +113,7 @@ public class Properties {
 	}
 
 	public Integer getFelt() {
-		return felt;
+		return this.felt;
 	}
 
 	public void setFelt(Integer felt) {
@@ -121,7 +121,7 @@ public class Properties {
 	}
 
 	public BigDecimal getCdi() {
-		return cdi;
+		return this.cdi;
 	}
 
 	public void setCdi(BigDecimal cdi) {
@@ -129,7 +129,7 @@ public class Properties {
 	}
 
 	public BigDecimal getMmi() {
-		return mmi;
+		return this.mmi;
 	}
 
 	public void setMmi(BigDecimal mmi) {
@@ -137,7 +137,7 @@ public class Properties {
 	}
 
 	public String getAlert() {
-		return alert;
+		return this.alert;
 	}
 
 	public void setAlert(String alert) {
@@ -145,7 +145,7 @@ public class Properties {
 	}
 
 	public String getStatus() {
-		return status;
+		return this.status;
 	}
 
 	public void setStatus(String status) {
@@ -153,7 +153,7 @@ public class Properties {
 	}
 
 	public Integer getTsunami() {
-		return tsunami;
+		return this.tsunami;
 	}
 
 	public void setTsunami(Integer tsunami) {
@@ -161,7 +161,7 @@ public class Properties {
 	}
 
 	public Integer getSig() {
-		return sig;
+		return this.sig;
 	}
 
 	public void setSig(Integer sig) {
@@ -169,7 +169,7 @@ public class Properties {
 	}
 
 	public String getNet() {
-		return net;
+		return this.net;
 	}
 
 	public void setNet(String net) {
@@ -177,7 +177,7 @@ public class Properties {
 	}
 
 	public String getCode() {
-		return code;
+		return this.code;
 	}
 
 	public void setCode(String code) {
@@ -185,7 +185,7 @@ public class Properties {
 	}
 
 	public String getIds() {
-		return ids;
+		return this.ids;
 	}
 
 	public void setIds(String ids) {
@@ -193,7 +193,7 @@ public class Properties {
 	}
 
 	public String getSources() {
-		return sources;
+		return this.sources;
 	}
 
 	public void setSources(String sources) {
@@ -201,7 +201,7 @@ public class Properties {
 	}
 
 	public String getTypes() {
-		return types;
+		return this.types;
 	}
 
 	public void setTypes(String types) {
@@ -209,7 +209,7 @@ public class Properties {
 	}
 
 	public Integer getNst() {
-		return nst;
+		return this.nst;
 	}
 
 	public void setNst(Integer nst) {
@@ -217,7 +217,7 @@ public class Properties {
 	}
 
 	public BigDecimal getDmin() {
-		return dmin;
+		return this.dmin;
 	}
 
 	public void setDmin(BigDecimal dmin) {
@@ -225,7 +225,7 @@ public class Properties {
 	}
 
 	public BigDecimal getRms() {
-		return rms;
+		return this.rms;
 	}
 
 	public void setRms(BigDecimal rms) {
@@ -233,7 +233,7 @@ public class Properties {
 	}
 
 	public BigDecimal getGap() {
-		return gap;
+		return this.gap;
 	}
 
 	public void setGap(BigDecimal gap) {
@@ -241,7 +241,7 @@ public class Properties {
 	}
 
 	public String getMagType() {
-		return magType;
+		return this.magType;
 	}
 
 	public void setMagType(String magType) {
@@ -249,7 +249,7 @@ public class Properties {
 	}
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -257,7 +257,7 @@ public class Properties {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -266,14 +266,16 @@ public class Properties {
 
 	@Override
 	public String toString() {
-		return "Properties [mag=" + mag + ", place=" + place + ", time=" + time
-				+ ", updated=" + updated + ", tz=" + tz + ", url=" + url + ", detail="
-				+ detail + ", felt=" + felt + ", cdi=" + cdi + ", mmi=" + mmi
-				+ ", alert=" + alert + ", status=" + status + ", tsunami=" + tsunami
-				+ ", sig=" + sig + ", net=" + net + ", code=" + code + ", ids=" + ids
-				+ ", sources=" + sources + ", types=" + types + ", nst=" + nst
-				+ ", dmin=" + dmin + ", rms=" + rms + ", gap=" + gap + ", magType="
-				+ magType + ", type=" + type + ", title=" + title + "]";
+		return "Properties [mag=" + this.mag + ", place=" + this.place + ", time="
+				+ this.time + ", updated=" + this.updated + ", tz=" + this.tz + ", url="
+				+ this.url + ", detail=" + this.detail + ", felt=" + this.felt + ", cdi="
+				+ this.cdi + ", mmi=" + this.mmi + ", alert=" + this.alert + ", status="
+				+ this.status + ", tsunami=" + this.tsunami + ", sig=" + this.sig
+				+ ", net=" + this.net + ", code=" + this.code + ", ids=" + this.ids
+				+ ", sources=" + this.sources + ", types=" + this.types + ", nst="
+				+ this.nst + ", dmin=" + this.dmin + ", rms=" + this.rms + ", gap="
+				+ this.gap + ", magType=" + this.magType + ", type=" + this.type
+				+ ", title=" + this.title + "]";
 	}
 
 }

@@ -29,11 +29,11 @@ public class TennisMatch {
 	private String liveComments;
 
 	public Player getPlayer1() {
-		return player1;
+		return this.player1;
 	}
 
 	public Player getPlayer2() {
-		return player2;
+		return this.player2;
 	}
 
 	public TennisMatch(String key, String title, Player player1, Player player2) {
@@ -42,26 +42,26 @@ public class TennisMatch {
 		this.player1 = player1;
 		this.player2 = player2;
 		this.serve = player1.getName();
-		liveComments = "Welcome to this match between " + player1.getName() + " and "
-				+ player2.getName() + ".";
+		this.liveComments = "Welcome to this match between " + player1.getName()
+				+ " and " + player2.getName() + ".";
 	}
 
 	public String getKey() {
-		return key;
+		return this.key;
 	}
 
 	public synchronized void reset() {
-		player1.reset();
-		player2.reset();
-		isSet1Finished = isSet2Finished = isSet3Finished = isFinished = false;
+		this.player1.reset();
+		this.player2.reset();
+		this.isSet1Finished = this.isSet2Finished = this.isSet3Finished = this.isFinished = false;
 
-		liveComments = "WELCOME to this match between " + player1.getName() + " and "
-				+ player2.getName() + ".";
+		this.liveComments = "WELCOME to this match between " + this.player1.getName()
+				+ " and " + this.player2.getName() + ".";
 
 	}
 
 	public String getPlayer1Score() {
-		if (hasAdvantage() && player1Points > player2Points) {
+		if (hasAdvantage() && this.player1Points > this.player2Points) {
 			addLiveComments("Advantage " + playerWithHighestScore());
 			return "AD";
 		}
@@ -69,48 +69,50 @@ public class TennisMatch {
 			addLiveComments("Deuce");
 			return "40";
 		}
-		return translateScore(player1Points);
+		return translateScore(this.player1Points);
 	}
 
 	public String getPlayer2Score() {
-		if (hasAdvantage() && player2Points > player1Points) {
+		if (hasAdvantage() && this.player2Points > this.player1Points) {
 			addLiveComments("Advantage " + playerWithHighestScore());
 			return "AD";
 		}
 		if (isDeuce()) {
 			return "40";
 		}
-		return translateScore(player2Points);
+		return translateScore(this.player2Points);
 	}
 
 	private boolean isDeuce() {
-		return player1Points >= 3 && player2Points == player1Points;
+		return this.player1Points >= 3 && this.player2Points == this.player1Points;
 	}
 
 	private String playerWithHighestScore() {
-		if (player1Points > player2Points) {
-			return player1.getName();
+		if (this.player1Points > this.player2Points) {
+			return this.player1.getName();
 		}
-		return player2.getName();
+		return this.player2.getName();
 	}
 
 	private String playerWithHighestGames() {
-		if (player1.getGamesInCurrentSet() > player2.getGamesInCurrentSet()) {
-			return player1.getName();
+		if (this.player1.getGamesInCurrentSet() > this.player2.getGamesInCurrentSet()) {
+			return this.player1.getName();
 		}
-		return player2.getName();
+		return this.player2.getName();
 	}
 
 	public String playerWithHighestSets() {
-		if (player1.getSets() > player2.getSets()) {
-			return player1.getName();
+		if (this.player1.getSets() > this.player2.getSets()) {
+			return this.player1.getName();
 		}
-		return player2.getName();
+		return this.player2.getName();
 	}
 
 	public boolean hasMatchWinner() {
-		if (isSet1Finished && isSet2Finished
-				&& (isSet3Finished || player1.getSets() != player2.getSets())) {
+		if (this.isSet1Finished
+				&& this.isSet2Finished
+				&& (this.isSet3Finished || this.player1.getSets() != this.player2
+						.getSets())) {
 			return true;
 		}
 		return false;
@@ -118,65 +120,67 @@ public class TennisMatch {
 
 	public boolean hasGameWinner() {
 		boolean hasGameWinner = false;
-		if (player2Points >= 4 && player2Points >= player1Points + 2) {
-			player2.incGamesInCurrentSet();
+		if (this.player2Points >= 4 && this.player2Points >= this.player1Points + 2) {
+			this.player2.incGamesInCurrentSet();
 			hasGameWinner = true;
 		}
-		if (player1Points >= 4 && player1Points >= player2Points + 2) {
-			player1.incGamesInCurrentSet();
+		if (this.player1Points >= 4 && this.player1Points >= this.player2Points + 2) {
+			this.player1.incGamesInCurrentSet();
 			hasGameWinner = true;
 		}
 		if (hasGameWinner) {
 			addLiveComments("Game " + playerWithHighestScore());
-			player2Points = 0;
-			player1Points = 0;
-			if (player1.getName().equals(serve)) {
-				serve = player2.getName();
+			this.player2Points = 0;
+			this.player1Points = 0;
+			if (this.player1.getName().equals(this.serve)) {
+				this.serve = this.player2.getName();
 			}
 			else {
-				serve = player1.getName();
+				this.serve = this.player1.getName();
 			}
 		}
 		return hasGameWinner;
 	}
 
 	public boolean hasSetWinner() {
-		if (player1.getGamesInCurrentSet() >= 6
-				&& (player1.getGamesInCurrentSet() >= player2.getGamesInCurrentSet() + 2 || player1
-						.getGamesInCurrentSet() + player2.getGamesInCurrentSet() == 13)
-				|| player2.getGamesInCurrentSet() >= 6
-				&& (player2.getGamesInCurrentSet() >= player1.getGamesInCurrentSet() + 2 || player1
-						.getGamesInCurrentSet() + player2.getGamesInCurrentSet() == 13)) {
-			if (!isSet1Finished) {
-				isSet1Finished = true;
-				player1.setSet1(player1.getGamesInCurrentSet());
-				player2.setSet1(player2.getGamesInCurrentSet());
+		if (this.player1.getGamesInCurrentSet() >= 6
+				&& (this.player1.getGamesInCurrentSet() >= this.player2
+						.getGamesInCurrentSet() + 2 || this.player1
+						.getGamesInCurrentSet() + this.player2.getGamesInCurrentSet() == 13)
+				|| this.player2.getGamesInCurrentSet() >= 6
+				&& (this.player2.getGamesInCurrentSet() >= this.player1
+						.getGamesInCurrentSet() + 2 || this.player1
+						.getGamesInCurrentSet() + this.player2.getGamesInCurrentSet() == 13)) {
+			if (!this.isSet1Finished) {
+				this.isSet1Finished = true;
+				this.player1.setSet1(this.player1.getGamesInCurrentSet());
+				this.player2.setSet1(this.player2.getGamesInCurrentSet());
 			}
-			else if (!isSet2Finished) {
-				isSet2Finished = true;
-				player1.setSet2(player1.getGamesInCurrentSet());
-				player2.setSet2(player2.getGamesInCurrentSet());
+			else if (!this.isSet2Finished) {
+				this.isSet2Finished = true;
+				this.player1.setSet2(this.player1.getGamesInCurrentSet());
+				this.player2.setSet2(this.player2.getGamesInCurrentSet());
 			}
 			else {
-				isSet3Finished = true;
-				player1.setSet3(player1.getGamesInCurrentSet());
-				player2.setSet3(player2.getGamesInCurrentSet());
+				this.isSet3Finished = true;
+				this.player1.setSet3(this.player1.getGamesInCurrentSet());
+				this.player2.setSet3(this.player2.getGamesInCurrentSet());
 			}
 
 			addLiveComments(playerWithHighestGames() + " wins this set !!");
-			if (player1.getGamesInCurrentSet() > player2.getGamesInCurrentSet()) {
-				player1.incSets();
+			if (this.player1.getGamesInCurrentSet() > this.player2.getGamesInCurrentSet()) {
+				this.player1.incSets();
 			}
 			else {
-				player2.incSets();
+				this.player2.incSets();
 			}
 
-			player1.setGamesInCurrentSet(0);
-			player2.setGamesInCurrentSet(0);
+			this.player1.setGamesInCurrentSet(0);
+			this.player2.setGamesInCurrentSet(0);
 
 			// check if match is finished
 			if (hasMatchWinner()) {
-				isFinished = true;
+				this.isFinished = true;
 				addLiveComments(playerWithHighestGames() + " WINS the match !!");
 			}
 
@@ -186,10 +190,10 @@ public class TennisMatch {
 	}
 
 	private boolean hasAdvantage() {
-		if (player2Points >= 4 && player2Points == player1Points + 1) {
+		if (this.player2Points >= 4 && this.player2Points == this.player1Points + 1) {
 			return true;
 		}
-		if (player1Points >= 4 && player1Points == player2Points + 1) {
+		if (this.player1Points >= 4 && this.player1Points == this.player2Points + 1) {
 			return true;
 		}
 
@@ -198,16 +202,16 @@ public class TennisMatch {
 	}
 
 	public void playerOneScores() {
-		liveComments = "";
-		player1Points++;
+		this.liveComments = "";
+		this.player1Points++;
 		if (hasGameWinner()) {
 			hasSetWinner();
 		}
 	}
 
 	public void playerTwoScores() {
-		liveComments = "";
-		player2Points++;
+		this.liveComments = "";
+		this.player2Points++;
 		if (hasGameWinner()) {
 			hasSetWinner();
 		}
@@ -229,19 +233,19 @@ public class TennisMatch {
 	}
 
 	public boolean isSet1Finished() {
-		return isSet1Finished;
+		return this.isSet1Finished;
 	}
 
 	public boolean isSet2Finished() {
-		return isSet2Finished;
+		return this.isSet2Finished;
 	}
 
 	public boolean isSet3Finished() {
-		return isSet3Finished;
+		return this.isSet3Finished;
 	}
 
 	public String getLiveComments() {
-		return liveComments;
+		return this.liveComments;
 	}
 
 	public void addLiveComments(String comments) {
@@ -249,11 +253,11 @@ public class TennisMatch {
 		int H = cal.get(Calendar.HOUR);
 		int m = cal.get(Calendar.MINUTE);
 		int s = cal.get(Calendar.SECOND);
-		liveComments = "\n" + H + ":" + m + ":" + s + " - " + comments;
+		this.liveComments = "\n" + H + ":" + m + ":" + s + " - " + comments;
 	}
 
 	public String getServe() {
-		return serve;
+		return this.serve;
 	}
 
 	public void setServe(String serve) {
@@ -261,7 +265,7 @@ public class TennisMatch {
 	}
 
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
 	public void setTitle(String title) {
@@ -269,7 +273,7 @@ public class TennisMatch {
 	}
 
 	public boolean isFinished() {
-		return isFinished;
+		return this.isFinished;
 	}
 
 	public void setFinished(boolean isFinished) {

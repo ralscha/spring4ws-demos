@@ -88,17 +88,17 @@ public class Board {
 	}
 
 	public void addIdea(Idea idea) {
-		Group group = groups.get(idea.getGroup());
+		Group group = this.groups.get(idea.getGroup());
 		if (group == null) {
 			group = new Group(idea.getGroup());
-			groups.put(idea.getGroup(), group);
+			this.groups.put(idea.getGroup(), group);
 		}
 
 		group.addIdea(idea);
 	}
 
 	public void removeIdea(Integer id) {
-		for (Group group : groups.values()) {
+		for (Group group : this.groups.values()) {
 			Idea idea = group.removeIdea(id);
 			if (idea != null) {
 				return;
@@ -107,7 +107,7 @@ public class Board {
 	}
 
 	public Idea getIdea(Integer id) {
-		for (Group group : groups.values()) {
+		for (Group group : this.groups.values()) {
 			Idea idea = group.getIdea(id);
 			if (idea != null) {
 				return idea;
@@ -118,7 +118,7 @@ public class Board {
 
 	public Collection<Idea> getAllIdeas() {
 		List<Idea> ideas = new ArrayList<>();
-		for (Group group : groups.values()) {
+		for (Group group : this.groups.values()) {
 			for (Idea idea : group.getIdeas()) {
 				idea.setGroup(group.getGroupId());
 			}
@@ -128,14 +128,14 @@ public class Board {
 	}
 
 	public void removeUser(String sessionId) {
-		users.remove(sessionId);
+		this.users.remove(sessionId);
 	}
 
 	public void moveIdea(Idea idea) {
 
 		Idea gIdea = null;
 		Group gGroup = null;
-		for (Group group : groups.values()) {
+		for (Group group : this.groups.values()) {
 			gIdea = group.getIdea(idea.getId());
 			if (gIdea != null) {
 				gGroup = group;
@@ -151,14 +151,14 @@ public class Board {
 
 			gGroup.removeIdea(idea.getId());
 			if (gGroup.isEmpty()) {
-				groups.remove(gGroup.getGroupId());
+				this.groups.remove(gGroup.getGroupId());
 			}
 		}
 
-		Group newGroup = groups.get(idea.getGroup());
+		Group newGroup = this.groups.get(idea.getGroup());
 		if (newGroup == null) {
 			newGroup = new Group(idea.getGroup());
-			groups.put(idea.getGroup(), newGroup);
+			this.groups.put(idea.getGroup(), newGroup);
 		}
 		newGroup.addIdea(idea);
 
@@ -169,9 +169,9 @@ public class Board {
 			TextMessage tm = new TextMessage(
 					BrainService.objectMapper.writeValueAsString(msg));
 			Set<String> usersWithErrors = new HashSet<>();
-			for (String sessionId : users.keySet()) {
+			for (String sessionId : this.users.keySet()) {
 				try {
-					WebSocketSession ws = users.get(sessionId);
+					WebSocketSession ws = this.users.get(sessionId);
 					if (ws.isOpen()) {
 						ws.sendMessage(tm);
 					}
@@ -186,7 +186,7 @@ public class Board {
 			}
 
 			for (String sessionId : usersWithErrors) {
-				users.remove(sessionId);
+				this.users.remove(sessionId);
 			}
 		}
 		catch (JsonProcessingException e) {
@@ -196,11 +196,11 @@ public class Board {
 	}
 
 	public void addUser(WebSocketSession session) {
-		users.put(session.getId(), session);
+		this.users.put(session.getId(), session);
 	}
 
 	public void removeUser(WebSocketSession session) {
-		users.remove(session.getId());
+		this.users.remove(session.getId());
 	}
 
 }

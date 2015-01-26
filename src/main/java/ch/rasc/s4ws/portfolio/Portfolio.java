@@ -25,7 +25,7 @@ public class Portfolio {
 	private final Map<String, PortfolioPosition> positionLookup = new LinkedHashMap<>();
 
 	public List<PortfolioPosition> getPositions() {
-		return new ArrayList<>(positionLookup.values());
+		return new ArrayList<>(this.positionLookup.values());
 	}
 
 	public void addPosition(PortfolioPosition position) {

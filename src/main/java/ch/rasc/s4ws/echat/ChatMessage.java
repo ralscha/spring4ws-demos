@@ -7,7 +7,7 @@ public class ChatMessage {
 	private String username;
 
 	public String getMessage() {
-		return message;
+		return this.message;
 	}
 
 	public void setMessage(String message) {
@@ -15,7 +15,7 @@ public class ChatMessage {
 	}
 
 	public String getUsername() {
-		return username;
+		return this.username;
 	}
 
 	public void setUsername(String username) {

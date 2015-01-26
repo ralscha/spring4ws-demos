@@ -27,7 +27,7 @@ public class SchedulerHandler {
 	@WampPublishListener("http://demo.rasc.ch/spring4ws/schdemo#clientDoInitialLoad")
 	public void clientDoInitialLoad(PublishMessage message) {
 		String sessionId = message.getHeader(WampMessageHeader.WEBSOCKET_SESSION_ID);
-		eventMessenger.sendTo(
+		this.eventMessenger.sendTo(
 				"http://demo.rasc.ch/spring4ws/schdemo#serverDoInitialLoad",
 				ImmutableMap.of("data", CustomEventDb.list()),
 				Collections.singleton(sessionId));
@@ -36,7 +36,7 @@ public class SchedulerHandler {
 	@WampPublishListener("http://demo.rasc.ch/spring4ws/schdemo#clientDoUpdate")
 	public void clientDoUpdate(PublishMessage message, CustomEvent record) {
 		CustomEventDb.update(record);
-		eventMessenger.sendToAllExcept(
+		this.eventMessenger.sendToAllExcept(
 				"http://demo.rasc.ch/spring4ws/schdemo#serverDoUpdate", record,
 				message.getWebSocketSessionId());
 	}
@@ -58,11 +58,12 @@ public class SchedulerHandler {
 			ids.add(ImmutableMap.of("internalId", internalId, "record", event));
 		}
 
-		eventMessenger.sendToAllExcept(
+		this.eventMessenger.sendToAllExcept(
 				"http://demo.rasc.ch/spring4ws/schdemo#serverDoAdd",
 				ImmutableMap.of("records", updatedRecords),
 				message.getWebSocketSessionId());
-		eventMessenger.sendToAll("http://demo.rasc.ch/spring4ws/schdemo#serverSyncId",
+		this.eventMessenger.sendToAll(
+				"http://demo.rasc.ch/spring4ws/schdemo#serverSyncId",
 				ImmutableMap.of("records", ids));
 	}
 
@@ -70,7 +71,7 @@ public class SchedulerHandler {
 	public void clientDoRemove(PublishMessage message, List<Integer> ids) {
 		CustomEventDb.delete(ids);
 
-		eventMessenger.sendToAllExcept(
+		this.eventMessenger.sendToAllExcept(
 				"http://demo.rasc.ch/spring4ws/schdemo#serverDoRemove",
 				ImmutableMap.of("ids", ids), message.getWebSocketSessionId());
 	}

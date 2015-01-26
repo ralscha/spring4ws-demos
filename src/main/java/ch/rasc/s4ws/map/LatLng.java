@@ -11,11 +11,11 @@ public class LatLng {
 	}
 
 	public double getLat() {
-		return lat;
+		return this.lat;
 	}
 
 	public double getLng() {
-		return lng;
+		return this.lng;
 	}
 
 }

@@ -38,37 +38,37 @@ public class MatchService {
 
 	@PostConstruct
 	public void init() {
-		random = new Random();
-		matches.put("1234", new TennisMatch("1234", "US OPEN - QUARTER FINALS",
+		this.random = new Random();
+		this.matches.put("1234", new TennisMatch("1234", "US OPEN - QUARTER FINALS",
 				new Player("Ferrer D.", "es"), new Player("Almagro N.", "es")));
-		matches.put("1235", new TennisMatch("1235", "US OPEN - QUARTER FINALS",
+		this.matches.put("1235", new TennisMatch("1235", "US OPEN - QUARTER FINALS",
 				new Player("Djokovic N.", "rs"), new Player("Berdych T.", "cz")));
-		matches.put("1236", new TennisMatch("1236", "US OPEN - QUARTER FINALS",
+		this.matches.put("1236", new TennisMatch("1236", "US OPEN - QUARTER FINALS",
 				new Player("Murray A.", "gb"), new Player("Chardy J.", "fr")));
-		matches.put("1237", new TennisMatch("1237", "US OPEN - QUARTER FINALS",
+		this.matches.put("1237", new TennisMatch("1237", "US OPEN - QUARTER FINALS",
 				new Player("Federer R.", "ch"), new Player("Tsonga J.W.", "fr")));
 
-		for (String matchId : matches.keySet()) {
+		for (String matchId : this.matches.keySet()) {
 			matchClientBets.put(matchId, new ConcurrentHashMap<String, String>());
 		}
 	}
 
 	@Scheduled(initialDelay = 2000, fixedRate = 3000)
 	public void play() {
-		for (Map.Entry<String, TennisMatch> match : matches.entrySet()) {
+		for (Map.Entry<String, TennisMatch> match : this.matches.entrySet()) {
 			TennisMatch m = match.getValue();
 			if (m.isFinished()) {
 				m.reset();
 			}
 			// Handle point
-			if (random.nextInt(2) == 1) {
+			if (this.random.nextInt(2) == 1) {
 				m.playerOneScores();
 			}
 			else {
 				m.playerTwoScores();
 			}
 
-			messagingTemplate.convertAndSend("/topic/match/" + m.getKey(), m);
+			this.messagingTemplate.convertAndSend("/topic/match/" + m.getKey(), m);
 
 			if (m.isFinished()) {
 				Map<String, String> clientBets = matchClientBets.get(m.getKey());
@@ -81,8 +81,8 @@ public class MatchService {
 					else {
 						result = "NOK";
 					}
-					messagingTemplate.convertAndSend(
-							"/queue/bet/" + clientId + "/" + m.getKey(), result);
+					this.messagingTemplate.convertAndSend("/queue/bet/" + clientId + "/"
+							+ m.getKey(), result);
 				}
 
 			}
@@ -90,6 +90,6 @@ public class MatchService {
 	}
 
 	public Map<String, TennisMatch> getMatches() {
-		return matches;
+		return this.matches;
 	}
 }

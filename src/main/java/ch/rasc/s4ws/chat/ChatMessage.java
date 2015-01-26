@@ -6,7 +6,7 @@ public class ChatMessage {
 	private String message;
 
 	public String getUsername() {
-		return username;
+		return this.username;
 	}
 
 	public void setUsername(String username) {
@@ -14,7 +14,7 @@ public class ChatMessage {
 	}
 
 	public String getMessage() {
-		return message;
+		return this.message;
 	}
 
 	public void setMessage(String message) {
@@ -23,7 +23,8 @@ public class ChatMessage {
 
 	@Override
 	public String toString() {
-		return "ChatMessage [username=" + username + ", message=" + message + "]";
+		return "ChatMessage [username=" + this.username + ", message=" + this.message
+				+ "]";
 	}
 
 }

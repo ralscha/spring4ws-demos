@@ -50,27 +50,27 @@ public class EnhancedChatService {
 
 	@WampCallListener
 	public Collection<UserConnection> readConnectedUsers() {
-		return socketIdToUserMap.values();
+		return this.socketIdToUserMap.values();
 	}
 
 	@WampCallListener("connect")
 	public void connect(CallMessage callMessage, UserConnection newUser) {
-		ReadableUserAgent ua = parser.parse(newUser.getBrowser());
+		ReadableUserAgent ua = this.parser.parse(newUser.getBrowser());
 		if (ua != null) {
 			newUser.setBrowser(ua.getName() + " " + ua.getVersionNumber().getMajor());
 		}
 
 		newUser.setSessionId(callMessage.getWebSocketSessionId());
-		socketIdToUserMap.put(callMessage.getWebSocketSessionId(), newUser);
-		eventMessenger.sendToAll("connected", newUser);
+		this.socketIdToUserMap.put(callMessage.getWebSocketSessionId(), newUser);
+		this.eventMessenger.sendToAll("connected", newUser);
 	}
 
 	@WampUnsubscribeListener("message")
 	public void unsubscribeClient(UnsubscribeMessage unsubscribeMessage) {
-		UserConnection uc = socketIdToUserMap.remove(unsubscribeMessage
+		UserConnection uc = this.socketIdToUserMap.remove(unsubscribeMessage
 				.getWebSocketSessionId());
 		if (uc != null) {
-			eventMessenger.sendToAll("disconnected", uc);
+			this.eventMessenger.sendToAll("disconnected", uc);
 		}
 	}
 
@@ -78,14 +78,14 @@ public class EnhancedChatService {
 	public void hangup(String connectedWith) {
 		String webSocketSessionId = findUserConnection(connectedWith);
 		if (webSocketSessionId != null) {
-			eventMessenger.sendTo("hangup", null,
+			this.eventMessenger.sendTo("hangup", null,
 					Collections.singleton(webSocketSessionId));
 		}
 	}
 
 	private String findUserConnection(String userName) {
-		for (String webSocketSessionId : socketIdToUserMap.keySet()) {
-			UserConnection uc = socketIdToUserMap.get(webSocketSessionId);
+		for (String webSocketSessionId : this.socketIdToUserMap.keySet()) {
+			UserConnection uc = this.socketIdToUserMap.get(webSocketSessionId);
 			if (uc.getUsername().equals(userName)) {
 				return webSocketSessionId;
 			}
@@ -95,14 +95,15 @@ public class EnhancedChatService {
 
 	@WampCallListener("snapshot")
 	public void snapshot(CallMessage callMessage, String image) {
-		UserConnection uc = socketIdToUserMap.get(callMessage.getWebSocketSessionId());
+		UserConnection uc = this.socketIdToUserMap.get(callMessage
+				.getWebSocketSessionId());
 		if (uc != null && image.startsWith(DATA_IMAGE)) {
 			try {
 				byte[] imageBytes = DatatypeConverter.parseBase64Binary(image
 						.substring(DATA_IMAGE.length()));
 				String resizedImageDataURL = resize(imageBytes);
 				uc.setImage(resizedImageDataURL);
-				eventMessenger.sendToAll("snapshot", uc);
+				this.eventMessenger.sendToAll("snapshot", uc);
 			}
 			catch (IOException e) {
 				e.printStackTrace();
@@ -129,7 +130,7 @@ public class EnhancedChatService {
 		String toUsername = (String) offerObject.get("toUsername");
 		String webSocketSessionId = findUserConnection(toUsername);
 		if (webSocketSessionId != null) {
-			eventMessenger.sendTo("receiveSdp", offerObject,
+			this.eventMessenger.sendTo("receiveSdp", offerObject,
 					Collections.singleton(webSocketSessionId));
 		}
 
@@ -149,7 +150,7 @@ public class EnhancedChatService {
 		String toUsername = (String) candidate.get("toUsername");
 		String webSocketSessionId = findUserConnection(toUsername);
 		if (webSocketSessionId != null) {
-			eventMessenger.sendTo("receiveIceCandidate", candidate,
+			this.eventMessenger.sendTo("receiveIceCandidate", candidate,
 					Collections.singleton(webSocketSessionId));
 		}
 

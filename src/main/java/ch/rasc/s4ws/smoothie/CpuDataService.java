@@ -33,28 +33,32 @@ public class CpuDataService {
 	}
 
 	public void addSession(String id, WebSocketSession session) {
-		sessions.put(id, session);
+		this.sessions.put(id, session);
 	}
 
 	public void removeSession(String id) {
-		sessions.remove(id);
+		this.sessions.remove(id);
 	}
 
 	@Scheduled(initialDelay = 1000, fixedDelay = 1000)
 	public void sendData() throws JsonProcessingException {
-		if (!sessions.isEmpty()) {
+		if (!this.sessions.isEmpty()) {
 			final CpuData cpuData = new CpuData();
-			cpuData.setHost1(new double[] { random.nextDouble(), random.nextDouble(),
-					random.nextDouble(), random.nextDouble() });
-			cpuData.setHost2(new double[] { random.nextDouble(), random.nextDouble(),
-					random.nextDouble(), random.nextDouble() });
-			cpuData.setHost3(new double[] { random.nextDouble(), random.nextDouble(),
-					random.nextDouble(), random.nextDouble() });
-			cpuData.setHost4(new double[] { random.nextDouble(), random.nextDouble(),
-					random.nextDouble(), random.nextDouble() });
+			cpuData.setHost1(new double[] { this.random.nextDouble(),
+					this.random.nextDouble(), this.random.nextDouble(),
+					this.random.nextDouble() });
+			cpuData.setHost2(new double[] { this.random.nextDouble(),
+					this.random.nextDouble(), this.random.nextDouble(),
+					this.random.nextDouble() });
+			cpuData.setHost3(new double[] { this.random.nextDouble(),
+					this.random.nextDouble(), this.random.nextDouble(),
+					this.random.nextDouble() });
+			cpuData.setHost4(new double[] { this.random.nextDouble(),
+					this.random.nextDouble(), this.random.nextDouble(),
+					this.random.nextDouble() });
 
 			TextMessage tm = new TextMessage(objectMapper.writeValueAsString(cpuData));
-			for (WebSocketSession session : sessions.values()) {
+			for (WebSocketSession session : this.sessions.values()) {
 				sendMessage(session, tm);
 			}
 		}
@@ -62,7 +66,7 @@ public class CpuDataService {
 
 	private void sendMessage(final WebSocketSession session, final TextMessage textMessage) {
 
-		taskExecutor.execute(() -> {
+		this.taskExecutor.execute(() -> {
 			if (session.isOpen()) {
 				try {
 					session.sendMessage(textMessage);

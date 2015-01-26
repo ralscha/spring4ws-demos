@@ -17,7 +17,7 @@ public class Tweet implements Comparable<Tweet>, Serializable {
 	private long createdAt;
 
 	public long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(long id) {
@@ -25,7 +25,7 @@ public class Tweet implements Comparable<Tweet>, Serializable {
 	}
 
 	public String getProfileImageUrl() {
-		return profileImageUrl;
+		return this.profileImageUrl;
 	}
 
 	public void setProfileImageUrl(String profileImageUrl) {
@@ -33,7 +33,7 @@ public class Tweet implements Comparable<Tweet>, Serializable {
 	}
 
 	public String getFromUser() {
-		return fromUser;
+		return this.fromUser;
 	}
 
 	public void setFromUser(String fromUser) {
@@ -41,7 +41,7 @@ public class Tweet implements Comparable<Tweet>, Serializable {
 	}
 
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	public void setText(String text) {
@@ -49,7 +49,7 @@ public class Tweet implements Comparable<Tweet>, Serializable {
 	}
 
 	public long getCreatedAt() {
-		return createdAt;
+		return this.createdAt;
 	}
 
 	public void setCreatedAt(long createdAt) {
@@ -58,7 +58,7 @@ public class Tweet implements Comparable<Tweet>, Serializable {
 
 	@Override
 	public int compareTo(Tweet o) {
-		return (int) (o.createdAt - createdAt);
+		return (int) (o.createdAt - this.createdAt);
 	}
 
 }

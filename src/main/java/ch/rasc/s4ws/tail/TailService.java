@@ -53,40 +53,40 @@ public class TailService {
 
 	@PostConstruct
 	public void postConstruct() throws IOException {
-		String property = environment.getRequiredProperty("TAIL_GEOCITY_DAT");
-		lookupService = new LookupService(property, LookupService.GEOIP_INDEX_CACHE);
-		tailers = new ArrayList<>();
+		String property = this.environment.getRequiredProperty("TAIL_GEOCITY_DAT");
+		this.lookupService = new LookupService(property, LookupService.GEOIP_INDEX_CACHE);
+		this.tailers = new ArrayList<>();
 
-		String logFiles = environment.getRequiredProperty("TAIL_ACCESS_LOG");
+		String logFiles = this.environment.getRequiredProperty("TAIL_ACCESS_LOG");
 		for (String logFile : Splitter.on(",").trimResults().split(logFiles)) {
 			Path p = Paths.get(logFile);
-			tailers.add(new Tailer(p.toFile(), new ListenerAdapter()));
+			this.tailers.add(new Tailer(p.toFile(), new ListenerAdapter()));
 		}
 
-		executor = Executors.newFixedThreadPool(tailers.size());
-		for (Tailer tailer : tailers) {
-			executor.execute(tailer);
+		this.executor = Executors.newFixedThreadPool(this.tailers.size());
+		for (Tailer tailer : this.tailers) {
+			this.executor.execute(tailer);
 		}
 
 	}
 
 	@PreDestroy
 	public void preDestroy() {
-		if (tailers != null) {
-			for (Tailer tailer : tailers) {
+		if (this.tailers != null) {
+			for (Tailer tailer : this.tailers) {
 				tailer.stop();
 			}
 		}
 
-		if (executor != null) {
-			executor.shutdown();
+		if (this.executor != null) {
+			this.executor.shutdown();
 		}
 	}
 
 	private class ListenerAdapter extends TailerListenerAdapter {
 		@Override
 		public void handle(String line) {
-			Matcher matcher = accessLogPattern.matcher(line);
+			Matcher matcher = TailService.this.accessLogPattern.matcher(line);
 
 			if (!matcher.matches()) {
 				// System.out.println(line);
@@ -95,7 +95,7 @@ public class TailService {
 
 			String ip = matcher.group(1);
 			if (!"-".equals(ip) && !"127.0.0.1".equals(ip)) {
-				Location l = lookupService.getLocation(ip);
+				Location l = TailService.this.lookupService.getLocation(ip);
 				if (l != null) {
 					Access access = new Access();
 					access.setIp(ip);
@@ -104,7 +104,7 @@ public class TailService {
 					access.setCountry(l.countryName);
 
 					String userAgent = matcher.group(9);
-					ReadableUserAgent ua = parser.parse(userAgent);
+					ReadableUserAgent ua = TailService.this.parser.parse(userAgent);
 					if (ua != null && ua.getFamily() != UserAgentFamily.UNKNOWN) {
 						String uaString = ua.getName() + " "
 								+ ua.getVersionNumber().toVersionString();
@@ -120,7 +120,8 @@ public class TailService {
 					}
 					access.setLl(new float[] { l.latitude, l.longitude });
 
-					messagingTemplate.convertAndSend("/queue/geoip", access);
+					TailService.this.messagingTemplate.convertAndSend("/queue/geoip",
+							access);
 				}
 			}
 		}

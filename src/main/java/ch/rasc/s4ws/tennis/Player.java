@@ -22,17 +22,17 @@ public class Player {
 	}
 
 	public synchronized void reset() {
-		sets = 0;
-		set1 = set2 = set3 = 0;
-		gamesInCurrentSet = 0;
+		this.sets = 0;
+		this.set1 = this.set2 = this.set3 = 0;
+		this.gamesInCurrentSet = 0;
 	}
 
 	public int getSets() {
-		return sets;
+		return this.sets;
 	}
 
 	public void incSets() {
-		sets++;
+		this.sets++;
 	}
 
 	public void setSets(int sets) {
@@ -40,7 +40,7 @@ public class Player {
 	}
 
 	public int getSet1() {
-		return set1;
+		return this.set1;
 	}
 
 	public void setSet1(int set1) {
@@ -48,7 +48,7 @@ public class Player {
 	}
 
 	public int getSet2() {
-		return set2;
+		return this.set2;
 	}
 
 	public void setSet2(int set2) {
@@ -56,7 +56,7 @@ public class Player {
 	}
 
 	public int getSet3() {
-		return set3;
+		return this.set3;
 	}
 
 	public void setSet3(int set3) {
@@ -64,11 +64,11 @@ public class Player {
 	}
 
 	public int getGamesInCurrentSet() {
-		return gamesInCurrentSet;
+		return this.gamesInCurrentSet;
 	}
 
 	public void incGamesInCurrentSet() {
-		gamesInCurrentSet++;
+		this.gamesInCurrentSet++;
 	}
 
 	public void setGamesInCurrentSet(int gamesInCurrentSet) {
@@ -76,11 +76,11 @@ public class Player {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public String getCountry() {
-		return country;
+		return this.country;
 	}
 
 }

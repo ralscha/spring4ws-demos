@@ -63,18 +63,18 @@ public class Snake {
 	}
 
 	private synchronized void reward() {
-		length++;
+		this.length++;
 		sendMessage("{\"type\": \"kill\"}");
 	}
 
 	protected void sendMessage(String msg) {
 
 		try {
-			session.sendMessage(new TextMessage(msg));
+			this.session.sendMessage(new TextMessage(msg));
 		}
 		catch (IOException ioe) {
 			try {
-				session.close(CloseStatus.NO_CLOSE_FRAME);
+				this.session.close(CloseStatus.NO_CLOSE_FRAME);
 			}
 			catch (IOException ioe2) {
 				// Ignore
@@ -83,7 +83,7 @@ public class Snake {
 	}
 
 	public synchronized void update(Collection<Snake> snakes) {
-		Location nextLocation = head.getAdjacentLocation(direction);
+		Location nextLocation = this.head.getAdjacentLocation(this.direction);
 		if (nextLocation.x >= SnakeUtils.PLAYFIELD_WIDTH) {
 			nextLocation.x = 0;
 		}
@@ -96,12 +96,12 @@ public class Snake {
 		if (nextLocation.y < 0) {
 			nextLocation.y = SnakeUtils.PLAYFIELD_HEIGHT;
 		}
-		if (direction != Direction.NONE) {
-			tail.addFirst(head);
-			if (tail.size() > length) {
-				tail.removeLast();
+		if (this.direction != Direction.NONE) {
+			this.tail.addFirst(this.head);
+			if (this.tail.size() > this.length) {
+				this.tail.removeLast();
 			}
-			head = nextLocation;
+			this.head = nextLocation;
 		}
 
 		handleCollisions(snakes);
@@ -109,11 +109,12 @@ public class Snake {
 
 	private void handleCollisions(Collection<Snake> snakes) {
 		for (Snake snake : snakes) {
-			boolean headCollision = id != snake.id && snake.getHead().equals(head);
-			boolean tailCollision = snake.getTail().contains(head);
+			boolean headCollision = this.id != snake.id
+					&& snake.getHead().equals(this.head);
+			boolean tailCollision = snake.getTail().contains(this.head);
 			if (headCollision || tailCollision) {
 				kill();
-				if (id != snake.id) {
+				if (this.id != snake.id) {
 					snake.reward();
 				}
 			}
@@ -121,11 +122,11 @@ public class Snake {
 	}
 
 	public synchronized Location getHead() {
-		return head;
+		return this.head;
 	}
 
 	public synchronized Collection<Location> getTail() {
-		return tail;
+		return this.tail;
 	}
 
 	public synchronized void setDirection(Direction direction) {
@@ -134,22 +135,22 @@ public class Snake {
 
 	public synchronized String getLocationsJson() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(head.x),
-				Integer.valueOf(head.y)));
-		for (Location location : tail) {
+		sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(this.head.x),
+				Integer.valueOf(this.head.y)));
+		for (Location location : this.tail) {
 			sb.append(',');
 			sb.append(String.format("{\"x\": %d, \"y\": %d}",
 					Integer.valueOf(location.x), Integer.valueOf(location.y)));
 		}
-		return String.format("{\"id\":%d,\"body\":[%s]}", Integer.valueOf(id),
+		return String.format("{\"id\":%d,\"body\":[%s]}", Integer.valueOf(this.id),
 				sb.toString());
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public String getHexColor() {
-		return hexColor;
+		return this.hexColor;
 	}
 }

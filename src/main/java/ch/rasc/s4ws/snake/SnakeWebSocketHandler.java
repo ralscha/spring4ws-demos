@@ -71,8 +71,8 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		this.snake = new Snake(id, session);
-		SnakeTimer.addSnake(snake);
+		this.snake = new Snake(this.id, session);
+		SnakeTimer.addSnake(this.snake);
 		StringBuilder sb = new StringBuilder();
 		for (Iterator<Snake> iterator = SnakeTimer.getSnakes().iterator(); iterator
 				.hasNext();) {
@@ -92,24 +92,24 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 			throws Exception {
 		String payload = message.getPayload();
 		if ("west".equals(payload)) {
-			snake.setDirection(Direction.WEST);
+			this.snake.setDirection(Direction.WEST);
 		}
 		else if ("north".equals(payload)) {
-			snake.setDirection(Direction.NORTH);
+			this.snake.setDirection(Direction.NORTH);
 		}
 		else if ("east".equals(payload)) {
-			snake.setDirection(Direction.EAST);
+			this.snake.setDirection(Direction.EAST);
 		}
 		else if ("south".equals(payload)) {
-			snake.setDirection(Direction.SOUTH);
+			this.snake.setDirection(Direction.SOUTH);
 		}
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
-		SnakeTimer.removeSnake(snake);
+		SnakeTimer.removeSnake(this.snake);
 		SnakeTimer.broadcast(String.format("{'type': 'leave', 'id': %d}",
-				Integer.valueOf(id)));
+				Integer.valueOf(this.id)));
 	}
 }

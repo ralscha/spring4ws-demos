@@ -18,7 +18,7 @@ public class Product {
 	private BigDecimal price;
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -26,7 +26,7 @@ public class Product {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -34,7 +34,7 @@ public class Product {
 	}
 
 	public String getOrderNumber() {
-		return orderNumber;
+		return this.orderNumber;
 	}
 
 	public void setOrderNumber(String orderNumber) {
@@ -42,7 +42,7 @@ public class Product {
 	}
 
 	public int getWeight() {
-		return weight;
+		return this.weight;
 	}
 
 	public void setWeight(int weight) {
@@ -50,7 +50,7 @@ public class Product {
 	}
 
 	public int getSize() {
-		return size;
+		return this.size;
 	}
 
 	public void setSize(int size) {
@@ -58,7 +58,7 @@ public class Product {
 	}
 
 	public boolean isInStock() {
-		return inStock;
+		return this.inStock;
 	}
 
 	public void setInStock(boolean inStock) {
@@ -66,7 +66,7 @@ public class Product {
 	}
 
 	public BigDecimal getPrice() {
-		return price;
+		return this.price;
 	}
 
 	public void setPrice(BigDecimal price) {

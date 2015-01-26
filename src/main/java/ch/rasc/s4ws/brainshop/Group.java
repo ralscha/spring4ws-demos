@@ -15,21 +15,21 @@ public class Group {
 	}
 
 	public List<Idea> getIdeas() {
-		return ideas;
+		return this.ideas;
 	}
 
 	public void addIdea(Idea idea) {
 		if (idea.getNext() != null && idea.getNext() > 0) {
-			ideas.add(indexOf(idea.getNext()), idea);
+			this.ideas.add(indexOf(idea.getNext()), idea);
 		}
 		else {
-			ideas.add(0, idea);
+			this.ideas.add(0, idea);
 		}
 	}
 
 	private int indexOf(Integer next) {
 		int pos = 0;
-		for (Idea idea : ideas) {
+		for (Idea idea : this.ideas) {
 			if (idea.getId().equals(next)) {
 				return pos;
 			}
@@ -39,7 +39,7 @@ public class Group {
 	}
 
 	public Idea getIdea(Integer id) {
-		for (Idea idea : ideas) {
+		for (Idea idea : this.ideas) {
 			if (idea.getId().equals(id)) {
 				return idea;
 			}
@@ -48,7 +48,7 @@ public class Group {
 	}
 
 	public Idea removeIdea(Integer id) {
-		ListIterator<Idea> li = ideas.listIterator();
+		ListIterator<Idea> li = this.ideas.listIterator();
 		while (li.hasNext()) {
 			Idea idea = li.next();
 			if (idea.getId().equals(id)) {
@@ -60,7 +60,7 @@ public class Group {
 	}
 
 	public boolean isEmpty() {
-		return ideas.isEmpty();
+		return this.ideas.isEmpty();
 	}
 
 	public void moveIdea(Idea idea) {
@@ -69,25 +69,25 @@ public class Group {
 			return;
 		}
 
-		ideas.remove(currentIndex);
+		this.ideas.remove(currentIndex);
 
 		if (idea.getNext() < 0) {
-			ideas.add(idea);
+			this.ideas.add(idea);
 		}
 		else {
 			int nextIdx = indexOf(idea.getNext());
 			if (nextIdx < 0) {
-				ideas.add(idea);
+				this.ideas.add(idea);
 			}
 			else {
-				ideas.add(nextIdx, idea);
+				this.ideas.add(nextIdx, idea);
 			}
 
 		}
 	}
 
 	public String getGroupId() {
-		return groupId;
+		return this.groupId;
 	}
 
 }

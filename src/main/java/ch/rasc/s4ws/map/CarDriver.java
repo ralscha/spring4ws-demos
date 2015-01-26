@@ -18,25 +18,25 @@ public class CarDriver {
 	@Scheduled(initialDelay = 1000, fixedDelay = 1000)
 	public void driveBlueCar() {
 
-		LatLng latLng = Route.routeBlue.get(blueRoute);
-		blueRoute++;
-		if (blueRoute >= Route.routeBlue.size()) {
-			blueRoute = 0;
+		LatLng latLng = Route.routeBlue.get(this.blueRoute);
+		this.blueRoute++;
+		if (this.blueRoute >= Route.routeBlue.size()) {
+			this.blueRoute = 0;
 		}
 
-		messagingTemplate.convertAndSend("/queue/blueCar", latLng);
+		this.messagingTemplate.convertAndSend("/queue/blueCar", latLng);
 	}
 
 	@Scheduled(initialDelay = 2000, fixedDelay = 1200)
 	public void driveRedCar() {
 
-		LatLng latLng = Route.routeRed.get(redRoute);
-		redRoute++;
-		if (redRoute >= Route.routeRed.size()) {
-			redRoute = 0;
+		LatLng latLng = Route.routeRed.get(this.redRoute);
+		this.redRoute++;
+		if (this.redRoute >= Route.routeRed.size()) {
+			this.redRoute = 0;
 		}
 
-		messagingTemplate.convertAndSend("/queue/redCar", latLng);
+		this.messagingTemplate.convertAndSend("/queue/redCar", latLng);
 	}
 
 }

@@ -12,7 +12,7 @@ public class UserConnection {
 	private String image;
 
 	public String getUsername() {
-		return username;
+		return this.username;
 	}
 
 	public void setUsername(String username) {
@@ -20,7 +20,7 @@ public class UserConnection {
 	}
 
 	public String getImage() {
-		return image;
+		return this.image;
 	}
 
 	public void setImage(String image) {
@@ -28,7 +28,7 @@ public class UserConnection {
 	}
 
 	public String getSessionId() {
-		return sessionId;
+		return this.sessionId;
 	}
 
 	public void setSessionId(String sessionId) {
@@ -36,7 +36,7 @@ public class UserConnection {
 	}
 
 	public boolean isSupportsWebRTC() {
-		return supportsWebRTC;
+		return this.supportsWebRTC;
 	}
 
 	public void setSupportsWebRTC(boolean supportsWebRTC) {
@@ -44,7 +44,7 @@ public class UserConnection {
 	}
 
 	public String getBrowser() {
-		return browser;
+		return this.browser;
 	}
 
 	public void setBrowser(String browser) {

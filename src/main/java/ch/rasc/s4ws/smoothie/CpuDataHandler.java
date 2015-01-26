@@ -14,13 +14,13 @@ public class CpuDataHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-		cpuDataService.addSession(session.getId(), session);
+		this.cpuDataService.addSession(session.getId(), session);
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
-		cpuDataService.removeSession(session.getId());
+		this.cpuDataService.removeSession(session.getId());
 	}
 
 }

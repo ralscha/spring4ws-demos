@@ -73,12 +73,12 @@ public class TwitterStatusListener implements StatusStreamHandler {
 		tweet.setProfileImageUrl(status.getUser().getProfileImageURL().toString());
 		tweet.setText(sb.toString());
 
-		lastTweets.offer(tweet);
+		this.lastTweets.offer(tweet);
 
-		messagingTemplate.convertAndSend("/queue/tweets",
+		this.messagingTemplate.convertAndSend("/queue/tweets",
 				Collections.singletonList(tweet));
 
-		hazelcastTopic.publish(tweet);
+		this.hazelcastTopic.publish(tweet);
 	}
 
 	@Override

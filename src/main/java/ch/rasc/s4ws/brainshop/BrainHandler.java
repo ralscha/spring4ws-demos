@@ -20,7 +20,7 @@ public class BrainHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
-		brainService.removeSession(session.getId());
+		this.brainService.removeSession(session.getId());
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class BrainHandler extends TextWebSocketHandler {
 			throws Exception {
 		BrainMessage bm = objectMapper
 				.readValue(message.getPayload(), BrainMessage.class);
-		brainService.handleIncomingMessage(session, bm);
+		this.brainService.handleIncomingMessage(session, bm);
 	}
 
 }

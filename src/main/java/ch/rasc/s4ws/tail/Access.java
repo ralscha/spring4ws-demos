@@ -15,7 +15,7 @@ public class Access {
 	private String country;
 
 	public String getCity() {
-		return city;
+		return this.city;
 	}
 
 	public void setCity(String city) {
@@ -23,7 +23,7 @@ public class Access {
 	}
 
 	public String getCountry() {
-		return country;
+		return this.country;
 	}
 
 	public void setCountry(String country) {
@@ -31,7 +31,7 @@ public class Access {
 	}
 
 	public String getIp() {
-		return ip;
+		return this.ip;
 	}
 
 	public void setIp(String ip) {
@@ -39,7 +39,7 @@ public class Access {
 	}
 
 	public long getDate() {
-		return date;
+		return this.date;
 	}
 
 	public void setDate(long date) {
@@ -47,7 +47,7 @@ public class Access {
 	}
 
 	public float[] getLl() {
-		return ll;
+		return this.ll;
 	}
 
 	public void setLl(float[] ll) {
@@ -55,7 +55,7 @@ public class Access {
 	}
 
 	public String getMessage() {
-		return message;
+		return this.message;
 	}
 
 	public void setMessage(String message) {

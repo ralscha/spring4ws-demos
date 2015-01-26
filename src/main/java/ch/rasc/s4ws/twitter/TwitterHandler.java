@@ -49,7 +49,7 @@ public class TwitterHandler {
 
 	@SubscribeMapping("/queue/tweets")
 	public Queue<Tweet> subscribe() {
-		return lastTweets;
+		return this.lastTweets;
 	}
 
 	@PostConstruct
@@ -62,35 +62,36 @@ public class TwitterHandler {
 				"javascript"));
 		endpoint.languages(ImmutableList.of("en", "de"));
 
-		String consumerKey = environment.getProperty("twitter4j.oauth.consumerKey");
-		String consumerSecret = environment.getProperty("twitter4j.oauth.consumerSecret");
-		String accessToken = environment.getProperty("twitter4j.oauth.accessToken");
-		String accessTokenSecret = environment
+		String consumerKey = this.environment.getProperty("twitter4j.oauth.consumerKey");
+		String consumerSecret = this.environment
+				.getProperty("twitter4j.oauth.consumerSecret");
+		String accessToken = this.environment.getProperty("twitter4j.oauth.accessToken");
+		String accessTokenSecret = this.environment
 				.getProperty("twitter4j.oauth.accessTokenSecret");
 
 		Authentication auth = new OAuth1(consumerKey, consumerSecret, accessToken,
 				accessTokenSecret);
 
-		client = new ClientBuilder().hosts(Constants.STREAM_HOST).endpoint(endpoint)
+		this.client = new ClientBuilder().hosts(Constants.STREAM_HOST).endpoint(endpoint)
 				.authentication(auth).processor(new StringDelimitedProcessor(queue))
 				.build();
 
-		executorService = Executors.newSingleThreadExecutor();
+		this.executorService = Executors.newSingleThreadExecutor();
 
 		TwitterStatusListener statusListener = new TwitterStatusListener(
-				messagingTemplate, hazelcastTopic, lastTweets);
-		t4jClient = new Twitter4jStatusClient(client, queue,
-				ImmutableList.of(statusListener), executorService);
+				this.messagingTemplate, this.hazelcastTopic, this.lastTweets);
+		this.t4jClient = new Twitter4jStatusClient(this.client, queue,
+				ImmutableList.of(statusListener), this.executorService);
 
-		t4jClient.connect();
-		t4jClient.process();
+		this.t4jClient.connect();
+		this.t4jClient.process();
 	}
 
 	@PreDestroy
 	public void destroy() {
-		t4jClient.stop();
-		client.stop();
-		executorService.shutdown();
+		this.t4jClient.stop();
+		this.client.stop();
+		this.executorService.shutdown();
 	}
 
 }

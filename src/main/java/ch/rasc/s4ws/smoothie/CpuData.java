@@ -13,7 +13,7 @@ public class CpuData {
 	private double[] host4;
 
 	public double[] getHost1() {
-		return host1;
+		return this.host1;
 	}
 
 	public void setHost1(double[] host1) {
@@ -21,7 +21,7 @@ public class CpuData {
 	}
 
 	public double[] getHost2() {
-		return host2;
+		return this.host2;
 	}
 
 	public void setHost2(double[] host2) {
@@ -29,7 +29,7 @@ public class CpuData {
 	}
 
 	public double[] getHost3() {
-		return host3;
+		return this.host3;
 	}
 
 	public void setHost3(double[] host3) {
@@ -37,7 +37,7 @@ public class CpuData {
 	}
 
 	public double[] getHost4() {
-		return host4;
+		return this.host4;
 	}
 
 	public void setHost4(double[] host4) {
@@ -45,7 +45,7 @@ public class CpuData {
 	}
 
 	public long getTime() {
-		return time;
+		return this.time;
 	}
 
 }

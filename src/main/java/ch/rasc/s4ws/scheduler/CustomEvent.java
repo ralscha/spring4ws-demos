@@ -63,7 +63,7 @@ public class CustomEvent {
 	}
 
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -71,7 +71,7 @@ public class CustomEvent {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -79,7 +79,7 @@ public class CustomEvent {
 	}
 
 	public DateTime getStartDate() {
-		return startDate;
+		return this.startDate;
 	}
 
 	public void setStartDate(DateTime startDate) {
@@ -87,7 +87,7 @@ public class CustomEvent {
 	}
 
 	public DateTime getEndDate() {
-		return endDate;
+		return this.endDate;
 	}
 
 	public void setEndDate(DateTime endDate) {
@@ -95,7 +95,7 @@ public class CustomEvent {
 	}
 
 	public int getResourceId() {
-		return resourceId;
+		return this.resourceId;
 	}
 
 	public void setResourceId(int resourceId) {
@@ -103,7 +103,7 @@ public class CustomEvent {
 	}
 
 	public Object getResizable() {
-		return resizable;
+		return this.resizable;
 	}
 
 	public void setResizable(Object resizable) {
@@ -111,7 +111,7 @@ public class CustomEvent {
 	}
 
 	public Boolean getDraggable() {
-		return draggable;
+		return this.draggable;
 	}
 
 	public void setDraggable(Boolean draggable) {
@@ -119,7 +119,7 @@ public class CustomEvent {
 	}
 
 	public String getCls() {
-		return cls;
+		return this.cls;
 	}
 
 	public void setCls(String cls) {
@@ -127,7 +127,7 @@ public class CustomEvent {
 	}
 
 	public Boolean getBlocked() {
-		return blocked;
+		return this.blocked;
 	}
 
 	public void setBlocked(Boolean blocked) {
@@ -135,7 +135,7 @@ public class CustomEvent {
 	}
 
 	public String getBlockedBy() {
-		return blockedBy;
+		return this.blockedBy;
 	}
 
 	public void setBlockedBy(String blockedBy) {
@@ -143,7 +143,7 @@ public class CustomEvent {
 	}
 
 	public Boolean getDone() {
-		return done;
+		return this.done;
 	}
 
 	public void setDone(Boolean done) {
@@ -152,10 +152,11 @@ public class CustomEvent {
 
 	@Override
 	public String toString() {
-		return "CustomEvent [id=" + id + ", name=" + name + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", resourceId=" + resourceId + ", resizable="
-				+ resizable + ", draggable=" + draggable + ", cls=" + cls + ", blocked="
-				+ blocked + ", blockedBy=" + blockedBy + ", done=" + done + "]";
+		return "CustomEvent [id=" + this.id + ", name=" + this.name + ", startDate="
+				+ this.startDate + ", endDate=" + this.endDate + ", resourceId="
+				+ this.resourceId + ", resizable=" + this.resizable + ", draggable="
+				+ this.draggable + ", cls=" + this.cls + ", blocked=" + this.blocked
+				+ ", blockedBy=" + this.blockedBy + ", done=" + this.done + "]";
 	}
 
 }

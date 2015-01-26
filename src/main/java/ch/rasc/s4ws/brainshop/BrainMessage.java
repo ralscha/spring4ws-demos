@@ -20,7 +20,7 @@ public class BrainMessage {
 	private String user;
 
 	public String getType() {
-		return type;
+		return this.type;
 	}
 
 	public void setType(String type) {
@@ -28,7 +28,7 @@ public class BrainMessage {
 	}
 
 	public String getCommand() {
-		return command;
+		return this.command;
 	}
 
 	public void setCommand(String command) {
@@ -36,7 +36,7 @@ public class BrainMessage {
 	}
 
 	public String getGroup() {
-		return group;
+		return this.group;
 	}
 
 	public void setGroup(String group) {
@@ -44,7 +44,7 @@ public class BrainMessage {
 	}
 
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
 	public void setText(String text) {
@@ -52,7 +52,7 @@ public class BrainMessage {
 	}
 
 	public Integer getNext() {
-		return next;
+		return this.next;
 	}
 
 	public void setNext(Integer next) {
@@ -60,7 +60,7 @@ public class BrainMessage {
 	}
 
 	public Integer getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Integer id) {
@@ -68,7 +68,7 @@ public class BrainMessage {
 	}
 
 	public String getBoard() {
-		return board;
+		return this.board;
 	}
 
 	public void setBoard(String board) {
@@ -76,7 +76,7 @@ public class BrainMessage {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -84,7 +84,7 @@ public class BrainMessage {
 	}
 
 	public String getUser() {
-		return user;
+		return this.user;
 	}
 
 	public void setUser(String user) {
