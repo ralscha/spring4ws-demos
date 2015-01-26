@@ -108,7 +108,7 @@ Ext.define ('Ext.ux.ws.wamp.Manager', {
 		me.fireEvent('connect', sess);
 
 		if (me.appKey !== null) // anonymous auth
-			me.absession.authreq(me.appKey, extra).then(function(challenge) {
+			me.absession.authreq(me.appKey, {}).then(function(challenge) {
 				var signature = me.absession.authsign(challenge, me.appSecret);
 				me.absession.auth(signature).then(
 
