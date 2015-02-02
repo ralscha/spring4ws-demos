@@ -19,6 +19,7 @@ package ch.rasc.s4ws.drawboard;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
@@ -31,10 +32,10 @@ import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
+import reactor.spring.context.annotation.Consumer;
 import reactor.spring.context.annotation.Selector;
 
-import com.google.common.collect.Maps;
-
+@Consumer
 public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 
 	private static final Log log = LogFactory.getLog(DrawboardWebSocketHandler.class);
@@ -42,8 +43,9 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 	@Autowired
 	public Reactor reactor;
 
-	private final Map<String, WebSocketSession> sessions = Maps.newConcurrentMap();
+	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
+	@SuppressWarnings("resource")
 	@Selector("sendString")
 	public void consumeSendString(Event<String> event) {
 		String receiver = event.getHeaders().get("sessionId");
@@ -74,6 +76,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@Selector("sendBinary")
 	public void consumeSendBinary(Event<ByteBuffer> event) {
 

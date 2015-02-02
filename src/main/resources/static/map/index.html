@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style>
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+    <script src="../sockjs-0.3.4.min.js"></script>
+    <script src="../stomp-2.3.3.min.js"></script>
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDqNmB0Mk6hOBCG1Lx2tmqVgKBUh3l-JFg&sensor=false"></script>
+    <script>
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(46.947922, 7.444608),
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+        
+        var blueCar = null;
+        var redCar = null;
+        
+        google.maps.event.addListener(map, "rightclick", function(event) {
+    	    var lat = event.latLng.lat();
+    	    var lng = event.latLng.lng();
+    	    console.log("Lat=" + lat + "; Lng=" + lng);
+    	});  
+        
+        var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
+        var sock  = new SockJS(path + '../sockjs');
+        var stompClient = Stomp.over(sock);
+
+        stompClient.connect({}, function(frame) {
+        	stompClient.subscribe("/topic/map/blueCar", function(msg) {
+        		var latlng = JSON.parse(msg.body);
+        		
+        		if (!blueCar) {
+	        		blueCar = new google.maps.Marker({
+	                    position: new google.maps.LatLng(latlng.lat,latlng.lng),
+	                    icon: 'car_sedan_blue.png',
+	                    map: map
+	                });
+        		} else {
+        			blueCar.setPosition(new google.maps.LatLng(latlng.lat,latlng.lng));
+        		}        		
+        		
+        	});
+        	stompClient.subscribe("/topic/map/redCar", function(msg) {
+        		var latlng = JSON.parse(msg.body);
+
+        		if (!redCar) {
+        			redCar = new google.maps.Marker({
+	                    position: new google.maps.LatLng(latlng.lat,latlng.lng),
+	                    icon: 'car_sedan_red.png',
+	                    map: map
+	                });
+        		} else {
+        			redCar.setPosition(new google.maps.LatLng(latlng.lat,latlng.lng));
+        		}
+        		
+        	});        	
+        });        
+        
+      }
+      
+    
+      
+    </script>
+  </head>
+  <body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+  </body>
+</html>

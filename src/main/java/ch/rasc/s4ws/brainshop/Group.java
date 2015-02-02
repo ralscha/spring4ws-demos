@@ -1,12 +1,11 @@
 package ch.rasc.s4ws.brainshop;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.google.common.collect.Lists;
-
 public class Group {
-	private final List<Idea> ideas = Lists.newLinkedList();
+	private final List<Idea> ideas = new ArrayList<>();
 
 	private final String groupId;
 

@@ -6,7 +6,7 @@ public class Access {
 
 	private long date;
 
-	private float[] ll;
+	private Double[] ll;
 
 	private String message;
 
@@ -46,11 +46,11 @@ public class Access {
 		this.date = date;
 	}
 
-	public float[] getLl() {
+	public Double[] getLl() {
 		return this.ll;
 	}
 
-	public void setLl(float[] ll) {
+	public void setLl(Double[] ll) {
 		this.ll = ll;
 	}
 

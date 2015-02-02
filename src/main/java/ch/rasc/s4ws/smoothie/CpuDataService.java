@@ -3,6 +3,7 @@ package ch.rasc.s4ws.smoothie;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 import org.apache.commons.logging.Log;
@@ -14,7 +15,6 @@ import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Maps;
 
 public class CpuDataService {
 
@@ -24,7 +24,7 @@ public class CpuDataService {
 
 	private final Random random = new Random();
 
-	private final Map<String, WebSocketSession> sessions = Maps.newConcurrentMap();
+	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
 	private final Executor taskExecutor;
 

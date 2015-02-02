@@ -25,7 +25,7 @@ public class MatchService {
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
 
-	@MessageMapping("/bet/{clientId}/{matchId}")
+	@MessageMapping("/tennis/bet/{clientId}/{matchId}")
 	public void bet(String winner, @DestinationVariable("clientId") String clientId,
 			@DestinationVariable("matchId") String matchId) {
 		Map<String, String> clientBets = matchClientBets.get(matchId);
@@ -68,7 +68,7 @@ public class MatchService {
 				m.playerTwoScores();
 			}
 
-			this.messagingTemplate.convertAndSend("/topic/match/" + m.getKey(), m);
+			this.messagingTemplate.convertAndSend("/topic/tennis/match/" + m.getKey(), m);
 
 			if (m.isFinished()) {
 				Map<String, String> clientBets = matchClientBets.get(m.getKey());
@@ -81,8 +81,8 @@ public class MatchService {
 					else {
 						result = "NOK";
 					}
-					this.messagingTemplate.convertAndSend("/queue/bet/" + clientId + "/"
-							+ m.getKey(), result);
+					this.messagingTemplate.convertAndSend("/queue/tennis/bet/" + clientId
+							+ "/" + m.getKey(), result);
 				}
 
 			}

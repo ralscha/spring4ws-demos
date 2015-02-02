@@ -1,8 +1,11 @@
 package ch.rasc.s4ws.tail;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -10,7 +13,6 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import net.sf.uadetector.ReadableUserAgent;
@@ -20,15 +22,16 @@ import net.sf.uadetector.service.UADetectorServiceFactory;
 
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
-import org.joda.time.DateTime;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Splitter;
-import com.maxmind.geoip.Location;
-import com.maxmind.geoip.LookupService;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.AddressNotFoundException;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
+import com.maxmind.geoip2.model.CityResponse;
 
 @Service
 public class TailService {
@@ -39,27 +42,37 @@ public class TailService {
 	private final UserAgentStringParser parser = UADetectorServiceFactory
 			.getResourceModuleParser();
 
-	@Autowired
-	private SimpMessageSendingOperations messagingTemplate;
-
-	@Autowired
-	private Environment environment;
+	private final SimpMessageSendingOperations messagingTemplate;
 
 	public ExecutorService executor;
 
-	private LookupService lookupService;
+	private final List<Tailer> tailers;
 
-	private List<Tailer> tailers;
+	private DatabaseReader reader = null;
 
-	@PostConstruct
-	public void postConstruct() throws IOException {
-		String property = this.environment.getRequiredProperty("TAIL_GEOCITY_DAT");
-		this.lookupService = new LookupService(property, LookupService.GEOIP_INDEX_CACHE);
+	@Autowired
+	public TailService(@Value("${geoip2.cityfile}") String cityFile,
+			@Value("${access.logs}") String accessLogs,
+			SimpMessageSendingOperations messagingTemplate) {
+		this.messagingTemplate = messagingTemplate;
+
+		String databaseFile = cityFile;
+		if (databaseFile != null) {
+			Path database = Paths.get(databaseFile);
+			if (Files.exists(database)) {
+				try {
+					this.reader = new DatabaseReader.Builder(database.toFile()).build();
+				}
+				catch (IOException e) {
+					LoggerFactory.getLogger(getClass()).error("GeoIPCityService init", e);
+				}
+			}
+		}
+
 		this.tailers = new ArrayList<>();
 
-		String logFiles = this.environment.getRequiredProperty("TAIL_ACCESS_LOG");
-		for (String logFile : Splitter.on(",").trimResults().split(logFiles)) {
-			Path p = Paths.get(logFile);
+		for (String logFile : accessLogs.split(",")) {
+			Path p = Paths.get(logFile.trim());
 			this.tailers.add(new Tailer(p.toFile(), new ListenerAdapter()));
 		}
 
@@ -67,7 +80,6 @@ public class TailService {
 		for (Tailer tailer : this.tailers) {
 			this.executor.execute(tailer);
 		}
-
 	}
 
 	@PreDestroy
@@ -95,13 +107,13 @@ public class TailService {
 
 			String ip = matcher.group(1);
 			if (!"-".equals(ip) && !"127.0.0.1".equals(ip)) {
-				Location l = TailService.this.lookupService.getLocation(ip);
-				if (l != null) {
+				CityResponse cr = lookupCity(ip);
+				if (cr != null) {
 					Access access = new Access();
 					access.setIp(ip);
-					access.setDate(DateTime.now().getMillis());
-					access.setCity(l.city);
-					access.setCountry(l.countryName);
+					access.setDate(Instant.now().toEpochMilli());
+					access.setCity(cr.getCity().getName());
+					access.setCountry(cr.getCountry().getName());
 
 					String userAgent = matcher.group(9);
 					ReadableUserAgent ua = TailService.this.parser.parse(userAgent);
@@ -118,13 +130,34 @@ public class TailService {
 					else {
 						access.setMessage(null);
 					}
-					access.setLl(new float[] { l.latitude, l.longitude });
+					access.setLl(new Double[] { cr.getLocation().getLatitude(),
+							cr.getLocation().getLongitude() });
 
-					TailService.this.messagingTemplate.convertAndSend("/queue/geoip",
+					TailService.this.messagingTemplate.convertAndSend("/topic/tail",
 							access);
 				}
 			}
 		}
+	}
+
+	public CityResponse lookupCity(String ip) {
+		if (this.reader != null) {
+			CityResponse response;
+			try {
+				try {
+					response = this.reader.city(InetAddress.getByName(ip));
+					return response;
+				}
+				catch (AddressNotFoundException e) {
+					return null;
+				}
+			}
+			catch (IOException | GeoIp2Exception e) {
+				LoggerFactory.getLogger(getClass()).error("lookupCity", e);
+			}
+		}
+
+		return null;
 	}
 
 	private static String getAccessLogRegex() {

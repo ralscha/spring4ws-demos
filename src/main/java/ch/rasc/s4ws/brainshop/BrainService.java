@@ -1,29 +1,23 @@
 package ch.rasc.s4ws.brainshop;
 
 import java.io.IOException;
-import java.util.concurrent.Executor;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.joda.time.DateTime;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
 
 public class BrainService {
 
 	public final static ObjectMapper objectMapper = new ObjectMapper();
-
-	private final Executor taskExecutor;
-
-	public BrainService(ThreadPoolTaskExecutor taskExecutor) {
-		this.taskExecutor = taskExecutor;
-	}
 
 	@SuppressWarnings("unused")
 	@PostConstruct
@@ -68,9 +62,16 @@ public class BrainService {
 
 			board.addUser(session);
 
-			Object msg = ImmutableMap.of("type", "init", "data", new Object[] {
-					ImmutableMap.of("type", "board-list", "boards", Board.all()),
-					ImmutableMap.of("type", "ideas", "ideas", board.getAllIdeas()) });
+			Map<String, Object> msg = new HashMap<>();
+			Map<String, Object> data1 = new HashMap<>();
+			data1.put("type", "board-list");
+			data1.put("boards", Board.all());
+			Map<String, Object> data2 = new HashMap<>();
+			data2.put("type", "ideas");
+			data2.put("ideas", board.getAllIdeas());
+
+			msg.put("type", "init");
+			msg.put("data", new Object[] { data1, data2 });
 			try {
 				TextMessage tm = new TextMessage(
 						BrainService.objectMapper.writeValueAsString(msg));
@@ -93,8 +94,14 @@ public class BrainService {
 
 	private static void handleDelete(BrainMessage bm) {
 		Board board = Board.get(bm.getBoard());
-		board.sendToAllUsers(ImmutableMap.of("type", "command", "command", "delete",
-				"board", bm.getBoard(), "id", bm.getId()));
+
+		Map<String, Object> msg = new HashMap<>();
+		msg.put("type", "command");
+		msg.put("command", "delete");
+		msg.put("board", bm.getBoard());
+		msg.put("id", bm.getId());
+
+		board.sendToAllUsers(msg);
 		board.removeIdea(bm.getId());
 
 	}
@@ -133,7 +140,8 @@ public class BrainService {
 			idea = Idea.createIdea();
 		}
 
-		idea.setDate(DateTime.now().toString("yyyy-MM-dd HH:mm"));
+		idea.setDate(LocalDateTime.now().format(
+				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 		idea.setGroup(bm.getGroup());
 		idea.setText(bm.getText());
 		idea.setNext(bm.getNext());

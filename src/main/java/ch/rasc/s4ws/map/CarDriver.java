@@ -24,7 +24,7 @@ public class CarDriver {
 			this.blueRoute = 0;
 		}
 
-		this.messagingTemplate.convertAndSend("/queue/blueCar", latLng);
+		this.messagingTemplate.convertAndSend("/topic/map/blueCar", latLng);
 	}
 
 	@Scheduled(initialDelay = 2000, fixedDelay = 1200)
@@ -36,7 +36,7 @@ public class CarDriver {
 			this.redRoute = 0;
 		}
 
-		this.messagingTemplate.convertAndSend("/queue/redCar", latLng);
+		this.messagingTemplate.convertAndSend("/topic/map/redCar", latLng);
 	}
 
 }

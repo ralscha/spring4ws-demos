@@ -16,6 +16,7 @@
 package ch.rasc.s4ws.portfolio.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +28,7 @@ import org.springframework.security.web.header.writers.frameoptions.XFrameOption
  *
  * @author Rob Winch
  */
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -42,13 +44,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 								XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
 				.and()
 
-				.formLogin().defaultSuccessUrl("/portfoliodemo/index.html")
-				.loginPage("/portfoliodemo/login.html")
-				.failureUrl("/portfoliodemo/login.html?error").permitAll().and().logout()
-				.logoutSuccessUrl("/portfoliodemo/login.html?logout")
-				.logoutUrl("/portfoliodemo/logout.html").permitAll().and()
-				.authorizeRequests().antMatchers("/portfoliodemo/login.css").permitAll()
-				.antMatchers("/portfoliodemo/**").authenticated().and();
+				.formLogin().defaultSuccessUrl("/portfolio/index.html")
+				.loginPage("/portfolio/login.html")
+				.failureUrl("/portfolio/login.html?error").permitAll().and().logout()
+				.logoutSuccessUrl("/portfolio/login.html?logout")
+				.logoutUrl("/portfolio/logout.html").permitAll().and()
+				.authorizeRequests().antMatchers("/portfolio/login.css").permitAll()
+				.antMatchers("/portfolio/**").authenticated().and();
 
 		// @formatter:on
 	}

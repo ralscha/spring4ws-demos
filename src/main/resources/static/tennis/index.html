@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tennis</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="css/flags.css">
+
+<style type="text/css">
+.sets {
+	background-color: #e5E5E5;
+}
+
+.serve {
+	color: yellow;
+	background-color: #ccc
+}
+</style>
+
+</head>
+<body>
+	<div class="container">
+		<h2>Tennis Game Tournament - Spring Framework 4, Websocket, SockJS, Stomp</h2>
+		<p> 
+			<a href="https://github.com/mgreau/javaee7-websocket" target="blog">See the source project on GitHub.</a>
+		</p>
+		<div class="row">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<span id="m1-title"></span> - <span id="m1-status"
+						class="label label-success"></span>
+
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<thead>
+							<tr>
+								<th width="5%">S1</th>
+								<th width="5%">S2</th>
+								<th width="5%">S3</th>
+								<th width="5%" class="active"></th>
+								<th width="5%" class="active"></th>
+								<th width="45%" class="active">PLAYERS</th>
+								<th width="10%" class="active">POINTS</th>
+								<th width="10%" class="active">GAMES</th>
+								<th width="10%" class="active">SETS</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="sets"><span id="m1-p1-set1"
+									class="label label-warning">0</span></td>
+								<td class="sets"><span id="m1-p1-set2"
+									class="label label-warning">0</span></td>
+								<td class="sets"><span id="m1-p1-set3"
+									class="label label-warning">0</span></td>
+								<td><span id="m1-p1-serve" class="badge serve"></span></td>
+								<td><img src="img/blank.gif" class="flag flag-rs" /></td>
+								<td id="m1-p1"></td>
+								<td class="active"><span id="m1-p1-points"
+									class="label label-danger">-</span></td>
+								<td id="m1-p1-games">0</td>
+								<td id="m1-p1-sets"></td>
+							</tr>
+							<tr>
+								<td class="sets"><span id="m1-p2-set1"
+									class="label label-warning">0</span></td>
+								<td class="sets"><span id="m1-p2-set2"
+									class="label label-warning">0</span></td>
+								<td class="sets"><span id="m1-p2-set3"
+									class="label label-warning">0</span></td>
+								<td><span id="m1-p2-serve" class="badge serve"></span></td>
+								<td><img src="img/blank.gif" class="flag flag-es" /></td>
+								<td id="m1-p2"></td>
+								<td class="active"><span id="m1-p2-points"
+									class="label label-danger">-</span></td>
+								<td id="m1-p2-games">0</td>
+								<td id="m1-p2-sets"></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="row">
+						<div class="col-sm-6 col-md-3">
+							<div class="thumbnail">
+								<div class="media">
+									<a class="pull-left" href="#"> <img class="media-object"
+										alt="player1" src="img/ferrer.jpg">
+									</a>
+									<div class="media-body">
+										<h4 id="m1-p1-card" class="media-heading"></h4>
+										<p>
+											<a href="#" class="btn btn-primary btn-xs"
+												onclick="betMatchWinner('Ferrer D.')">Match Winner ?</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="thumbnail">
+								<div class="media">
+									<a class="pull-left" href="#"> <img class="media-object"
+										alt="player2" src="img/almagro.jpg">
+									</a>
+									<div class="media-body">
+										<h4 id="m1-p2-card" class="media-heading"></h4>
+										<p>
+											<a href="#" class="btn btn-primary btn-xs"
+												onclick="betMatchWinner('Almagro N.')">Match Winner ?</a>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="thumbnail">
+								<ul>
+									<li>Bet Match Winner : <span id="m1-betmatchwinner"
+										class="label label-warning"></span></li>
+									<li>Result : <span id="m1-betmatchwinner-result"
+										class="label label-default"></span></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="thumbnail">
+								<div class="media">
+									<textarea style="font-size: 11px; background-color: #e5e5e5;"
+										id="m1-comments" cols="45" rows="4"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <script src="../sockjs-0.3.4.min.js"></script>
+    <script src="../stomp-2.3.3.min.js"></script>
+    <script src="../uuid.js"></script>
+	<script src="js/websocket.js"></script>
+</body>
+</html>

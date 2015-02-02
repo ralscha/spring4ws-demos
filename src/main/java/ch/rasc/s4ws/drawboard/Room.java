@@ -8,6 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
@@ -15,11 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import reactor.core.Reactor;
 import reactor.event.Event;
+import reactor.spring.context.annotation.Consumer;
 import reactor.spring.context.annotation.Selector;
 import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
 
-import com.google.common.collect.Maps;
-
+@Consumer
 public final class Room {
 
 	private final BufferedImage roomImage = new BufferedImage(900, 600,
@@ -27,12 +28,13 @@ public final class Room {
 
 	private final Graphics2D roomGraphics = this.roomImage.createGraphics();
 
-	private final Map<String, Long> playerMap = Maps.newConcurrentMap();
+	private final Map<String, Long> playerMap = new ConcurrentHashMap<>();
+
+	public final Reactor reactor;
 
 	@Autowired
-	public Reactor reactor;
-
-	public Room() {
+	public Room(Reactor reactor) {
+		this.reactor = reactor;
 		this.roomGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		this.roomGraphics.setBackground(Color.WHITE);
@@ -40,7 +42,7 @@ public final class Room {
 				this.roomImage.getHeight());
 	}
 
-	@Selector("newPlayer")
+	@Selector(value = "newPlayer")
 	public void newPlayer(String sessionId) {
 		this.playerMap.put(sessionId, 0L);
 		Event<String> event = Event.wrap(MessageType.PLAYER_CHANGED.flag + "+");

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" rel="stylesheet">
+<style>
+.ribbon {
+  background-color: #a00;
+  overflow: hidden;
+  position: absolute;
+  right: -1em;
+  top: 5em;
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);  
+  transform: rotate(45deg);
+  -moz-box-shadow: 0 0 1em #888;
+  -webkit-box-shadow: 0 0 1em #888;
+  -ms-box-shadow: 0 0 1em #888;
+  box-shadow: 0 0 1em #888;
+}
+.ribbon a {
+  border: 1px solid #faa;
+  color: #fff;
+  display: block;
+  font: bold 81.25% 'Helvetiva Neue', Helvetica, Arial, sans-serif;
+  margin: 0.05em 0 0.075em 0;
+  padding: 0.5em 3.5em;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 0 0.5em #444;
+}
+</style>
+<title>Various Spring Framework 4.1 / SockJS / Stomp Examples</title>
+</head>
+<body>
+	<div class="ribbon">
+	  <a href="https://github.com/ralscha/spring4ws-demos">Source Code on GitHub</a>
+	</div>
+
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="brand" href="./index.html">Various Spring Framework 4.1 / SockJS / Stomp Examples</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="span12">
+
+			<section id="demo-links">
+				<h3>Demos</h3>
+				<ul>
+					<li>
+					  <strong><a class="demolink" href="chat/index.html">Chat</a></strong>
+					  <p>This is the sample application from <a href="https://github.com/flowersinthesand/portal-java">portal-java</a>.</p>
+					</li>
+					<li>
+					  <strong><a class="demolink" href="twitter/index.html">Twitter</a></strong>
+					  <p>Twitter demo that uses the <a href="https://github.com/twitter/hbc">Streaming API from Twitter</a> and tracks these terms 
+					  "ExtJS", "#extjs", "#SenchaTouch", "Sencha", "#java", "java7", "java8", "#websocket", "#SpringFramework", "html5" and "javascript".</p>
+					</li>	
+					<li>
+					  <strong><a class="demolink" href="snake/index.html">Snake</a></strong>
+					  <p>Port of the Websocket snake demo included in the Tomcat 7 distribution (webapps/examples folder).</p>
+					</li>
+					<li>
+					  <strong><a class="demolink" href="tail/index.html">Access Log Wargames Map</a></strong>
+					  <p>
+					    Translates ip addresses from the Apache access log from this server to latitude/longitude with the help of <a href="http://dev.maxmind.com/geoip/geolite">GeoCityIP</a> and
+					    visualizes them on a world map. This example is based on <a href="https://github.com/stagas/maptail">maptail</a> and <a href="https://github.com/mape">mape</a>'s <a href="https://github.com/mape/node-wargames">wargames</a>.			    
+					  </p>
+					</li>
+					<li>
+					  <strong><a class="demolink" href="smoothie/index.html">Smoothie Charts</a></strong>
+					  <p>Copy of the <a href="http://smoothiecharts.org/">Smoothie Charts</a> <a href="http://smoothiecharts.org/examples/server-load.html">Server Load Example</a>. 
+					  But in this example the server generates the random data every second and sends it to the connected clients.</p>
+					</li>	
+					<li>
+					  <strong><a class="demolink" href="map/index.html">Google Maps Demo</a></strong>
+					  <p>Server sends periodically coordinates to the connected clients that moves two car icons on a google maps.</p>
+					</li>				
+					<li>
+					  <strong><a class="demolink" href="portfolio/index.html">Portfolio</a></strong>
+					  <p>Copy of the traditional portfolio demo from <a href="https://github.com/rstoyanchev">Rossen Stoyanchev's</a> <a href="https://github.com/rstoyanchev/spring-websocket-portfolio">rstoyanchev/spring-websocket-portfolio</a> project</p>
+					</li>
+					<li>
+					  <strong><a class="demolink" href="bandwidth/index.html">Realtime Bandwidth Monitoring</a></strong>
+					  <p>Shows received and sent bytes of this server network interface. Port of the <a href="https://github.com/pesarkhobeee/Realtime-Bandwidth-Grapher">pesarkhobeee/Realtime-Bandwidth-Grapher</a> project.</p>
+					</li>
+					<li>
+					  <strong><a class="demolink" href="drawboard/index.html">Drawboard Example</a></strong>
+					  <p>Port of the drawboard example from Tomcat 8 RC5. Websocket only example.</p>
+					</li>
+					<li>
+					  <strong><a class="demolink" href="brainshop/index.html">Brainshop Example</a></strong>
+					  <p>Web-based Brainstorming. Port of this <a href="https://code.google.com/p/brainshop/">node.js demo application</a>  </p>
+					</li>	
+					<li>
+					  <strong><a class="demolink" href="tennis/index.html">Tennis Demo</a></strong>
+					  <p>Realtime tennis results. Port of this demo application <a href="https://github.com/mgreau/javaee7-websocket">mgreau / javaee7-websocket</a></p>
+					</li>
+				
+				</ul>
+			</section>
+			
+			<section id="links">
+			  <h3>Links</h3>
+			  <ul>
+			    <li><a href="http://projects.spring.io/spring-framework/">Spring Framework</a></li>
+			    <li><a href="https://github.com/sockjs">SockJS</a></li>
+			    <li><a href="http://jmesnil.net/stomp-websocket/doc/">STOMP</a></li>
+			  </ul>
+			</section>
+		</div>
+	</div>
+
+</body>
+</html>

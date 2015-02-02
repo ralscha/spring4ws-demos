@@ -13,10 +13,8 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import twitter4j.StallWarning;
@@ -111,13 +109,11 @@ public class TwitterStatusListener implements StatusStreamHandler {
 		// nothing here
 	}
 
+	@SuppressWarnings("resource")
 	private String unshorten(String url) {
-		try {
+		try (CloseableHttpClient defaultHttpClient = HttpClientBuilder.create()
+				.disableRedirectHandling().build()) {
 			HttpHead head = new HttpHead(url);
-			HttpParams params = new BasicHttpParams();
-			HttpClientParams.setRedirecting(params, false);
-			head.setParams(params);
-			DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
 			HttpResponse response = defaultHttpClient.execute(head);
 
 			int status = response.getStatusLine().getStatusCode();
