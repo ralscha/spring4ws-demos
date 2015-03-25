@@ -39,7 +39,7 @@ public class Spring4WebSocketExamplesApplication extends
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/stomp");
-		registry.addEndpoint("/sockjs").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/sockjs").withSockJS();
 	}
 
 	@Override
