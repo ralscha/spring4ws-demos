@@ -11,7 +11,7 @@ public class BrainConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(brainHandler(), "/brainsockjs").withSockJS();
+		registry.addHandler(brainHandler(), "/brainsockjs").setAllowedOrigins("*").withSockJS();
 	}
 
 	@Bean
