@@ -14,8 +14,8 @@ import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import reactor.core.Reactor;
-import reactor.event.Event;
+import reactor.bus.Event;
+import reactor.bus.EventBus;
 import reactor.spring.context.annotation.Consumer;
 import reactor.spring.context.annotation.Selector;
 import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
@@ -30,11 +30,11 @@ public final class Room {
 
 	private final Map<String, Long> playerMap = new ConcurrentHashMap<>();
 
-	public final Reactor reactor;
+	public final EventBus eventBus;
 
 	@Autowired
-	public Room(Reactor reactor) {
-		this.reactor = reactor;
+	public Room(EventBus eventBus) {
+		this.eventBus = eventBus;
 		this.roomGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		this.roomGraphics.setBackground(Color.WHITE);
@@ -42,17 +42,17 @@ public final class Room {
 				this.roomImage.getHeight());
 	}
 
-	@Selector(value = "newPlayer")
+	@Selector("newPlayer")
 	public void newPlayer(String sessionId) {
 		this.playerMap.put(sessionId, 0L);
 		Event<String> event = Event.wrap(MessageType.PLAYER_CHANGED.flag + "+");
 		event.getHeaders().set("excludeId", sessionId);
-		this.reactor.notify("sendString", event);
+		this.eventBus.notify("sendString", event);
 
 		event = Event.wrap(MessageType.IMAGE_MESSAGE.flag
 				+ String.valueOf(this.playerMap.size()));
 		event.getHeaders().set("sessionId", sessionId);
-		this.reactor.notify("sendString", event);
+		this.eventBus.notify("sendString", event);
 
 		// Store image as PNG
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -65,14 +65,14 @@ public final class Room {
 		Event<ByteBuffer> byteBufferEvent = Event
 				.wrap(ByteBuffer.wrap(bout.toByteArray()));
 		byteBufferEvent.getHeaders().set("sessionId", sessionId);
-		this.reactor.notify("sendBinary", byteBufferEvent);
+		this.eventBus.notify("sendBinary", byteBufferEvent);
 	}
 
 	@Selector("removePlayer")
 	public void removePlayer(String sessionId) {
 		Event<String> event = Event.wrap(MessageType.PLAYER_CHANGED.flag + "-");
 		this.playerMap.remove(sessionId);
-		this.reactor.notify("sendString", event);
+		this.eventBus.notify("sendString", event);
 	}
 
 	@Selector("incomingMessage")
@@ -99,7 +99,7 @@ public final class Room {
 							+ this.playerMap.get(playerSessionId) + ","
 							+ drawMessageString);
 					event.getHeaders().set("sessionId", playerSessionId);
-					this.reactor.notify("sendString", event);
+					this.eventBus.notify("sendString", event);
 				}
 
 			}

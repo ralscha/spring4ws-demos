@@ -24,6 +24,14 @@
 		<java.version>1.8</java.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>spring</id>
+			<name>Spring</name>
+			<url>https://repo.spring.io/release</url>
+		</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -93,22 +101,31 @@
 		<dependency>
 			<groupId>com.hazelcast</groupId>
 			<artifactId>hazelcast</artifactId>
-			<version>3.4.1</version>
+			<version>3.4.2</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.projectreactor</groupId>
+			<groupId>io.projectreactor</groupId>
 			<artifactId>reactor-core</artifactId>
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.projectreactor.spring</groupId>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-bus</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.projectreactor.spring</groupId>
 			<artifactId>reactor-spring-core</artifactId>
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.projectreactor.spring</groupId>
+			<groupId>io.projectreactor.spring</groupId>
 			<artifactId>reactor-spring-context</artifactId>
+			<version>2.0.0.RELEASE</version>
 		</dependency>
 
 	</dependencies>

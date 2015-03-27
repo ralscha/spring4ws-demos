@@ -30,8 +30,8 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
-import reactor.core.Reactor;
-import reactor.event.Event;
+import reactor.bus.Event;
+import reactor.bus.EventBus;
 import reactor.spring.context.annotation.Consumer;
 import reactor.spring.context.annotation.Selector;
 
@@ -41,7 +41,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 	private static final Log log = LogFactory.getLog(DrawboardWebSocketHandler.class);
 
 	@Autowired
-	public Reactor reactor;
+	public EventBus eventBus;
 
 	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
@@ -112,7 +112,7 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		this.sessions.put(session.getId(), session);
-		this.reactor.notify("newPlayer", Event.wrap(session.getId()));
+		this.eventBus.notify("newPlayer", Event.wrap(session.getId()));
 	}
 
 	@Override
@@ -121,14 +121,14 @@ public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 
 		Event<String> event = Event.wrap(message.getPayload());
 		event.getHeaders().set("sessionId", session.getId());
-		this.reactor.notify("incomingMessage", event);
+		this.eventBus.notify("incomingMessage", event);
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
 		this.sessions.remove(session.getId());
-		this.reactor.notify("removePlayer", Event.wrap(session.getId()));
+		this.eventBus.notify("removePlayer", Event.wrap(session.getId()));
 	}
 
 }

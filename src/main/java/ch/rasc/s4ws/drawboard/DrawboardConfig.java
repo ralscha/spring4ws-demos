@@ -6,14 +6,17 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import reactor.core.Environment;
-import reactor.core.Reactor;
-import reactor.core.spec.Reactors;
+import reactor.Environment;
+import reactor.bus.EventBus;
 import reactor.spring.context.config.EnableReactor;
 
 @Configuration
 @EnableReactor
 public class DrawboardConfig implements WebSocketConfigurer {
+
+	static {
+		Environment.initializeIfEmpty().assignErrorJournal();
+	}
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -26,15 +29,14 @@ public class DrawboardConfig implements WebSocketConfigurer {
 	}
 
 	@Bean
-	public Room room(Environment env) {
-		return new Room(reactor(env));
+	public EventBus eventBus() {
+		return EventBus.config().env(Environment.get())
+				.dispatcher(Environment.THREAD_POOL).get();
 	}
 
 	@Bean
-	public Reactor reactor(Environment env) {
-		Reactor reactor = Reactors.reactor().env(env).dispatcher(Environment.THREAD_POOL)
-				.get();
-		return reactor;
+	public Room room() {
+		return new Room(eventBus());
 	}
 
 }
