@@ -26,8 +26,8 @@ public class BrainHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message)
 			throws Exception {
-		BrainMessage bm = objectMapper
-				.readValue(message.getPayload(), BrainMessage.class);
+		BrainMessage bm = objectMapper.readValue(message.getPayload(),
+				BrainMessage.class);
 		this.brainService.handleIncomingMessage(session, bm);
 	}
 

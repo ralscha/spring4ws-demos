@@ -44,18 +44,18 @@ public class CpuDataService {
 	public void sendData() throws JsonProcessingException {
 		if (!this.sessions.isEmpty()) {
 			final CpuData cpuData = new CpuData();
-			cpuData.setHost1(new double[] { this.random.nextDouble(),
-					this.random.nextDouble(), this.random.nextDouble(),
-					this.random.nextDouble() });
-			cpuData.setHost2(new double[] { this.random.nextDouble(),
-					this.random.nextDouble(), this.random.nextDouble(),
-					this.random.nextDouble() });
-			cpuData.setHost3(new double[] { this.random.nextDouble(),
-					this.random.nextDouble(), this.random.nextDouble(),
-					this.random.nextDouble() });
-			cpuData.setHost4(new double[] { this.random.nextDouble(),
-					this.random.nextDouble(), this.random.nextDouble(),
-					this.random.nextDouble() });
+			cpuData.setHost1(
+					new double[] { this.random.nextDouble(), this.random.nextDouble(),
+							this.random.nextDouble(), this.random.nextDouble() });
+			cpuData.setHost2(
+					new double[] { this.random.nextDouble(), this.random.nextDouble(),
+							this.random.nextDouble(), this.random.nextDouble() });
+			cpuData.setHost3(
+					new double[] { this.random.nextDouble(), this.random.nextDouble(),
+							this.random.nextDouble(), this.random.nextDouble() });
+			cpuData.setHost4(
+					new double[] { this.random.nextDouble(), this.random.nextDouble(),
+							this.random.nextDouble(), this.random.nextDouble() });
 
 			TextMessage tm = new TextMessage(objectMapper.writeValueAsString(cpuData));
 			for (WebSocketSession session : this.sessions.values()) {
@@ -64,7 +64,8 @@ public class CpuDataService {
 		}
 	}
 
-	private void sendMessage(final WebSocketSession session, final TextMessage textMessage) {
+	private void sendMessage(final WebSocketSession session,
+			final TextMessage textMessage) {
 
 		this.taskExecutor.execute(() -> {
 			if (session.isOpen()) {

@@ -139,8 +139,8 @@ public class Snake {
 				Integer.valueOf(this.head.y)));
 		for (Location location : this.tail) {
 			sb.append(',');
-			sb.append(String.format("{\"x\": %d, \"y\": %d}",
-					Integer.valueOf(location.x), Integer.valueOf(location.y)));
+			sb.append(String.format("{\"x\": %d, \"y\": %d}", Integer.valueOf(location.x),
+					Integer.valueOf(location.y)));
 		}
 		return String.format("{\"id\":%d,\"body\":[%s]}", Integer.valueOf(this.id),
 				sb.toString());

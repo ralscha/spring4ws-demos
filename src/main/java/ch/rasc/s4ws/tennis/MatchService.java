@@ -81,8 +81,8 @@ public class MatchService {
 					else {
 						result = "NOK";
 					}
-					this.messagingTemplate.convertAndSend("/queue/tennis/bet/" + clientId
-							+ "/" + m.getKey(), result);
+					this.messagingTemplate.convertAndSend(
+							"/queue/tennis/bet/" + clientId + "/" + m.getKey(), result);
 				}
 
 			}

@@ -14,11 +14,11 @@ import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
 import reactor.bus.Event;
 import reactor.bus.EventBus;
 import reactor.spring.context.annotation.Consumer;
 import reactor.spring.context.annotation.Selector;
-import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
 
 @Consumer
 public final class Room {
@@ -49,8 +49,8 @@ public final class Room {
 		event.getHeaders().set("excludeId", sessionId);
 		this.eventBus.notify("sendString", event);
 
-		event = Event.wrap(MessageType.IMAGE_MESSAGE.flag
-				+ String.valueOf(this.playerMap.size()));
+		event = Event.wrap(
+				MessageType.IMAGE_MESSAGE.flag + String.valueOf(this.playerMap.size()));
 		event.getHeaders().set("sessionId", sessionId);
 		this.eventBus.notify("sendString", event);
 
@@ -89,15 +89,15 @@ public final class Room {
 				Long msgId = Long.valueOf(messageContent.substring(0, indexOfChar));
 				this.playerMap.put(sessionId, msgId);
 
-				DrawMessage drawMessage = DrawMessage.parseFromString(messageContent
-						.substring(indexOfChar + 1));
+				DrawMessage drawMessage = DrawMessage
+						.parseFromString(messageContent.substring(indexOfChar + 1));
 				drawMessage.draw(this.roomGraphics);
 				String drawMessageString = drawMessage.toString();
 
 				for (String playerSessionId : this.playerMap.keySet()) {
-					Event<String> event = Event.wrap("1"
-							+ this.playerMap.get(playerSessionId) + ","
-							+ drawMessageString);
+					Event<String> event = Event
+							.wrap("1" + this.playerMap.get(playerSessionId) + ","
+									+ drawMessageString);
 					event.getHeaders().set("sessionId", playerSessionId);
 					this.eventBus.notify("sendString", event);
 				}

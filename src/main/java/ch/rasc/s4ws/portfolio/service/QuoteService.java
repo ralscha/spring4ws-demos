@@ -61,8 +61,8 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 				logger.trace("Sending quote " + quote);
 			}
 			if (this.brokerAvailable.get()) {
-				this.messagingTemplate.convertAndSend(
-						"/topic/price.stock." + quote.getTicker(), quote);
+				this.messagingTemplate
+						.convertAndSend("/topic/price.stock." + quote.getTicker(), quote);
 			}
 		}
 	}
@@ -98,8 +98,8 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 		private BigDecimal getPrice(String ticker) {
 			BigDecimal seedPrice = new BigDecimal(this.prices.get(ticker), mathContext);
 			double range = seedPrice.multiply(new BigDecimal(0.02)).doubleValue();
-			BigDecimal priceChange = new BigDecimal(String.valueOf(this.random
-					.nextDouble() * range), mathContext);
+			BigDecimal priceChange = new BigDecimal(
+					String.valueOf(this.random.nextDouble() * range), mathContext);
 			return seedPrice.add(priceChange);
 		}
 

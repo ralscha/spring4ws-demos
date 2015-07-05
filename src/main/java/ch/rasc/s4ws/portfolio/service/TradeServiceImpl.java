@@ -58,8 +58,9 @@ public class TradeServiceImpl implements TradeService {
 		String ticker = trade.getTicker();
 		int sharesToTrade = trade.getShares();
 
-		PortfolioPosition newPosition = trade.getAction() == TradeAction.Buy ? portfolio
-				.buy(ticker, sharesToTrade) : portfolio.sell(ticker, sharesToTrade);
+		PortfolioPosition newPosition = trade.getAction() == TradeAction.Buy
+				? portfolio.buy(ticker, sharesToTrade)
+				: portfolio.sell(ticker, sharesToTrade);
 
 		if (newPosition == null) {
 			String payload = "Rejected trade " + trade;

@@ -48,8 +48,8 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 		float saturation = (random.nextInt(2000) + 1000) / 10000f;
 		float luminance = 0.9f;
 		Color color = Color.getHSBColor(hue, saturation, luminance);
-		return '#' + Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000)
-				.substring(1);
+		return '#'
+				+ Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
 	}
 
 	public static Location getRandomLocation() {
@@ -83,8 +83,8 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 				sb.append(',');
 			}
 		}
-		SnakeTimer.broadcast(String.format("{\"type\": \"join\",\"data\":[%s]}",
-				sb.toString()));
+		SnakeTimer.broadcast(
+				String.format("{\"type\": \"join\",\"data\":[%s]}", sb.toString()));
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class SnakeWebSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
 		SnakeTimer.removeSnake(this.snake);
-		SnakeTimer.broadcast(String.format("{'type': 'leave', 'id': %d}",
-				Integer.valueOf(this.id)));
+		SnakeTimer.broadcast(
+				String.format("{'type': 'leave', 'id': %d}", Integer.valueOf(this.id)));
 	}
 }

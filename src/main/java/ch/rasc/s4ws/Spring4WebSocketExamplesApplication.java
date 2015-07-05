@@ -20,8 +20,8 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocket
 @EnableWebSocketMessageBroker
 @EnableScheduling
-public class Spring4WebSocketExamplesApplication extends
-		AbstractWebSocketMessageBrokerConfigurer implements SchedulingConfigurer {
+public class Spring4WebSocketExamplesApplication
+		extends AbstractWebSocketMessageBrokerConfigurer implements SchedulingConfigurer {
 
 	public static void main(String[] args) {
 		System.setProperty("spring.profiles.active", "development");
@@ -49,8 +49,8 @@ public class Spring4WebSocketExamplesApplication extends
 
 	@Override
 	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		taskRegistrar.setTaskScheduler(new ConcurrentTaskScheduler(Executors
-				.newSingleThreadScheduledExecutor()));
+		taskRegistrar.setTaskScheduler(new ConcurrentTaskScheduler(
+				Executors.newSingleThreadScheduledExecutor()));
 	}
 
 }

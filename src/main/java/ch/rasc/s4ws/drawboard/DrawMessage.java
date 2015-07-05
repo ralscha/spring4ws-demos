@@ -190,7 +190,8 @@ public final class DrawMessage {
 	}
 
 	/**
-	 * Converts this message into a String representation that can be sent over WebSocket.<br>
+	 * Converts this message into a String representation that can be sent over WebSocket.
+	 * <br>
 	 * Since a DrawMessage consists only of numbers, we concatenate those numbers with a
 	 * ",".
 	 */
@@ -198,9 +199,9 @@ public final class DrawMessage {
 	public String toString() {
 
 		return this.type + "," + (this.colorR & 0xFF) + "," + (this.colorG & 0xFF) + ","
-				+ (this.colorB & 0xFF) + "," + (this.colorA & 0xFF) + ","
-				+ this.thickness + "," + this.x1 + "," + this.y1 + "," + this.x2 + ","
-				+ this.y2 + "," + (this.lastInChain ? "1" : "0");
+				+ (this.colorB & 0xFF) + "," + (this.colorA & 0xFF) + "," + this.thickness
+				+ "," + this.x1 + "," + this.y1 + "," + this.x2 + "," + this.y2 + ","
+				+ (this.lastInChain ? "1" : "0");
 	}
 
 	public static DrawMessage parseFromString(String str) throws ParseException {

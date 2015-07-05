@@ -140,8 +140,8 @@ public class BrainService {
 			idea = Idea.createIdea();
 		}
 
-		idea.setDate(LocalDateTime.now().format(
-				DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+		idea.setDate(LocalDateTime.now()
+				.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 		idea.setGroup(bm.getGroup());
 		idea.setText(bm.getText());
 		idea.setNext(bm.getNext());

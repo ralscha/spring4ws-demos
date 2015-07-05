@@ -6,6 +6,7 @@ import java.util.List;
 public class Route {
 
 	public static List<LatLng> routeBlue = new ArrayList<>();
+
 	static {
 		routeBlue.add(new LatLng(46.95448061777255, 7.416114807128906));
 		routeBlue.add(new LatLng(46.95500789134226, 7.416629791259766));
@@ -148,6 +149,7 @@ public class Route {
 	}
 
 	public static List<LatLng> routeRed = new ArrayList<>();
+
 	static {
 		routeRed.add(new LatLng(46.97088225099078, 7.470617294311523));
 		routeRed.add(new LatLng(46.96976944205062, 7.470188140869141));

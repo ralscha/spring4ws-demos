@@ -42,8 +42,8 @@ public class TennisMatch {
 		this.player1 = player1;
 		this.player2 = player2;
 		this.serve = player1.getName();
-		this.liveComments = "Welcome to this match between " + player1.getName()
-				+ " and " + player2.getName() + ".";
+		this.liveComments = "Welcome to this match between " + player1.getName() + " and "
+				+ player2.getName() + ".";
 	}
 
 	public String getKey() {
@@ -109,10 +109,8 @@ public class TennisMatch {
 	}
 
 	public boolean hasMatchWinner() {
-		if (this.isSet1Finished
-				&& this.isSet2Finished
-				&& (this.isSet3Finished || this.player1.getSets() != this.player2
-						.getSets())) {
+		if (this.isSet1Finished && this.isSet2Finished && (this.isSet3Finished
+				|| this.player1.getSets() != this.player2.getSets())) {
 			return true;
 		}
 		return false;
@@ -144,13 +142,14 @@ public class TennisMatch {
 
 	public boolean hasSetWinner() {
 		if (this.player1.getGamesInCurrentSet() >= 6
-				&& (this.player1.getGamesInCurrentSet() >= this.player2
-						.getGamesInCurrentSet() + 2 || this.player1
-						.getGamesInCurrentSet() + this.player2.getGamesInCurrentSet() == 13)
-				|| this.player2.getGamesInCurrentSet() >= 6
-				&& (this.player2.getGamesInCurrentSet() >= this.player1
-						.getGamesInCurrentSet() + 2 || this.player1
-						.getGamesInCurrentSet() + this.player2.getGamesInCurrentSet() == 13)) {
+				&& (this.player1
+						.getGamesInCurrentSet() >= this.player2.getGamesInCurrentSet() + 2
+						|| this.player1.getGamesInCurrentSet()
+								+ this.player2.getGamesInCurrentSet() == 13)
+				|| this.player2.getGamesInCurrentSet() >= 6 && (this.player2
+						.getGamesInCurrentSet() >= this.player1.getGamesInCurrentSet() + 2
+						|| this.player1.getGamesInCurrentSet()
+								+ this.player2.getGamesInCurrentSet() == 13)) {
 			if (!this.isSet1Finished) {
 				this.isSet1Finished = true;
 				this.player1.setSet1(this.player1.getGamesInCurrentSet());
@@ -168,7 +167,8 @@ public class TennisMatch {
 			}
 
 			addLiveComments(playerWithHighestGames() + " wins this set !!");
-			if (this.player1.getGamesInCurrentSet() > this.player2.getGamesInCurrentSet()) {
+			if (this.player1.getGamesInCurrentSet() > this.player2
+					.getGamesInCurrentSet()) {
 				this.player1.incSets();
 			}
 			else {
