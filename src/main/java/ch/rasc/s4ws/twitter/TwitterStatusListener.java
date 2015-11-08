@@ -53,7 +53,7 @@ public class TwitterStatusListener implements StatusStreamHandler {
 		Matcher matcher = URL_PATTERN.matcher(text);
 		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
-			String unshortenedURL = unshorten(matcher.group());
+			String unshortenedURL = unshorten(matcher.group(), 1);
 			if (unshortenedURL != null) {
 				matcher.appendReplacement(sb, "<a target=\"_blank\" href=\""
 						+ unshortenedURL + "\">" + unshortenedURL + "</a>");
@@ -110,7 +110,10 @@ public class TwitterStatusListener implements StatusStreamHandler {
 	}
 
 	@SuppressWarnings("resource")
-	private String unshorten(String url) {
+	private String unshorten(String url, int loop) {
+		if (loop > 2) {
+			return null;
+		}
 		try (CloseableHttpClient defaultHttpClient = HttpClientBuilder.create()
 				.disableRedirectHandling().build()) {
 			HttpHead head = new HttpHead(url);
@@ -125,7 +128,8 @@ public class TwitterStatusListener implements StatusStreamHandler {
 					if (!value.startsWith("http") && value.startsWith("/")) {
 						value = "http:/" + value;
 					}
-					return unshorten(value);
+					int nloop = loop + 1;
+					return unshorten(value, nloop);
 				}
 			}
 			else if (status >= 400 && status != HttpStatus.SC_METHOD_NOT_ALLOWED
