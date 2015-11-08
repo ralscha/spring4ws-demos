@@ -28,19 +28,14 @@ import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 
-import net.sf.uadetector.ReadableUserAgent;
-import net.sf.uadetector.UserAgentFamily;
-import net.sf.uadetector.UserAgentStringParser;
-import net.sf.uadetector.service.UADetectorServiceFactory;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
 
 @Service
 public class TailService {
 
 	private final Pattern accessLogPattern = Pattern.compile(getAccessLogRegex(),
 			Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-	private final UserAgentStringParser parser = UADetectorServiceFactory
-			.getResourceModuleParser();
 
 	private final SimpMessageSendingOperations messagingTemplate;
 
@@ -116,14 +111,11 @@ public class TailService {
 					access.setCountry(cr.getCountry().getName());
 
 					String userAgent = matcher.group(9);
-					ReadableUserAgent ua = TailService.this.parser.parse(userAgent);
-					if (ua != null && ua.getFamily() != UserAgentFamily.UNKNOWN) {
-						String uaString = ua.getName() + " "
-								+ ua.getVersionNumber().toVersionString();
-						uaString += "; " + ua.getOperatingSystem().getName();
-						uaString += "; " + ua.getFamily();
-						uaString += "; " + ua.getTypeName();
-						uaString += "; " + ua.getProducer();
+					
+					UserAgent ua = UserAgent.parseUserAgentString(userAgent);
+					
+					if (ua != null && ua.getBrowser() != Browser.UNKNOWN) {
+						String uaString = ua.getBrowser().getName() + "; " + ua.getOperatingSystem().toString();
 
 						access.setMessage(matcher.group(4) + "; " + uaString);
 					}
