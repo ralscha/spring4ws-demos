@@ -57,8 +57,8 @@ public class TwitterHandler {
 		BlockingQueue<String> queue = new LinkedBlockingQueue<>(100);
 		StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
 
-		endpoint.trackTerms(ImmutableList.of("ExtJS", "#extjs", "#SenchaTouch", "Sencha",
-				"#java", "java7", "java8", "#websocket", "#SpringFramework", "html5",
+		endpoint.trackTerms(ImmutableList.of("ExtJS", "#extjs", "Sencha",
+				"#java", "java8", "java9", "#websocket", "#SpringFramework", "html5",
 				"javascript"));
 		endpoint.languages(ImmutableList.of("en", "de"));
 
