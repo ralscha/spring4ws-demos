@@ -51,7 +51,7 @@ public class Board {
 			for (Board board : boards.values()) {
 				Set<String> usersWithErrors = new HashSet<>();
 				for (String sessionId : board.users.keySet()) {
-					try (WebSocketSession ws = board.users.get(sessionId)) {						
+					try (WebSocketSession ws = board.users.get(sessionId)) {
 						if (ws.isOpen()) {
 							ws.sendMessage(tm);
 						}

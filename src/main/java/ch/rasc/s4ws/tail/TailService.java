@@ -111,11 +111,12 @@ public class TailService {
 					access.setCountry(cr.getCountry().getName());
 
 					String userAgent = matcher.group(9);
-					
+
 					UserAgent ua = UserAgent.parseUserAgentString(userAgent);
-					
+
 					if (ua != null && ua.getBrowser() != Browser.UNKNOWN) {
-						String uaString = ua.getBrowser().getName() + "; " + ua.getOperatingSystem().toString();
+						String uaString = ua.getBrowser().getName() + "; "
+								+ ua.getOperatingSystem().toString();
 
 						access.setMessage(matcher.group(4) + "; " + uaString);
 					}

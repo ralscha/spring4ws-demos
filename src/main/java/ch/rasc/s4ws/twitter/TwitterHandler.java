@@ -57,9 +57,9 @@ public class TwitterHandler {
 		BlockingQueue<String> queue = new LinkedBlockingQueue<>(100);
 		StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
 
-		endpoint.trackTerms(ImmutableList.of("ExtJS", "#extjs", "Sencha",
-				"#java", "java8", "java9", "#websocket", "#SpringFramework", "html5",
-				"javascript"));
+		endpoint.trackTerms(
+				ImmutableList.of("ExtJS", "#extjs", "Sencha", "#java", "java8", "java9",
+						"#websocket", "#SpringFramework", "html5", "javascript"));
 		endpoint.languages(ImmutableList.of("en", "de"));
 
 		String consumerKey = this.environment.getProperty("twitter4j.oauth.consumerKey");
