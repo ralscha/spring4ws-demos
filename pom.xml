@@ -20,7 +20,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<start-class>ch.rasc.spring4ws-demos.Spring4WebSocketExamplesApplication</start-class>
+		<start-class>ch.rasc.s4ws.Spring4WebSocketExamplesApplication</start-class>
 		<java.version>1.8</java.version>
 	</properties>
 	

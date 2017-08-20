@@ -24,7 +24,7 @@ public class Spring4WebSocketExamplesApplication
 		extends AbstractWebSocketMessageBrokerConfigurer implements SchedulingConfigurer {
 
 	public static void main(String[] args) {
-		System.setProperty("spring.profiles.active", "development");
+		// System.setProperty("spring.profiles.active", "development");
 		SpringApplication.run(Spring4WebSocketExamplesApplication.class, args);
 	}
 
