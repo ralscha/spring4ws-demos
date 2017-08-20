@@ -28,7 +28,6 @@ import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 
-import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 
 @Service
@@ -111,14 +110,33 @@ public class TailService {
 					access.setCountry(cr.getCountry().getName());
 
 					String userAgent = matcher.group(9);
-
 					UserAgent ua = UserAgent.parseUserAgentString(userAgent);
 
-					if (ua != null && ua.getBrowser() != Browser.UNKNOWN) {
-						String uaString = ua.getBrowser().getName() + "; "
-								+ ua.getOperatingSystem().toString();
+					if (ua != null) {
+						String browserVersion = ua.getBrowserVersion() != null
+								? ua.getBrowserVersion().getVersion()
+								: "";
+						if (browserVersion.equals("Unknown")) {
+							browserVersion = "";
+						}
+						String os = ua.getOperatingSystem() != null
+								? ua.getOperatingSystem().getName()
+								: "";
+						if (os.equals("Unknown")) {
+							os = "";
+						}
+						String browser = ua.getBrowser() != null
+								? ua.getBrowser().getName()
+								: "";
 
-						access.setMessage(matcher.group(4) + "; " + uaString);
+						if (!browser.equals("Unknown")) {
+							String uaString = String.join(" ", browser, browserVersion,
+									os);
+							access.setMessage(matcher.group(4) + "; " + uaString);
+						}
+						else {
+							access.setMessage(matcher.group(4));
+						}
 					}
 					else {
 						access.setMessage(null);
