@@ -17,7 +17,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
-import com.hazelcast.core.ITopic;
 import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
 import com.twitter.hbc.twitter4j.message.DisconnectMessage;
 import com.twitter.hbc.twitter4j.message.StallWarningMessage;
@@ -35,13 +34,10 @@ public class TwitterStatusListener implements StatusStreamHandler {
 
 	private final Queue<Tweet> lastTweets;
 
-	private final ITopic<Tweet> hazelcastTopic;
-
 	public TwitterStatusListener(SimpMessageSendingOperations messagingTemplate,
-			ITopic<Tweet> hazelcastTopic, Queue<Tweet> lastTweets) {
+			Queue<Tweet> lastTweets) {
 		this.messagingTemplate = messagingTemplate;
 		this.lastTweets = lastTweets;
-		this.hazelcastTopic = hazelcastTopic;
 	}
 
 	@Override
@@ -76,7 +72,6 @@ public class TwitterStatusListener implements StatusStreamHandler {
 		this.messagingTemplate.convertAndSend("/queue/tweets",
 				Collections.singletonList(tweet));
 
-		this.hazelcastTopic.publish(tweet);
 	}
 
 	@Override

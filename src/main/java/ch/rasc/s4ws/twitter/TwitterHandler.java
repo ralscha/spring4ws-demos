@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MinMaxPriorityQueue;
-import com.hazelcast.core.ITopic;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.endpoint.StatusesFilterEndpoint;
@@ -35,9 +34,6 @@ public class TwitterHandler {
 
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
-
-	@Autowired
-	private ITopic<Tweet> hazelcastTopic;
 
 	private final Queue<Tweet> lastTweets = MinMaxPriorityQueue.maximumSize(10).create();
 
@@ -57,9 +53,9 @@ public class TwitterHandler {
 		BlockingQueue<String> queue = new LinkedBlockingQueue<>(100);
 		StatusesFilterEndpoint endpoint = new StatusesFilterEndpoint();
 
-		endpoint.trackTerms(
-				ImmutableList.of("ExtJS", "#extjs", "Sencha", "#java", "java8", "java9",
-						"#websocket", "#SpringFramework", "html5", "javascript"));
+		endpoint.trackTerms(ImmutableList.of("ExtJS", "#extjs", "Sencha", "#java",
+				"java8", "java9", "#websocket", "#SpringFramework", "html5", "javascript",
+				"#kotlin", "kotlin"));
 		endpoint.languages(ImmutableList.of("en", "de"));
 
 		String consumerKey = this.environment.getProperty("twitter4j.oauth.consumerKey");
@@ -79,7 +75,7 @@ public class TwitterHandler {
 		this.executorService = Executors.newSingleThreadExecutor();
 
 		TwitterStatusListener statusListener = new TwitterStatusListener(
-				this.messagingTemplate, this.hazelcastTopic, this.lastTweets);
+				this.messagingTemplate, this.lastTweets);
 		this.t4jClient = new Twitter4jStatusClient(this.client, queue,
 				ImmutableList.of(statusListener), this.executorService);
 
