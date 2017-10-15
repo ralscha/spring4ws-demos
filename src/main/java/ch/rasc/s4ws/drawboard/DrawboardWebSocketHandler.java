@@ -17,118 +17,90 @@
 package ch.rasc.s4ws.drawboard;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 
-import reactor.bus.Event;
-import reactor.bus.EventBus;
-import reactor.spring.context.annotation.Consumer;
-import reactor.spring.context.annotation.Selector;
-
-@Consumer
 public class DrawboardWebSocketHandler extends AbstractWebSocketHandler {
 
 	private static final Log log = LogFactory.getLog(DrawboardWebSocketHandler.class);
 
-	@Autowired
-	public EventBus eventBus;
-
 	private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
-	@SuppressWarnings("resource")
-	@Selector("sendString")
-	public void consumeSendString(Event<String> event) {
-		String receiver = event.getHeaders().get("sessionId");
-		TextMessage txtMessage = new TextMessage(event.getData());
-		if (receiver != null) {
-			WebSocketSession session = this.sessions.get(receiver);
-			if (session != null) {
-				try {
-					session.sendMessage(txtMessage);
-				}
-				catch (IOException e) {
-					log.error("sendMessage", e);
-				}
-			}
-		}
-		else {
-			String excludeId = event.getHeaders().get("excludeId");
-			for (WebSocketSession session : this.sessions.values()) {
-				if (!session.getId().equals(excludeId)) {
-					try {
-						session.sendMessage(txtMessage);
-					}
-					catch (IOException e) {
-						log.error("sendMessage", e);
-					}
-				}
-			}
-		}
+	private final ApplicationEventPublisher publisher;
+
+	public DrawboardWebSocketHandler(ApplicationEventPublisher publisher) {
+		this.publisher = publisher;
 	}
 
-	@SuppressWarnings("resource")
-	@Selector("sendBinary")
-	public void consumeSendBinary(Event<ByteBuffer> event) {
+	@EventListener
+	public void consumeSendString(SendMessageEvent evt) {
+		String receiver = evt.getReceiver();
+		WebSocketMessage<?> message = null;
 
-		String receiver = event.getHeaders().get("sessionId");
-		BinaryMessage binMsg = new BinaryMessage(event.getData());
-		if (receiver != null) {
-			WebSocketSession session = this.sessions.get(receiver);
-			if (session != null) {
-				try {
-					session.sendMessage(binMsg);
-				}
-				catch (IOException e) {
-					log.error("sendMessage", e);
-				}
-			}
+		if (evt.getBinaryData() != null) {
+			message = new BinaryMessage(evt.getBinaryData());
 		}
-		else {
-			String excludeId = event.getHeaders().get("excludeId");
-			for (WebSocketSession session : this.sessions.values()) {
-				if (!session.getId().equals(excludeId)) {
+		else if (evt.getTextData() != null) {
+			message = new TextMessage(evt.getTextData());
+		}
+
+		if (message != null) {
+			if (receiver != null) {
+				WebSocketSession session = this.sessions.get(receiver);
+				if (session != null) {
 					try {
-						session.sendMessage(binMsg);
+						session.sendMessage(message);
 					}
 					catch (IOException e) {
 						log.error("sendMessage", e);
 					}
 				}
 			}
+			else {
+				String excludeId = evt.getExcludeId();
+				for (WebSocketSession session : this.sessions.values()) {
+					if (!session.getId().equals(excludeId)) {
+						try {
+							session.sendMessage(message);
+						}
+						catch (IOException e) {
+							log.error("sendMessage", e);
+						}
+					}
+				}
+			}
 		}
-
 	}
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		this.sessions.put(session.getId(), session);
-		this.eventBus.notify("newPlayer", Event.wrap(session.getId()));
+		this.publisher.publishEvent(new NewPlayerEvent(session.getId()));
 	}
 
 	@Override
 	public void handleTextMessage(WebSocketSession session, final TextMessage message)
 			throws Exception {
-
-		Event<String> event = Event.wrap(message.getPayload());
-		event.getHeaders().set("sessionId", session.getId());
-		this.eventBus.notify("incomingMessage", event);
+		this.publisher.publishEvent(
+				new IncomingMessageEvent(session.getId(), message.getPayload()));
 	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
 			throws Exception {
 		this.sessions.remove(session.getId());
-		this.eventBus.notify("removePlayer", Event.wrap(session.getId()));
+		this.publisher.publishEvent(new RemovePlayerEvent(session.getId()));
 	}
 
 }

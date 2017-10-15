@@ -1,22 +1,18 @@
 package ch.rasc.s4ws.drawboard;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-import reactor.Environment;
-import reactor.bus.EventBus;
-import reactor.spring.context.config.EnableReactor;
-
 @Configuration
-@EnableReactor
 public class DrawboardConfig implements WebSocketConfigurer {
 
-	static {
-		Environment.initializeIfEmpty().assignErrorJournal();
-	}
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -25,18 +21,12 @@ public class DrawboardConfig implements WebSocketConfigurer {
 
 	@Bean
 	public WebSocketHandler drawboardWebSocketHandler() {
-		return new DrawboardWebSocketHandler();
-	}
-
-	@Bean
-	public EventBus eventBus() {
-		return EventBus.config().env(Environment.get())
-				.dispatcher(Environment.THREAD_POOL).get();
+		return new DrawboardWebSocketHandler(this.publisher);
 	}
 
 	@Bean
 	public Room room() {
-		return new Room(eventBus());
+		return new Room(this.publisher);
 	}
 
 }
