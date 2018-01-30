@@ -6,7 +6,7 @@
 	<groupId>ch.rasc</groupId>
 	<artifactId>spring4ws-demos</artifactId>
 	<version>0.0.1</version>
-    <packaging>jar</packaging>
+	<packaging>jar</packaging>
 
 	<name>Spring 5 WebSocket Examples</name>
 	<description>Various Spring 5 WebSocket Examples</description>
@@ -23,7 +23,7 @@
 		<start-class>ch.rasc.s4ws.Spring4WebSocketExamplesApplication</start-class>
 		<java.version>1.8</java.version>
 	</properties>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,13 +51,13 @@
 		<dependency>
 			<groupId>eu.bitwalker</groupId>
 			<artifactId>UserAgentUtils</artifactId>
-			<version>1.20</version>
+			<version>1.21</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.maxmind.geoip2</groupId>
 			<artifactId>geoip2</artifactId>
-			<version>2.10.0</version>
+			<version>2.11.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>httpclient</artifactId>
@@ -79,10 +79,14 @@
 	</dependencies>
 
 	<build>
+	    <finalName>spring4ws-demos</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
