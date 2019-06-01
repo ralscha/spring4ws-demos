@@ -10,10 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @SpringBootApplication
@@ -21,7 +21,7 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocketMessageBroker
 @EnableScheduling
 public class Spring4WebSocketExamplesApplication
-		extends AbstractWebSocketMessageBrokerConfigurer implements SchedulingConfigurer {
+		implements WebSocketMessageBrokerConfigurer, SchedulingConfigurer {
 
 	public static void main(String[] args) {
 		// System.setProperty("spring.profiles.active", "development");
@@ -39,7 +39,7 @@ public class Spring4WebSocketExamplesApplication
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/stomp");
-		registry.addEndpoint("/sockjs").withSockJS();
+		registry.addEndpoint("/sockjs").setAllowedOrigins("*").setAllowedOrigins("*").withSockJS();
 	}
 
 	@Override

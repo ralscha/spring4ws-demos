@@ -54,15 +54,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			    .antMatchers("/portfolio/**").authenticated();
 		// @formatter:on
 	}
-	
+
 	@Override
 	@Bean
 	public UserDetailsService userDetailsService() {
-	    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-	    manager.createUser(User.withUsername("fabrice").password("fab123")
-	        .roles("USER").build());
-	    manager.createUser(User.withUsername("paulson").password("bond")
+		User.UserBuilder users = User.withDefaultPasswordEncoder();
+		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+		manager.createUser(
+				users.username("fabrice").password("fab123").roles("USER").build());
+		manager.createUser(users.username("paulson").password("bond")
 				.roles("ADMIN", "USER").build());
-	    return manager;
+		return manager;
 	}
 }

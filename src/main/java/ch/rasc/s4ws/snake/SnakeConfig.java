@@ -12,7 +12,7 @@ public class SnakeConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(snakeWebSocketHandler(), "/snakesockjs").withSockJS();
+		registry.addHandler(snakeWebSocketHandler(), "/snakesockjs").setAllowedOrigins("*").withSockJS();
 	}
 
 	@Bean

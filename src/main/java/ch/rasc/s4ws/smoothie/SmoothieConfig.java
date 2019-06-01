@@ -12,7 +12,7 @@ public class SmoothieConfig implements WebSocketConfigurer {
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(cpuDataHandler(), "/smoothieSockJS").withSockJS();
+		registry.addHandler(cpuDataHandler(), "/smoothieSockJS").setAllowedOrigins("*").withSockJS();
 	}
 
 	@Bean
