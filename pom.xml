@@ -57,7 +57,7 @@
 		<dependency>
 			<groupId>com.maxmind.geoip2</groupId>
 			<artifactId>geoip2</artifactId>
-			<version>2.17.1</version>
+			<version>2.17.0</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>httpclient</artifactId>
