@@ -25,6 +25,8 @@ import ch.rasc.s4ws.portfolio.Portfolio;
 import ch.rasc.s4ws.portfolio.PortfolioPosition;
 
 /**
+ * Provides in-memory portfolios for the demo users.
+ *
  * @author Rob Winch
  */
 @Service

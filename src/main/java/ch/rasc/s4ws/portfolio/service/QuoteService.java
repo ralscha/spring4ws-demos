@@ -75,7 +75,7 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 
 		private final Map<String, String> prices = new ConcurrentHashMap<>();
 
-		public StockQuoteGenerator() {
+		StockQuoteGenerator() {
 			this.prices.put("CTXS", "24.30");
 			this.prices.put("DELL", "13.03");
 			this.prices.put("EMC", "24.13");
@@ -86,7 +86,7 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 			this.prices.put("VMW", "66.98");
 		}
 
-		public Set<Quote> generateQuotes() {
+		Set<Quote> generateQuotes() {
 			Set<Quote> quotes = new HashSet<>();
 			for (String ticker : this.prices.keySet()) {
 				BigDecimal price = getPrice(ticker);
@@ -97,7 +97,7 @@ public class QuoteService implements ApplicationListener<BrokerAvailabilityEvent
 
 		private BigDecimal getPrice(String ticker) {
 			BigDecimal seedPrice = new BigDecimal(this.prices.get(ticker), mathContext);
-			double range = seedPrice.multiply(new BigDecimal(0.02)).doubleValue();
+			double range = seedPrice.multiply(new BigDecimal("0.02")).doubleValue();
 			BigDecimal priceChange = new BigDecimal(
 					String.valueOf(this.random.nextDouble() * range), mathContext);
 			return seedPrice.add(priceChange);

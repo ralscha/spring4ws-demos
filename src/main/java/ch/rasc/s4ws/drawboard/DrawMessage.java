@@ -139,7 +139,7 @@ public final class DrawMessage {
 	/**
 	 * Draws this DrawMessage onto the given Graphics2D.
 	 *
-	 * @param g
+	 * @param g the graphics context to draw on
 	 */
 	public void draw(Graphics2D g) {
 
@@ -213,7 +213,8 @@ public final class DrawMessage {
 		boolean last;
 
 		try {
-			String[] elements = str.split(",");
+			// Discard trailing empty fields; the last-in-chain flag must be nonempty.
+			String[] elements = str.split(",", 0);
 
 			type = Integer.parseInt(elements[0]);
 			if (!(type >= 1 && type <= 4)) {

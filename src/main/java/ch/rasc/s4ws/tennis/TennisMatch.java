@@ -141,15 +141,15 @@ public class TennisMatch {
 	}
 
 	public boolean hasSetWinner() {
-		if (this.player1.getGamesInCurrentSet() >= 6
+		if ((this.player1.getGamesInCurrentSet() >= 6
 				&& (this.player1
 						.getGamesInCurrentSet() >= this.player2.getGamesInCurrentSet() + 2
 						|| this.player1.getGamesInCurrentSet()
-								+ this.player2.getGamesInCurrentSet() == 13)
-				|| this.player2.getGamesInCurrentSet() >= 6 && (this.player2
+								+ this.player2.getGamesInCurrentSet() == 13))
+				|| (this.player2.getGamesInCurrentSet() >= 6 && (this.player2
 						.getGamesInCurrentSet() >= this.player1.getGamesInCurrentSet() + 2
 						|| this.player1.getGamesInCurrentSet()
-								+ this.player2.getGamesInCurrentSet() == 13)) {
+								+ this.player2.getGamesInCurrentSet() == 13))) {
 			if (!this.isSet1Finished) {
 				this.isSet1Finished = true;
 				this.player1.setSet1(this.player1.getGamesInCurrentSet());
@@ -218,18 +218,12 @@ public class TennisMatch {
 	}
 
 	private static String translateScore(int score) {
-		switch (score) {
-		case 3:
-			return "40";
-		case 2:
-			return "30";
-		case 1:
-			return "15";
-		case 0:
-			return "0";
-		default:
-			return "40";
-		}
+		return switch (score) {
+			case 2 -> "30";
+			case 1 -> "15";
+			case 0 -> "0";
+			default -> "40";
+		};
 	}
 
 	public boolean isSet1Finished() {

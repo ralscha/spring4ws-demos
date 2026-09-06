@@ -75,7 +75,8 @@ public class TradeServiceImpl implements TradeService {
 	@Scheduled(fixedDelay = 1500)
 	public void sendTradeNotifications() {
 
-		for (TradeResult result : this.tradeResults) {
+		// Process a snapshot so newly submitted trades wait for the next pass.
+		for (TradeResult result : List.copyOf(this.tradeResults)) {
 			if (System.currentTimeMillis() >= result.timestamp + 1500) {
 				logger.debug("Sending position update: " + result.position);
 				this.messagingTemplate.convertAndSendToUser(result.user,
@@ -93,7 +94,7 @@ public class TradeServiceImpl implements TradeService {
 
 		private final long timestamp;
 
-		public TradeResult(String user, PortfolioPosition position) {
+		TradeResult(String user, PortfolioPosition position) {
 			this.user = user;
 			this.position = position;
 			this.timestamp = System.currentTimeMillis();

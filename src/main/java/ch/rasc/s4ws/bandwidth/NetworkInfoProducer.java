@@ -5,6 +5,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
@@ -36,7 +37,7 @@ public class NetworkInfoProducer {
 	public NetworkInfoProducer() {
 		OperatingSystemMXBean operatingSystemMXBean = ManagementFactory
 				.getOperatingSystemMXBean();
-		String os = operatingSystemMXBean.getName().toLowerCase();
+		String os = operatingSystemMXBean.getName().toLowerCase(Locale.ROOT);
 		this.isLinux = os.indexOf("linux") != -1;
 	}
 

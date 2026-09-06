@@ -68,7 +68,7 @@ public class TailService {
 
 		this.tailers = new ArrayList<>();
 
-		for (String logFile : accessLogs.split(",")) {
+		for (String logFile : accessLogs.split(",", -1)) {
 			if (logFile.isBlank()) {
 				continue;
 			}

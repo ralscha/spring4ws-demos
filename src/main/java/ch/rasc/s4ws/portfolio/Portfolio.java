@@ -37,6 +37,8 @@ public class Portfolio {
 	}
 
 	/**
+	 * Buys shares of an existing portfolio position.
+	 *
 	 * @return the updated position or null
 	 */
 	public PortfolioPosition buy(String ticker, int sharesToBuy) {
@@ -50,6 +52,8 @@ public class Portfolio {
 	}
 
 	/**
+	 * Sells shares of an existing portfolio position.
+	 *
 	 * @return the updated position or null
 	 */
 	public PortfolioPosition sell(String ticker, int sharesToSell) {

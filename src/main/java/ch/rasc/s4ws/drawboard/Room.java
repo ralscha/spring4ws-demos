@@ -12,12 +12,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 
 import ch.rasc.s4ws.drawboard.DrawMessage.ParseException;
 
 public final class Room {
+
+	private static final Logger logger = LoggerFactory.getLogger(Room.class);
 
 	private final BufferedImage roomImage = new BufferedImage(900, 600,
 			BufferedImage.TYPE_INT_RGB);
@@ -95,11 +99,8 @@ public final class Room {
 				}
 
 			}
-			catch (NumberFormatException e) {
-				e.printStackTrace();
-			}
-			catch (ParseException e) {
-				e.printStackTrace();
+			catch (NumberFormatException | ParseException e) {
+				logger.warn("Invalid drawing message from session {}", sessionId, e);
 			}
 		}
 
