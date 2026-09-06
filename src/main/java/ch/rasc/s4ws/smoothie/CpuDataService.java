@@ -13,14 +13,13 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 public class CpuDataService {
 
 	private final static Log logger = LogFactory.getLog(CpuDataService.class);
 
-	private final static ObjectMapper objectMapper = new ObjectMapper();
+	private final static JsonMapper objectMapper = JsonMapper.builder().build();
 
 	private final Random random = new Random();
 
@@ -41,7 +40,7 @@ public class CpuDataService {
 	}
 
 	@Scheduled(initialDelay = 1000, fixedDelay = 1000)
-	public void sendData() throws JsonProcessingException {
+	public void sendData() {
 		if (!this.sessions.isEmpty()) {
 			final CpuData cpuData = new CpuData();
 			cpuData.setHost1(

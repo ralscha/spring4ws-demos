@@ -17,53 +17,61 @@ package ch.rasc.s4ws.portfolio.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.Message;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
+import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * Customizes Spring Security configuration.
- *
- * @author Rob Winch
- */
 @Configuration
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableWebSocketSecurity
+public class WebSecurityConfig {
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
-		http.csrf().disable()
-			.headers()
-		   	  .addHeaderWriter(
-					new XFrameOptionsHeaderWriter(
-							XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN))
-			.and()
-			  .formLogin().defaultSuccessUrl("/portfolio/index.html")
-			  .loginPage("/portfolio/login.html")
-			  .failureUrl("/portfolio/login.html?error").permitAll()
-			.and()
-			  .logout()
-			    .logoutSuccessUrl("/portfolio/login.html?logout")
-			    .logoutUrl("/portfolio/logout.html").permitAll()
-			.and()
-			  .authorizeRequests()
-			    .antMatchers("/portfolio/login.css").permitAll()
-			    .antMatchers("/portfolio/**").authenticated();
-		// @formatter:on
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		http
+			.csrf(csrf -> csrf.ignoringRequestMatchers("/sockjs/**", "/snakesockjs/**", "/smoothieSockJS/**"))
+			.headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+			.formLogin(login -> login.loginPage("/portfolio/login.html")
+				.loginProcessingUrl("/portfolio/login.html")
+				.defaultSuccessUrl("/portfolio/index.html", true)
+				.failureUrl("/portfolio/login.html?error").permitAll())
+			.logout(logout -> logout.logoutUrl("/portfolio/logout.html")
+				.logoutSuccessUrl("/portfolio/login.html?logout").permitAll())
+			.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/portfolio/login.css").permitAll()
+				.requestMatchers("/portfolio/**").authenticated()
+				.anyRequest().permitAll());
+		return http.build();
 	}
 
-	@Override
 	@Bean
-	public UserDetailsService userDetailsService() {
-		User.UserBuilder users = User.withDefaultPasswordEncoder();
-		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-		manager.createUser(
-				users.username("fabrice").password("fab123").roles("USER").build());
-		manager.createUser(users.username("paulson").password("bond")
-				.roles("ADMIN", "USER").build());
-		return manager;
+	AuthorizationManager<Message<?>> messageAuthorizationManager(
+			MessageMatcherDelegatingAuthorizationManager.Builder messages) {
+		return messages
+			.nullDestMatcher().permitAll()
+			.simpSubscribeDestMatchers("/app/positions", "/user/queue/**").authenticated()
+			.simpSubscribeDestMatchers("/topic/**", "/queue/tennis/bet/**").permitAll()
+			.simpDestMatchers("/app/trade").authenticated()
+			.simpDestMatchers("/topic/chat", "/app/tennis/bet/**").permitAll()
+			.anyMessage().denyAll().build();
+	}
+
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
+	@Bean
+	UserDetailsService userDetailsService(PasswordEncoder encoder) {
+		return new InMemoryUserDetailsManager(
+			User.withUsername("fabrice").password(encoder.encode("fab123")).roles("USER").build(),
+			User.withUsername("paulson").password(encoder.encode("bond")).roles("ADMIN", "USER").build());
 	}
 }

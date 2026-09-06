@@ -413,11 +413,9 @@ window.onload = function() {
 		return map;
 	}
 
-	var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
-	var sock = new SockJS(path + '../sockjs');
-	var stompClient = Stomp.over(sock);
+	var stompClient = DemoMessaging.createClient();
 
-	stompClient.connect({}, function(frame) {
+	stompClient.onConnect = function(frame) {
 		stompClient.subscribe("/topic/tail", function(msg) {
 			var geo = JSON.parse(msg.body);
 			setTimeout(function() {
@@ -430,7 +428,8 @@ window.onload = function() {
 				}
 			}, config.bufferTime);			
 		});
-	});
+	};
+	stompClient.activate();
 
 	(function tick() {
 		map.markers.age();

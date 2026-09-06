@@ -8,7 +8,7 @@ function ApplicationModel(stompClient) {
   self.notifications = ko.observableArray();
 
   self.connect = function() {
-    stompClient.connect({}, function(frame) {
+    stompClient.onConnect = function(frame) {
 
       console.log('Connected ' + frame);
       self.username(frame.headers['user-name']);
@@ -26,9 +26,11 @@ function ApplicationModel(stompClient) {
       stompClient.subscribe("/user/queue/errors", function(message) {
         self.pushNotification("Error " + message.body);
       });
-    }, function(error) {
+    };
+    stompClient.onStompError = function(error) {
       console.log("STOMP protocol error " + error);
-    });
+    };
+    stompClient.activate();
   };
 
   self.pushNotification = function(text) {
@@ -38,9 +40,13 @@ function ApplicationModel(stompClient) {
     }
   };
 
-  self.logout = function() {
-    stompClient.disconnect();
-    window.location.href = "logout.html";
+  self.logout = async function() {
+    await stompClient.deactivate();
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = 'logout.html';
+    document.body.append(form);
+    await DemoMessaging.submitForm(form);
   };
 }
 
@@ -68,6 +74,8 @@ function PortfolioModel() {
   var rowLookup = {};
 
   self.loadPositions = function(positions) {
+    self.rows.removeAll();
+    rowLookup = {};
     for ( var i = 0; i < positions.length; i++) {
       var row = new PortfolioRow(positions[i]);
       self.rows.push(row);
@@ -101,7 +109,7 @@ function PortfolioRow(data) {
 
   self.updatePrice = function(newPrice) {
     var delta = (newPrice - self.price()).toFixed(2);
-    self.arrow((delta < 0) ? '<i class="icon-arrow-down"></i>' : '<i class="icon-arrow-up"></i>');
+    self.arrow((delta < 0) ? '\u2193' : '\u2191');
     self.change((delta / self.price() * 100).toFixed(2));
     self.price(newPrice);
   };
@@ -125,17 +133,17 @@ function TradeModel(stompClient) {
     self.currentRow(row);
     self.error('');
     self.suppressValidation(false);
-    $('#trade-dialog').modal();
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('trade-dialog')).show();
   };
 
-  $('#trade-dialog').on('shown', function () {
-    var input = $('#trade-dialog input');
+  $('#trade-dialog').on('shown.bs.modal', function () {
+    var input = $('#inputShares');
     input.focus();
     input.select();
   });
   
   var validateShares = function() {
-      if (isNaN(self.sharesToTrade()) || (self.sharesToTrade() < 1)) {
+      if (!Number.isInteger(Number(self.sharesToTrade())) || (self.sharesToTrade() < 1)) {
         self.error('Invalid number');
         return false;
       }
@@ -153,10 +161,15 @@ function TradeModel(stompClient) {
     var trade = {
         "action" : self.action(),
         "ticker" : self.currentRow().ticker,
-        "shares" : self.sharesToTrade()
+        "shares" : Number(self.sharesToTrade())
       };
     console.log(trade);
-    stompClient.send("/app/trade", {}, JSON.stringify(trade));
-    $('#trade-dialog').modal('hide');
+    if (!stompClient.connected) {
+      self.error('Connection lost. Please try again after reconnecting.');
+      return;
+    }
+    stompClient.publish({ destination: "/app/trade", body: JSON.stringify(trade),
+      headers: { 'content-type': 'application/json' } });
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('trade-dialog')).hide();
   };
 }

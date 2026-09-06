@@ -4,3 +4,6 @@ target
 .settings
 
 /.sts4-cache/
+node_modules/
+playwright-report/
+test-results/

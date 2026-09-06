@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
@@ -28,7 +28,8 @@ import com.maxmind.geoip2.exception.AddressNotFoundException;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 
-import eu.bitwalker.useragentutils.UserAgent;
+import nl.basjes.parse.useragent.UserAgent;
+import nl.basjes.parse.useragent.UserAgentAnalyzer;
 
 @Service
 public class TailService {
@@ -44,6 +45,8 @@ public class TailService {
 
 	private DatabaseReader reader = null;
 
+	private UserAgentAnalyzer userAgentAnalyzer;
+
 	@Autowired
 	public TailService(@Value("${geoip2.cityfile}") String cityFile,
 			@Value("${access.logs}") String accessLogs,
@@ -51,7 +54,7 @@ public class TailService {
 		this.messagingTemplate = messagingTemplate;
 
 		String databaseFile = cityFile;
-		if (databaseFile != null) {
+		if (databaseFile != null && !databaseFile.isBlank()) {
 			Path database = Paths.get(databaseFile);
 			if (Files.exists(database)) {
 				try {
@@ -66,13 +69,22 @@ public class TailService {
 		this.tailers = new ArrayList<>();
 
 		for (String logFile : accessLogs.split(",")) {
+			if (logFile.isBlank()) {
+				continue;
+			}
 			Path p = Paths.get(logFile.trim());
-			this.tailers.add(new Tailer(p.toFile(), new ListenerAdapter()));
+			this.tailers.add(Tailer.builder().setFile(p.toFile())
+					.setTailerListener(new ListenerAdapter()).setStartThread(false).get());
 		}
 
-		this.executor = Executors.newFixedThreadPool(this.tailers.size());
-		for (Tailer tailer : this.tailers) {
-			this.executor.execute(tailer);
+		if (!this.tailers.isEmpty()) {
+			this.userAgentAnalyzer = UserAgentAnalyzer.newBuilder()
+					.withField("AgentNameVersion").withField("OperatingSystemNameVersion")
+					.withCache(1000).hideMatcherLoadStats().build();
+			this.executor = Executors.newVirtualThreadPerTaskExecutor();
+			for (Tailer tailer : this.tailers) {
+				this.executor.execute(tailer);
+			}
 		}
 	}
 
@@ -80,12 +92,20 @@ public class TailService {
 	public void preDestroy() {
 		if (this.tailers != null) {
 			for (Tailer tailer : this.tailers) {
-				tailer.stop();
+				tailer.close();
 			}
 		}
 
 		if (this.executor != null) {
-			this.executor.shutdown();
+			this.executor.shutdownNow();
+		}
+		if (this.reader != null) {
+			try {
+				this.reader.close();
+			}
+			catch (IOException e) {
+				LoggerFactory.getLogger(getClass()).warn("Closing GeoIP database", e);
+			}
 		}
 	}
 
@@ -106,43 +126,16 @@ public class TailService {
 					Access access = new Access();
 					access.setIp(ip);
 					access.setDate(Instant.now().toEpochMilli());
-					access.setCity(cr.getCity().getName());
-					access.setCountry(cr.getCountry().getName());
+					access.setCity(cr.city().name());
+					access.setCountry(cr.country().name());
 
-					String userAgent = matcher.group(9);
-					UserAgent ua = UserAgent.parseUserAgentString(userAgent);
-
-					if (ua != null) {
-						String browserVersion = ua.getBrowserVersion() != null
-								? ua.getBrowserVersion().getVersion()
-								: "";
-						if (browserVersion.equals("Unknown")) {
-							browserVersion = "";
-						}
-						String os = ua.getOperatingSystem() != null
-								? ua.getOperatingSystem().getName()
-								: "";
-						if (os.equals("Unknown")) {
-							os = "";
-						}
-						String browser = ua.getBrowser() != null
-								? ua.getBrowser().getName()
-								: "";
-
-						if (!browser.equals("Unknown")) {
-							String uaString = String.join(" ", browser, browserVersion,
-									os);
-							access.setMessage(matcher.group(4) + "; " + uaString);
-						}
-						else {
-							access.setMessage(matcher.group(4));
-						}
+					UserAgent ua = TailService.this.userAgentAnalyzer.parse(matcher.group(9));
+					access.setMessage(matcher.group(5) + "; " + ua.getValue("AgentNameVersion")
+							+ " " + ua.getValue("OperatingSystemNameVersion"));
+					if (cr.location().latitude() == null || cr.location().longitude() == null) {
+						return;
 					}
-					else {
-						access.setMessage(null);
-					}
-					access.setLl(new Double[] { cr.getLocation().getLatitude(),
-							cr.getLocation().getLongitude() });
+					access.setLl(new Double[] { cr.location().latitude(), cr.location().longitude() });
 
 					TailService.this.messagingTemplate.convertAndSend("/topic/tail",
 							access);

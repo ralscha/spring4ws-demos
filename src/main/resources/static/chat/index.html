@@ -4,9 +4,10 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, target-densitydpi=medium-dpi" />
 		<title>Chat</title>
-		<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="../sockjs-1.1.4.min.js"></script>
-        <script src="../stomp-2.3.4.min.js"></script>
+		<script src="../vendor/jquery.min.js"></script>
+        <script src="../vendor/sockjs.min.js"></script>
+        <script src="../vendor/stomp.umd.min.js"></script>
+    <script src="../messaging.js"></script>
 		<script>
 		$(function() {
 			var username, 
@@ -20,18 +21,17 @@
 				content.scrollTop = content.scrollHeight;
 			}
 			
-			$(input).keyup(function(event) {
-				if (event.which === 13 && $.trim(input.value)) {
+			$(input).on("keyup", function(event) {
+				if (event.key === "Enter" && input.value.trim()) {
 					if (!username) {
 						username = input.value;
 						$("#editor p").addClass("user").removeClass("guide").text(username);
 						
 						
-						var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
-						var sock = new SockJS(path + '../sockjs');
-						stompClient = Stomp.over(sock);
+						stompClient = DemoMessaging.createClient();
+						$(input).prop("disabled", true);
 
-						stompClient.connect({}, function(frame) {
+						stompClient.onConnect = function(frame) {
 							notify("The connection has been opened");
 							$(input).removeAttr("disabled").focus();
 							
@@ -46,14 +46,15 @@
 								$('<p class="message"/>').text(data.message).appendTo(content);
 								content.scrollTop = content.scrollHeight;
 							});
-						}, 
-						function(error) {
+						};
+						stompClient.onStompError = function(error) {
 							notify("An error occured: " + error);
-							$(input).attr("disabled", "disabled");
-						});
+							$(input).prop("disabled", true);
+						};
+						stompClient.activate();
 						
 					} else {
-						stompClient.send("/topic/chat", {}, JSON.stringify({username: username, message: input.value}));
+						if (stompClient.connected) stompClient.publish({ destination: "/topic/chat", body: JSON.stringify({username: username, message: input.value}) });
 					}
 					
 					input.value = "";
@@ -61,10 +62,10 @@
 			});
 			
 			$(input).focus();
-			$(window).resize(function() {
+			$(window).on("resize", function() {
 				$(content).height($(window).height() - $("#editor").outerHeight(true) - 15).scrollTop(content.scrollHeight);
 			})
-			.resize();
+			.trigger("resize");
 		});
 		</script>
 		<style>
@@ -85,7 +86,7 @@
 	<body>
 		<div id="content">
 			<p class="user"><span>Admin</span></p>
-			<p class="message">Welcome to the Chat Demo with Spring 4, SockJS and Stomp</p>
+			<p class="message">Welcome to the Chat Demo with Spring 7, SockJS and Stomp</p>
 		</div>
 		<div id="editor">
 			<p class="guide">Enter your username</p>

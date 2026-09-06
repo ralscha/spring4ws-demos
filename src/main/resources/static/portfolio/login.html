@@ -2,38 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Sign in &middot; Stock Trading Portfolio Sign in</title>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · Stock Trading Portfolio</title>
+  <link href="../vendor/bootstrap.min.css" rel="stylesheet">
   <link href="login.css" rel="stylesheet">
 </head>
 <body>
-
-  <div class="container">
-    <div data-bind="visible: showErrorMessage" class="alert alert-error">
-      Invalid username/password.
-    </div>
+  <main class="container">
+    <div id="login-error" class="alert alert-danger" role="alert" hidden>Invalid username/password.</div>
     <form class="form-signin" method="post" action="login.html">
-      <h3 class="muted form-signin-heading">Please sign in</h3>
-      <input type="text" class="input-block-level" placeholder="User name" name="username">
-      <input type="password" class="input-block-level" placeholder="Password" name="password">
+      <h3 class="text-secondary form-signin-heading">Please sign in</h3>
+      <label class="form-label" for="username">User name</label>
+      <input id="username" type="text" class="form-control" autocomplete="username" name="username" required>
+      <label class="form-label" for="password">Password</label>
+      <input id="password" type="password" class="form-control" autocomplete="current-password" name="password" required>
       <button class="btn btn-primary" type="submit">Sign in</button>
       <hr>
-      <p class="text-info"><small>
-        Log in as <strong>fabrice/fab123</strong> or <strong>paulson/bond</strong><br>
-        See <code>WebSecurityConfig.java</code></small></p>
+      <p class="text-secondary"><small>Demo accounts: <strong>fabrice / fab123</strong> or <strong>paulson / bond</strong></small></p>
     </form>
-  </div><!-- /container -->
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js"></script>
-
+  </main>
+  <script src="../messaging.js"></script>
   <script>
-    ko.applyBindings({
-      showErrorMessage : ko.computed(function() {
-        var query = window.location.search;
-        return query ? (query.indexOf('error') != -1) : false;
-      })
+    const error = document.getElementById('login-error');
+    error.hidden = !new URLSearchParams(location.search).has('error');
+    document.querySelector('form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = event.target.querySelector('button');
+      button.disabled = true;
+      try {
+        await DemoMessaging.submitForm(event.target);
+      } catch (failure) {
+        error.textContent = 'Unable to sign in. Please try again.';
+        error.hidden = false;
+        button.disabled = false;
+      }
     });
   </script>
-
 </body>
 </html>

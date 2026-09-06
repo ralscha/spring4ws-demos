@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" rel="stylesheet">
+<link href="vendor/bootstrap.min.css" rel="stylesheet">
 <style>
 .ribbon {
   background-color: #a00;
@@ -31,23 +32,23 @@
   text-shadow: 0 0 0.5em #444;
 }
 </style>
-<title>Various Spring Framework 5 / SockJS / Stomp Examples</title>
+<title>Various Spring Framework 7 / SockJS / Stomp Examples</title>
 </head>
 <body>
 	<div class="ribbon">
 	  <a href="https://github.com/ralscha/spring4ws-demos">Source Code on GitHub</a>
 	</div>
 
-	<div class="navbar">
-		<div class="navbar-inner">
+	<div class="navbar navbar-dark bg-dark mb-4">
+		<div class="container">
 			<div class="container">
-				<a class="brand" href="./index.html">Various Spring Framework 5 / SockJS / Stomp Examples</a>
+				<a class="navbar-brand text-wrap" href="./index.html">Various Spring Framework 7 / SockJS / Stomp Examples</a>
 			</div>
 		</div>
 	</div>
 
 	<div class="container">
-		<div class="span12">
+		<div class="col-12">
 
 			<section id="demo-links">
 				<h3>Demos</h3>
@@ -63,7 +64,7 @@
 					<li>
 					  <strong><a class="demolink" href="tail/index.html">Access Log Wargames Map</a></strong>
 					  <p>
-					    Translates ip addresses from the Apache access log from this server to latitude/longitude with the help of <a href="http://dev.maxmind.com/geoip/geolite">GeoCityIP</a> and
+					    Translates ip addresses from the Apache access log from this server to latitude/longitude with the help of <a href="https://dev.maxmind.com/geoip/geolite2-free-geolocation-data/">GeoLite2 City</a> and
 					    visualizes them on a world map. This example is based on <a href="https://github.com/stagas/maptail">maptail</a> and <a href="https://github.com/mape">mape</a>'s <a href="https://github.com/mape/node-wargames">wargames</a>.			    
 					  </p>
 					</li>
@@ -73,8 +74,8 @@
 					  But in this example the server generates the random data every second and sends it to the connected clients.</p>
 					</li>	
 					<li>
-					  <strong><a class="demolink" href="map/index.html">Google Maps Demo</a></strong>
-					  <p>Server sends periodically coordinates to the connected clients that moves two car icons on a google maps.</p>
+					  <strong><a class="demolink" href="map/index.html">Live Car Map</a></strong>
+					  <p>The server periodically sends coordinates to move two cars on a Leaflet / OpenStreetMap map.</p>
 					</li>				
 					<li>
 					  <strong><a class="demolink" href="portfolio/index.html">Portfolio</a></strong>
@@ -99,9 +100,9 @@
 			<section id="links">
 			  <h3>Links</h3>
 			  <ul>
-			    <li><a href="http://projects.spring.io/spring-framework/">Spring Framework</a></li>
+			    <li><a href="https://spring.io/projects/spring-framework">Spring Framework</a></li>
 			    <li><a href="https://github.com/sockjs">SockJS</a></li>
-			    <li><a href="http://jmesnil.net/stomp-websocket/doc/">STOMP</a></li>
+			    <li><a href="https://stomp-js.github.io/">STOMP</a></li>
 			  </ul>
 			</section>
 			

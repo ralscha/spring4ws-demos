@@ -1,75 +1,49 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style>
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map_canvas { height: 100% }
-    </style>
-    <script src="../sockjs-1.1.4.min.js"></script>
-    <script src="../stomp-2.3.4.min.js"></script>
-    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyAZjJ216B4aJGdXTwXNevmXesob9RUSlPc&sensor=false"></script>
-    <script>
-      function initialize() {
-        var mapOptions = {
-          center: new google.maps.LatLng(46.947922, 7.444608),
-          zoom: 14,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-        
-        var blueCar = null;
-        var redCar = null;
-        
-        google.maps.event.addListener(map, "rightclick", function(event) {
-    	    var lat = event.latLng.lat();
-    	    var lng = event.latLng.lng();
-    	    console.log("Lat=" + lat + "; Lng=" + lng);
-    	});  
-        
-        var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
-        var sock  = new SockJS(path + '../sockjs');
-        var stompClient = Stomp.over(sock);
-
-        stompClient.connect({}, function(frame) {
-        	stompClient.subscribe("/topic/map/blueCar", function(msg) {
-        		var latlng = JSON.parse(msg.body);
-        		
-        		if (!blueCar) {
-	        		blueCar = new google.maps.Marker({
-	                    position: new google.maps.LatLng(latlng.lat,latlng.lng),
-	                    icon: 'car_sedan_blue.png',
-	                    map: map
-	                });
-        		} else {
-        			blueCar.setPosition(new google.maps.LatLng(latlng.lat,latlng.lng));
-        		}        		
-        		
-        	});
-        	stompClient.subscribe("/topic/map/redCar", function(msg) {
-        		var latlng = JSON.parse(msg.body);
-
-        		if (!redCar) {
-        			redCar = new google.maps.Marker({
-	                    position: new google.maps.LatLng(latlng.lat,latlng.lng),
-	                    icon: 'car_sedan_red.png',
-	                    map: map
-	                });
-        		} else {
-        			redCar.setPosition(new google.maps.LatLng(latlng.lat,latlng.lng));
-        		}
-        		
-        	});        	
-        });        
-        
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Car Map</title>
+  <link rel="stylesheet" href="../vendor/leaflet/leaflet.css">
+  <style>
+    html, body, #map_canvas { height: 100%; margin: 0; }
+    #status { position: absolute; top: 10px; right: 10px; z-index: 1000; background: white; padding: 8px; font: 14px sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="map_canvas" aria-label="Live car locations"></div>
+  <div id="status" role="status">Connecting…</div>
+  <script src="../vendor/leaflet/leaflet.js"></script>
+  <script src="../vendor/sockjs.min.js"></script>
+  <script src="../vendor/stomp.umd.min.js"></script>
+  <script src="../messaging.js"></script>
+  <script>
+    const map = L.map('map_canvas').setView([46.947922, 7.444608], 14);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    const cars = {};
+    const client = DemoMessaging.createClient();
+    const status = document.getElementById('status');
+    client.onConnect = () => {
+      status.textContent = 'Live';
+      for (const color of ['blue', 'red']) {
+        client.subscribe('/topic/map/' + color + 'Car', message => {
+          const { lat, lng } = JSON.parse(message.body);
+          if (cars[color]) {
+            cars[color].setLatLng([lat, lng]);
+          } else {
+            cars[color] = L.marker([lat, lng], {
+              icon: L.icon({ iconUrl: 'car_sedan_' + color + '.png', iconSize: [32, 32] }),
+              title: color + ' car'
+            }).addTo(map);
+          }
+        });
       }
-      
-    
-      
-    </script>
-  </head>
-  <body onload="initialize()">
-    <div id="map_canvas" style="width:100%; height:100%"></div>
-  </body>
+    };
+    client.onWebSocketClose = () => { status.textContent = 'Reconnecting…'; };
+    client.activate();
+  </script>
+</body>
 </html>

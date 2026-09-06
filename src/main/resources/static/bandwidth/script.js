@@ -3,17 +3,16 @@ var range_snd = 512; // KBps
 
 window.onload = function() {
     
-    var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1);
-    var sock  = new SockJS(path + '../sockjs');
-    var stompClient = Stomp.over(sock);
+    var stompClient = DemoMessaging.createClient();
 
-    stompClient.connect({}, function(frame) {
+    stompClient.onConnect = function(frame) {
     	stompClient.subscribe("/topic/networkinfo", function(msg) {
     		update(msg.body);
     	});
     	   	
-    }); 
-	
+    };
+    stompClient.activate();
+
 	var rate_rec = 0;
 	var rate_snd = 0;
     

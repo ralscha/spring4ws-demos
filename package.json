@@ -1,0 +1,25 @@
+{
+  "name": "spring-websocket-demos",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Pinned browser assets and browser tests for the Spring WebSocket demos",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build": "node scripts/vendor.mjs",
+    "test": "playwright test",
+    "test:context": "playwright test --config=playwright.context.config.js"
+  },
+  "dependencies": {
+    "@stomp/stompjs": "7.3.0",
+    "bootstrap": "5.3.8",
+    "jquery": "4.0.0",
+    "knockout": "3.5.3",
+    "leaflet": "1.9.4",
+    "raphael": "2.3.0",
+    "smoothie": "1.36.1",
+    "sockjs-client": "1.6.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

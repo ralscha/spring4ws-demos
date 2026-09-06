@@ -1,15 +1,11 @@
 package ch.rasc.s4ws;
 
-import java.util.concurrent.Executors;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -21,10 +17,9 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 @EnableWebSocketMessageBroker
 @EnableScheduling
 public class Spring4WebSocketExamplesApplication
-		implements WebSocketMessageBrokerConfigurer, SchedulingConfigurer {
+		implements WebSocketMessageBrokerConfigurer {
 
 	public static void main(String[] args) {
-		// System.setProperty("spring.profiles.active", "development");
 		SpringApplication.run(Spring4WebSocketExamplesApplication.class, args);
 	}
 
@@ -39,18 +34,21 @@ public class Spring4WebSocketExamplesApplication
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/stomp");
-		registry.addEndpoint("/sockjs").setAllowedOrigins("*").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/sockjs").withSockJS();
 	}
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.setApplicationDestinationPrefixes("/app");
+		registry.enableSimpleBroker("/topic", "/queue");
 	}
 
-	@Override
-	public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-		taskRegistrar.setTaskScheduler(new ConcurrentTaskScheduler(
-				Executors.newSingleThreadScheduledExecutor()));
+	@Bean
+	public ThreadPoolTaskScheduler taskScheduler() {
+		ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+		scheduler.setPoolSize(2);
+		scheduler.setThreadNamePrefix("demo-scheduler-");
+		return scheduler;
 	}
 
 }

@@ -1,0 +1,10 @@
+{
+  "@stomp/stompjs": "7.3.0",
+  "bootstrap": "5.3.8",
+  "jquery": "4.0.0",
+  "knockout": "3.5.3",
+  "leaflet": "1.9.4",
+  "raphael": "2.3.0",
+  "smoothie": "1.36.1",
+  "sockjs-client": "1.6.1"
+}

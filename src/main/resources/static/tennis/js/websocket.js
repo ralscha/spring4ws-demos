@@ -1,10 +1,9 @@
 var idMatch = '1234';
-var clientId = uuid.v4();
-var path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-var sock = new SockJS(path + '../sockjs');
-var stompClient = Stomp.over(sock);
+var clientId = Array.from(crypto.getRandomValues(new Uint8Array(16)),
+	byte => byte.toString(16).padStart(2, '0')).join('');
+var stompClient = DemoMessaging.createClient();
 
-var m1comments, m1title;
+var m1comments, m1title, m1p1serve, m1p2serve;
 // Player1 elements
 var m1p1, m1p1games, m1p1sets, m1p1points, m1p1set1, m1p1set2, m1p1set3;
 // Player2 elements
@@ -40,57 +39,62 @@ function iniHtmlElements() {
 
 function startConnection() {
 
-	stompClient.connect({}, function(frame) {
-		document.getElementById("m1-status").innerHTML = 'CONNECTED';
+	stompClient.onConnect = function(frame) {
+		document.getElementById("m1-status").textContent = 'CONNECTED';
 		stompClient.subscribe("/topic/tennis/match/" + idMatch, function(msg) {
 			var obj = JSON.parse(msg.body);
-			m1title.innerHTML = obj.title;
+			m1title.textContent = obj.title;
 			// comments
 			m1comments.value = m1comments.value + obj.liveComments;
 			m1comments.scrollTop = 999999;
 			// serve
 			if (obj.serve === obj.player1.name) {
-				m1p1serve.innerHTML = "S";
-				m1p2serve.innerHTML = "";
+				m1p1serve.textContent = "S";
+				m1p2serve.textContent = "";
 			} else {
-				m1p1serve.innerHTML = "";
-				m1p2serve.innerHTML = "S";
+				m1p1serve.textContent = "";
+				m1p2serve.textContent = "S";
 			}
 			// player1
-			m1p1.innerHTML = obj.player1.name;
-			m1p1games.innerHTML = obj.player1.gamesInCurrentSet;
-			m1p1sets.innerHTML = obj.player1.sets;
-			m1p1points.innerHTML = obj.player1Score;
-			m1p1set1.innerHTML = obj.player1.set1;
-			m1p1set2.innerHTML = obj.player1.set2;
-			m1p1set3.innerHTML = obj.player1.set3;
+			m1p1.textContent = obj.player1.name;
+			m1p1games.textContent = obj.player1.gamesInCurrentSet;
+			m1p1sets.textContent = obj.player1.sets;
+			m1p1points.textContent = obj.player1Score;
+			m1p1set1.textContent = obj.player1.set1;
+			m1p1set2.textContent = obj.player1.set2;
+			m1p1set3.textContent = obj.player1.set3;
 			// player2
-			m1p2.innerHTML = obj.player2.name;
-			m1p2games.innerHTML = obj.player2.gamesInCurrentSet;
-			m1p2sets.innerHTML = obj.player2.sets;
-			m1p2points.innerHTML = obj.player2Score;
-			m1p2set1.innerHTML = obj.player2.set1;
-			m1p2set2.innerHTML = obj.player2.set2;
-			m1p2set3.innerHTML = obj.player2.set3;
+			m1p2.textContent = obj.player2.name;
+			m1p2games.textContent = obj.player2.gamesInCurrentSet;
+			m1p2sets.textContent = obj.player2.sets;
+			m1p2points.textContent = obj.player2Score;
+			m1p2set1.textContent = obj.player2.set1;
+			m1p2set2.textContent = obj.player2.set2;
+			m1p2set3.textContent = obj.player2.set3;
 
-			document.getElementById("m1-status").innerHTML = 'LIVE';
+			document.getElementById("m1-status").textContent = 'LIVE';
 		});
 		
 		stompClient.subscribe("/queue/tennis/bet/" + clientId + '/' + idMatch, function(msg) {
-			var obj = JSON.parse(msg.body);
-			document.getElementById("m1-betmatchwinner-result").innerHTML = obj;
+			var obj = msg.body;
+			document.getElementById("m1-betmatchwinner-result").textContent = obj;
 		});
 		
-	}, function(error) {
-		document.getElementById("m1-status").innerHTML = 'An ERROR occured: ' + error;
-	});
+	};
+	stompClient.onStompError = function(error) {
+		document.getElementById("m1-status").textContent = 'Connection error';
+	};
+	stompClient.activate();
 
 }
 function betMatchWinner(player) {
-	document.getElementById("m1-betmatchwinner").innerHTML = player;
-	document.getElementById("m1-betmatchwinner-result").innerHTML = "";
+	if (!stompClient.connected) {
+		return;
+	}
+	document.getElementById("m1-betmatchwinner").textContent = player;
+	document.getElementById("m1-betmatchwinner-result").textContent = "";
 	
-	stompClient.send("/app/tennis/bet/"+clientId+'/'+idMatch, {}, JSON.stringify(player));
+	stompClient.publish({ destination: "/app/tennis/bet/"+clientId+'/'+idMatch, body: player });
 }
 
 window.addEventListener("load", connect, false);
