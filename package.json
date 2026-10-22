@@ -10,7 +10,7 @@
     "test:context": "playwright test --config=playwright.context.config.js"
   },
   "dependencies": {
-    "@stomp/stompjs": "7.3.0",
+    "@stomp/stompjs": "7.5.0",
     "bootstrap": "5.3.8",
     "jquery": "4.0.0",
     "knockout": "3.5.3",
@@ -20,6 +20,6 @@
     "sockjs-client": "1.6.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.63.0"
+    "@playwright/test": "1.64.1"
   }
 }
