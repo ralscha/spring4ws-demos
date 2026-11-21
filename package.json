@@ -12,7 +12,7 @@
   "dependencies": {
     "@stomp/stompjs": "7.5.0",
     "bootstrap": "5.3.9",
-    "jquery": "4.0.0",
+    "jquery": "4.1.0",
     "knockout": "3.5.3",
     "leaflet": "1.9.4",
     "raphael": "2.3.0",
